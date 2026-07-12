@@ -33,6 +33,11 @@ body{
 
 /* ══════════ SIDE PANEL ══════════ */
 .side-panel{width:300px;flex-shrink:0;}
+.sp-back{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;
+  color:var(--gray-t);text-decoration:none;margin-bottom:14px;padding:7px 12px;
+  background:#fff;border:1px solid var(--gray-bd);border-radius:9px;box-shadow:0 1px 2px rgba(0,0,0,.04);
+  transition:.15s;}
+.sp-back:hover{color:var(--brand-d);border-color:var(--brand);background:var(--brand-l);}
 .sp-eyebrow{font-size:10px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:var(--rfid-d);margin-bottom:8px;}
 .sp-title{font-size:22px;font-weight:800;line-height:1.25;margin-bottom:10px;color:var(--dark);}
 .sp-title span{color:var(--brand-d);}
@@ -306,6 +311,28 @@ body{
 @keyframes toastin{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
 @keyframes toastout{to{opacity:0;transform:translateY(-6px);}}
 
+/* branch (chi nhánh) selector */
+.branch-pill{background:var(--dark);color:#fff;border-color:var(--dark);}
+.branch-pill .branch-name{font-weight:800;}
+.hchip{display:flex;align-items:center;gap:3px;height:30px;padding:0 9px;border-radius:8px;
+  background:rgba(255,255,255,.18);color:#fff;font-size:10.5px;font-weight:800;cursor:pointer;
+  white-space:nowrap;flex-shrink:0;}
+.hchip:active{background:rgba(255,255,255,.32);}
+.branch-sheet-overlay{position:absolute;inset:0;background:rgba(10,14,20,.52);z-index:30;
+  display:flex;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity .18s;}
+.branch-sheet-overlay.show{opacity:1;pointer-events:auto;}
+.branch-sheet{width:100%;background:#fff;border-radius:18px 18px 0 0;padding:14px 12px 18px;
+  transform:translateY(100%);transition:transform .22s ease;box-shadow:0 -8px 24px rgba(0,0,0,.2);}
+.branch-sheet-overlay.show .branch-sheet{transform:translateY(0);}
+.branch-sheet-handle{width:36px;height:4px;border-radius:3px;background:var(--gray-bd);margin:0 auto 12px;}
+.branch-sheet-title{font-size:13px;font-weight:800;color:var(--dark);margin-bottom:2px;}
+.branch-sheet-sub{font-size:10.5px;color:var(--gray-t);margin-bottom:10px;}
+.branch-item{display:flex;justify-content:space-between;align-items:center;padding:11px 10px;
+  border-radius:10px;font-size:12.5px;font-weight:700;color:var(--dark);cursor:pointer;}
+.branch-item:active{background:var(--brand-l);}
+.branch-item.active{background:var(--brand-l);color:var(--brand-d);}
+.branch-check{color:var(--brand-d);font-weight:900;font-size:14px;}
+
 /* device hw controls */
 .pda-hw-side{position:absolute;right:-3px;top:150px;width:6px;height:60px;background:linear-gradient(90deg,#3a3e46,#1a1c20);border-radius:0 4px 4px 0;}
 .pda-scan-trigger{
@@ -325,6 +352,7 @@ body{
 
 <!-- ══════ SIDE PANEL ══════ -->
 <div class="side-panel">
+  <a href="index.html" class="sp-back">← Trang chủ</a>
   <div class="sp-eyebrow">📡 TNG · Thiết kế nâng cấp RFID</div>
   <div class="sp-title">Mô phỏng PDA <span>TO-BE</span></div>
   <div class="sp-desc">Bản dựng tương tác trên khung thiết bị cầm tay Zebra-class, áp dụng toàn bộ đề xuất nâng cấp: RFID song song QR, sửa 12 vấn đề UX, đồng bộ màu thương hiệu. Nhấn vào màn hình hoặc dùng menu bên dưới để điều hướng — nút vật lý dưới thiết bị hoạt động như back / home thật.</div>
@@ -350,7 +378,8 @@ body{
   <div class="sp-legend">
     <b>🟢 Xanh lá</b> — thương hiệu / QR flow gốc, đồng bộ toàn app (thay thế đỏ &amp; xanh dương lệch tông).<br>
     <b>🔵 Xanh RFID (teal)</b> — mọi thao tác, field, màn hình liên quan RFID mới, giúp phân biệt tức thì với QR.<br>
-    <b>Vòng sóng lan toả</b> — mô-típ xuyên suốt tượng trưng cho tín hiệu radio, xuất hiện ở FAB, Bulk Scan, Geiger.
+    <b>Vòng sóng lan toả</b> — mô-típ xuyên suốt tượng trưng cho tín hiệu radio, xuất hiện ở FAB, Bulk Scan, Geiger.<br>
+    <b>🏢 Chi nhánh</b> — chip nhỏ cạnh chuông cảnh báo/nút ⌂ trên thanh tiêu đề mỗi màn hình, mặc định <b>SC3</b>. Nhấn để mở bottom sheet chọn chi nhánh khác (SC1, SC2, SC4…), toàn bộ dữ liệu kho/lệnh/tồn sẽ lọc theo chi nhánh đang chọn.
   </div>
 </div>
 
@@ -376,8 +405,11 @@ body{
         <!-- ═══ HOME ═══ -->
         <section class="scr active" data-screen="home">
           <div class="scr-header">
-            <div class="htitle">TNG · Kho phụ liệu<small>13 nhà máy · Nhân viên: Hà My</small></div>
-            <div class="hicons"><button class="hbtn">🔔</button></div>
+            <div class="htitle">TNG · Kho phụ liệu<small>Chi nhánh <span class="branch-name">SC3</span> · NV: Hà My</small></div>
+            <div class="hicons">
+              <div class="hchip" onclick="openBranchSheet()"> <span class="branch-name">SC3</span> ▾</div>
+              <button class="hbtn">🔔</button>
+            </div>
           </div>
           <div class="scr-body">
             <div class="rfid-widget">
@@ -410,7 +442,10 @@ body{
           <div class="scr-header">
             <button class="hbtn" data-back>‹</button>
             <div class="htitle">Xuất lên chuyền may</div>
-            <div class="hicons"><button class="hbtn" data-home>⌂</button></div>
+            <div class="hicons">
+              <div class="hchip" onclick="openBranchSheet()">🏢 <span class="branch-name">SC3</span> ▾</div>
+              <button class="hbtn" data-home>⌂</button>
+            </div>
           </div>
           <div class="scr-body">
             <div class="stickybar">
@@ -482,11 +517,11 @@ body{
 
             <div class="plcard">
               <div class="plcard-top">
-                <div><div class="plcard-name">Vải chính TC-65/35</div><div class="plcard-meta">Màu Xanh Navy · Khổ 1.5m</div></div>
+                <div><div class="plcard-name">Kim máy DBx1 #14</div><div class="plcard-meta">Kim tròn mũi bi · Hộp 100 cây</div></div>
                 <span class="badge b-brand">✅ Đủ tag</span>
               </div>
               <div class="plcard-mid">
-                <div class="plcard-nums"><span>Yêu cầu 48 cuộn</span><span>Đã xuất 48</span></div>
+                <div class="plcard-nums"><span>Yêu cầu 40 hộp</span><span>Đã xuất 40</span></div>
                 <div class="progress-track"><div class="progress-fill" style="width:100%"></div></div>
               </div>
               <div class="plcard-foot"><span style="font-size:10.5px;color:var(--gray-t);">Hoàn thành</span><button class="btn-suggest">💡 Gợi ý</button></div>
@@ -588,9 +623,17 @@ body{
           <div class="scr-header">
             <button class="hbtn" data-back>‹</button>
             <div class="htitle">Trực quan kho PL<small>Kho A · Tổng 96 vị trí</small></div>
-            <div class="hicons"><button class="hbtn" data-home>⌂</button></div>
+            <div class="hicons">
+              <div class="hchip" onclick="openBranchSheet()">🏢 <span class="branch-name">SC3</span> ▾</div>
+              <button class="hbtn" data-home>⌂</button>
+            </div>
           </div>
           <div class="scr-body">
+            <div class="stickybar" style="margin-bottom:10px;">
+              <div class="searchrow" style="margin-bottom:0;">
+                <div class="pill" style="flex:1;">Kho A ▾</div>
+              </div>
+            </div>
             <div class="kpi-strip">
               <div class="statchip sc-green"><b>1.842</b><span>Tổng tag</span></div>
               <div class="statchip sc-green"><b>1.796</b><span>Tag OK</span></div>
@@ -615,7 +658,10 @@ body{
           <div class="scr-header">
             <button class="hbtn" data-back>‹</button>
             <div class="htitle">Stock kho phụ liệu<small>Kho A · 326 chủng loại</small></div>
-            <div class="hicons"><button class="hbtn" data-home>⌂</button></div>
+            <div class="hicons">
+              <div class="hchip" onclick="openBranchSheet()">🏢 <span class="branch-name">SC3</span> ▾</div>
+              <button class="hbtn" data-home>⌂</button>
+            </div>
           </div>
           <div class="scr-body">
             <div class="stickybar">
@@ -629,11 +675,11 @@ body{
             </div>
 
             <div class="stockcard">
-              <div class="stockcard-top"><span>Vải chính TC-65/35</span><span>412 cuộn</span></div>
-              <div class="stockcard-row"><span>Xanh Navy · Khổ 1.5m</span><span>Tồn 18 ngày</span></div>
+              <div class="stockcard-top"><span>Kim máy DBx1 #14</span><span>1.240 hộp</span></div>
+              <div class="stockcard-row"><span>Kim tròn mũi bi · 100 cây/hộp</span><span>Tồn 24 ngày</span></div>
               <div class="rfidcov"><span style="font-size:9.5px;color:var(--rfid-d);font-weight:800;">RFID</span>
-                <div class="progress-track"><div class="progress-fill" style="width:96%"></div></div>
-                <span style="font-size:10px;font-weight:800;color:var(--rfid-d);">96%</span></div>
+                <div class="progress-track"><div class="progress-fill" style="width:88%"></div></div>
+                <span style="font-size:10px;font-weight:800;color:var(--rfid-d);">88%</span></div>
             </div>
             <div class="stockcard">
               <div class="stockcard-top"><span>Chỉ may 402 – trắng</span><span>86 cuộn</span></div>
@@ -681,10 +727,15 @@ body{
           <div class="scr-header">
             <button class="hbtn" data-back>‹</button>
             <div class="htitle">Nhập chuyển nội bộ<small>Kho B · Khu vực tiếp nhận</small></div>
-            <div class="hicons"><button class="hbtn" data-home>⌂</button></div>
+            <div class="hicons">
+              <div class="hchip" onclick="openBranchSheet()">🏢 <span class="branch-name">SC3</span> ▾</div>
+              <button class="hbtn" data-home>⌂</button>
+            </div>
           </div>
           <div class="scr-body">
-            <div class="stickybar"><div class="searchrow" style="margin-bottom:0;"><div class="pill">Kho B ▾</div></div></div>
+            <div class="stickybar">
+              <div class="searchrow" style="margin-bottom:0;"><div class="pill">Kho B ▾</div></div>
+            </div>
             <div class="empty-wrap">
               <div class="empty-ico">📭</div>
               <div class="empty-title">Chưa có thùng nào chờ nhập</div>
@@ -697,6 +748,22 @@ body{
       </div><!-- /app-content -->
 
       <div class="toastbox" id="toastBox"></div>
+
+      <div class="branch-sheet-overlay" id="branchSheetOverlay" onclick="closeBranchSheet(event)">
+        <div class="branch-sheet" onclick="event.stopPropagation()">
+          <div class="branch-sheet-handle"></div>
+          <div class="branch-sheet-title">Chọn chi nhánh</div>
+          <div class="branch-sheet-sub">Dữ liệu kho, lệnh, tồn kho sẽ hiển thị theo chi nhánh đã chọn</div>
+          <div id="branchList">
+            <div class="branch-item" data-branch="SC1" onclick="selectBranch('SC1')"><span>🏭 SC1</span><span class="branch-check"></span></div>
+            <div class="branch-item" data-branch="SC2" onclick="selectBranch('SC2')"><span>🏭 SC2</span><span class="branch-check"></span></div>
+            <div class="branch-item active" data-branch="SC3" onclick="selectBranch('SC3')"><span>🏭 SC3</span><span class="branch-check">✓</span></div>
+            <div class="branch-item" data-branch="SC4" onclick="selectBranch('SC4')"><span>🏭 SC4</span><span class="branch-check"></span></div>
+            <div class="branch-item" data-branch="SC5" onclick="selectBranch('SC5')"><span>🏭 SC5</span><span class="branch-check"></span></div>
+            <div class="branch-item" data-branch="SC9" onclick="selectBranch('SC9')"><span>🏭 SC9</span><span class="branch-check"></span></div>
+          </div>
+        </div>
+      </div>
 
       <div class="app-bottomnav">
         <div class="bn-item active" data-nav="home" data-bn><span class="bn-ico">🏠</span>Trang chủ</div>
@@ -747,6 +814,26 @@ document.addEventListener('click', e => {
   if(e.target.closest('[data-back]')){ goBack(); return; }
   if(e.target.closest('[data-home]')){ goHome(); return; }
 });
+
+/* ── Chi nhánh (branch) selector ── */
+let currentBranch = 'SC3';
+function openBranchSheet(){
+  document.getElementById('branchSheetOverlay').classList.add('show');
+}
+function closeBranchSheet(e){
+  document.getElementById('branchSheetOverlay').classList.remove('show');
+}
+function selectBranch(code){
+  currentBranch = code;
+  document.querySelectorAll('.branch-name').forEach(el => el.textContent = code);
+  document.querySelectorAll('.branch-item').forEach(el=>{
+    const active = el.dataset.branch === code;
+    el.classList.toggle('active', active);
+    el.querySelector('.branch-check').textContent = active ? '✓' : '';
+  });
+  document.getElementById('branchSheetOverlay').classList.remove('show');
+  toast('🏢 Đã chuyển sang chi nhánh ' + code, 'ok');
+}
 
 function toast(msg, type){
   const box = document.getElementById('toastBox');

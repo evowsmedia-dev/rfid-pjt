@@ -155,6 +155,17 @@ tr:last-child td{border-bottom:none;}
 .flow-label{font-size:10px;color:var(--gray-t);font-weight:700;}
 .flow-description{font-size:11px;color:var(--gray-t);margin-top:8px;text-align:center;max-width:600px;}
 
+.local-shot{margin-top:12px;border:1px dashed var(--gray-bd);border-radius:12px;background:#fff;padding:12px;box-shadow:var(--shadow-sm);}
+.local-shot-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;}
+.local-shot-title{font-size:12px;font-weight:800;color:var(--dark);}
+.local-shot-actions{display:flex;gap:8px;flex-wrap:wrap;}
+.local-shot-btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--gray-bd);background:var(--brand-l);color:var(--brand-d);border-radius:8px;padding:7px 10px;font-size:11px;font-weight:800;cursor:pointer;}
+.local-shot-btn.secondary{background:#fff;color:var(--gray-t);}
+.local-shot-btn:hover{border-color:var(--brand);}
+.local-shot-preview{min-height:160px;border-radius:10px;background:var(--bg);display:flex;align-items:center;justify-content:center;overflow:hidden;color:var(--gray-t);font-size:11.5px;text-align:center;padding:16px;}
+.local-shot-preview img{display:block;max-width:100%;height:auto;border-radius:8px;border:1px solid var(--gray-bd);box-shadow:var(--shadow);}
+.local-shot input[type=file]{display:none;}
+
 @media print{ .side-panel{display:none;} .main-content{max-width:100%;} }
 
 @media (max-width:900px){
@@ -308,7 +319,17 @@ body.tabs-ready .node.lvl-2.tab-visible{margin-top:0;padding-top:0;border-top:0;
 <div class="step-content">
             Chọn chức năng <code>CBQL → Đi học hỏi</code>. Màn hình hiển thị danh sách các tuần học hỏi.
           </div>
-</div><p class="note info">Màn hình chính là nơi bạn quản lý tất cả các hoạt động học hỏi của CBQL theo tuần.</p></div></div><div class="node lvl-3" id="step2"><h4>Bước 2: Xem danh sách tuần và thống kê</h4><div class="split"><div class="split-text"><p>Màn hình chính hiển thị các <strong>tuần học hỏi</strong>, mỗi tuần gồm 4 phần:</p><div class="table-wrapper" style="margin-top: 12px;">
+</div><p class="note info">Màn hình chính là nơi bạn quản lý tất cả các hoạt động học hỏi của CBQL theo tuần.</p><div class="local-shot" id="step1-upload">
+<div class="local-shot-head">
+<div class="local-shot-title">Ảnh minh hoạ bước 1</div>
+<div class="local-shot-actions">
+<label class="local-shot-btn" for="step1ImageInput">Tải ảnh từ máy</label>
+<button class="local-shot-btn secondary" type="button" id="step1ImageClear">Xoá ảnh</button>
+</div>
+</div>
+<input id="step1ImageInput" type="file" accept="image/*">
+<div class="local-shot-preview" id="step1ImagePreview">Chưa có ảnh. Chọn ảnh màn hình đăng nhập hoặc menu CBQL → Đi học hỏi từ máy tính.</div>
+</div></div></div><div class="node lvl-3" id="step2"><h4>Bước 2: Xem danh sách tuần và thống kê</h4><div class="split"><div class="split-text"><p>Màn hình chính hiển thị các <strong>tuần học hỏi</strong>, mỗi tuần gồm 4 phần:</p><div class="table-wrapper" style="margin-top: 12px;">
 <table>
 <thead>
 <tr>
@@ -514,6 +535,48 @@ body.tabs-ready .node.lvl-2.tab-visible{margin-top:0;padding-top:0;border-top:0;
 </section></div></div>
 
 <script>
+(() => {
+  const input = document.getElementById('step1ImageInput');
+  const preview = document.getElementById('step1ImagePreview');
+  const clear = document.getElementById('step1ImageClear');
+  const storageKey = 'tre-erp-docs-step1-image';
+  if(!input || !preview || !clear) return;
+
+  function showImage(src){
+    preview.innerHTML = '';
+    const img = document.createElement('img');
+    img.src = src;
+    img.alt = 'Ảnh minh hoạ bước 1';
+    preview.appendChild(img);
+  }
+
+  const saved = localStorage.getItem(storageKey);
+  if(saved) showImage(saved);
+
+  input.addEventListener('change', () => {
+    const file = input.files && input.files[0];
+    if(!file) return;
+    if(!file.type.startsWith('image/')){
+      preview.textContent = 'File không phải ảnh. Vui lòng chọn PNG, JPG hoặc ảnh màn hình.';
+      input.value = '';
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      const src = String(reader.result || '');
+      localStorage.setItem(storageKey, src);
+      showImage(src);
+    };
+    reader.readAsDataURL(file);
+  });
+
+  clear.addEventListener('click', () => {
+    localStorage.removeItem(storageKey);
+    input.value = '';
+    preview.textContent = 'Chưa có ảnh. Chọn ảnh màn hình đăng nhập hoặc menu CBQL → Đi học hỏi từ máy tính.';
+  });
+})();
+
 (function(){
   const main = document.querySelector('.main-content');
   const navLinks = Array.from(document.querySelectorAll('#sidenav .sp-link'));

@@ -132,6 +132,7 @@ table.steps-table .actor-cell{white-space:nowrap;}
 /* ── FOOTER ── */
 footer{margin-left:var(--sidebar-w);background:#fff;border-top:1px solid var(--gray-bd);padding:16px 28px;font-size:11px;color:var(--gray-t);}
 </style>
+<link rel="stylesheet" href="../assets/erp-sidebar.css">
 </head>
 <body>
 <!-- TOP HEADER -->
@@ -790,5 +791,6 @@ function renderHistory(page){
 loadComments('q01');
 Object.keys(FLOWS).forEach(id=>renderHistory(id));
 </script>
+<script src="../assets/erp-sidebar.js"></script>
 </body>
 </html>

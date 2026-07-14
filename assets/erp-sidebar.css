@@ -1,0 +1,79 @@
+:root{
+  --erp-sidebar-w:270px;
+  --erp-sidebar-collapsed-w:58px;
+}
+.erp-global-sidebar{
+  position:fixed;
+  inset:0 auto 0 0;
+  width:var(--erp-sidebar-w);
+  z-index:1000;
+  background:#fff;
+  border-right:1px solid #E4E7EC;
+  box-shadow:2px 0 14px rgba(15,23,42,.06);
+  display:flex;
+  flex-direction:column;
+  padding:18px 14px;
+  transition:width .18s ease;
+}
+.erp-global-sidebar *{box-sizing:border-box;}
+.erp-global-head{display:flex;align-items:center;gap:9px;margin-bottom:16px;min-height:34px;}
+.erp-global-mark{
+  width:32px;height:32px;border-radius:9px;
+  background:linear-gradient(135deg,#5EB332,#3f7d22);
+  color:#fff;display:flex;align-items:center;justify-content:center;
+  font:800 13px/1 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  flex-shrink:0;
+}
+.erp-global-brand{min-width:0;}
+.erp-global-brand b{display:block;color:#1A2332;font:800 12.5px/1.3 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;}
+.erp-global-brand span{display:block;color:#6B7280;font:800 9px/1.3 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;text-transform:uppercase;letter-spacing:.4px;}
+.erp-global-toggle{
+  margin-left:auto;width:30px;height:30px;border:1px solid #E4E7EC;border-radius:8px;
+  background:#F6F7F9;color:#3f7d22;cursor:pointer;font-size:15px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;
+}
+.erp-global-label{
+  color:#6B7280;font:800 9.5px/1.3 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:1px;text-transform:uppercase;margin:10px 0 8px;
+}
+.erp-global-nav{display:flex;flex-direction:column;gap:2px;overflow-y:auto;padding-right:2px;}
+.erp-global-nav a{
+  color:#1A2332;text-decoration:none;border-left:2px solid transparent;border-radius:7px;
+  padding:6px 9px;font:600 11.5px/1.35 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  transition:.12s;
+}
+.erp-global-nav a:hover,.erp-global-nav a.active{background:#EAF6E1;color:#3f7d22;border-left-color:#3f7d22;}
+.erp-global-nav a.erp-lvl-1{font-size:12.5px;font-weight:800;margin-top:6px;}
+.erp-global-nav a.erp-lvl-3{padding-left:24px;color:#6B7280;font-size:10.8px;}
+.erp-global-foot{margin-top:auto;padding-top:14px;border-top:1px solid #E4E7EC;color:#9AA3AF;font:500 9.5px/1.5 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;}
+body.has-erp-global{padding-left:var(--erp-sidebar-w);}
+body.erp-sidebar-collapsed{padding-left:var(--erp-sidebar-collapsed-w);}
+body.erp-sidebar-collapsed .erp-global-sidebar{width:var(--erp-sidebar-collapsed-w);padding-left:10px;padding-right:10px;}
+body.erp-sidebar-collapsed .erp-global-brand,
+body.erp-sidebar-collapsed .erp-global-label,
+body.erp-sidebar-collapsed .erp-global-nav,
+body.erp-sidebar-collapsed .erp-global-foot{display:none;}
+body.erp-sidebar-collapsed .erp-global-head{justify-content:center;flex-direction:column;gap:10px;}
+body.erp-sidebar-collapsed .erp-global-toggle{margin-left:0;}
+
+body.has-erp-global .top-header{left:var(--erp-sidebar-w);}
+body.erp-sidebar-collapsed .top-header{left:var(--erp-sidebar-collapsed-w);}
+body.has-erp-global .layout .sidebar{left:var(--erp-sidebar-w);}
+body.erp-sidebar-collapsed .layout .sidebar{left:var(--erp-sidebar-collapsed-w);}
+body.has-erp-global .main-wrap{margin-left:var(--sidebar-w);}
+body.has-erp-global footer{margin-left:var(--sidebar-w);}
+
+@media(max-width:900px){
+  body.has-erp-global,body.erp-sidebar-collapsed{padding-left:0;padding-top:58px;}
+  .erp-global-sidebar{
+    right:0;bottom:auto;width:100%;height:58px;flex-direction:row;align-items:center;
+    padding:10px 12px;border-right:none;border-bottom:1px solid #E4E7EC;
+  }
+  .erp-global-label,.erp-global-foot{display:none;}
+  .erp-global-head{margin-bottom:0;}
+  .erp-global-nav{flex-direction:row;overflow-x:auto;overflow-y:hidden;gap:4px;flex:1;}
+  .erp-global-nav a{white-space:nowrap;padding:7px 10px;}
+  .erp-global-nav a.erp-lvl-3{padding-left:10px;}
+  body.has-erp-global .top-header,body.erp-sidebar-collapsed .top-header{left:0;top:58px;}
+  body.has-erp-global .layout .sidebar,body.erp-sidebar-collapsed .layout .sidebar{left:0;}
+}

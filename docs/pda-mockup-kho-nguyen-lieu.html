@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mô phỏng PDA – Thiết kế nâng cấp RFID · App Kho nguyên liệu TNG</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --brand:#5EB332; --brand-d:#3f7d22; --brand-l:#EAF6E1;
+  --rfid:#0891B2; --rfid-d:#065C72; --rfid-l:#E0F7FA;
+  --warn:#EA8C00; --warn-l:#FFF4E5;
+  --danger:#DC2626; --danger-l:#FEF2F2;
+  --dark:#1A2332; --gray-t:#6B7280; --gray-2:#9AA3AF; --gray-bd:#E4E7EC; --bg:#F6F7F9;
+  --case:#20232A; --case-2:#2B2F37; --case-3:#15171C; --accent-grip:#F0A93B;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;}
+body{
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  background:
+    radial-gradient(ellipse 900px 600px at 20% 0%, #EEF6E9 0%, transparent 60%),
+    radial-gradient(ellipse 900px 700px at 100% 100%, #E6F6F8 0%, transparent 55%),
+    repeating-linear-gradient(0deg, rgba(0,0,0,.025) 0 1px, transparent 1px 42px),
+    repeating-linear-gradient(90deg, rgba(0,0,0,.025) 0 1px, transparent 1px 42px),
+    #FAFBFC;
+  min-height:100vh; color:#1A2332;
+  display:flex; align-items:flex-start; justify-content:center;
+  gap:40px; padding:48px 24px; flex-wrap:wrap;
+}
+.mono{font-family:'JetBrains Mono',monospace;}
+
+/* ══════════ SIDE PANEL ══════════ */
+.side-panel{width:310px;flex-shrink:0;}
+.sp-eyebrow{font-size:10px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:var(--rfid-d);margin-bottom:8px;}
+.sp-title{font-size:22px;font-weight:800;line-height:1.25;margin-bottom:10px;color:var(--dark);}
+.sp-title span{color:var(--brand-d);}
+.sp-desc{font-size:12.5px;color:var(--gray-t);line-height:1.7;margin-bottom:20px;}
+.sp-stats{display:flex;gap:8px;margin-bottom:22px;}
+.sp-stat{flex:1;background:#fff;border:1px solid var(--gray-bd);
+  border-radius:10px;padding:10px 8px;text-align:center;box-shadow:0 1px 2px rgba(0,0,0,.04);}
+.sp-stat b{display:block;font-size:17px;font-weight:800;color:var(--brand-d);}
+.sp-stat span{font-size:9.5px;color:var(--gray-t);text-transform:uppercase;letter-spacing:.4px;}
+.sp-nav-label{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--gray-t);margin:22px 0 10px;}
+.sp-nav{display:flex;flex-direction:column;gap:6px;}
+.sp-btn{
+  display:flex;align-items:center;gap:10px;background:#fff;
+  border:1px solid var(--gray-bd);border-radius:10px;padding:10px 12px;
+  color:var(--dark);font-size:12.5px;font-weight:600;cursor:pointer;text-align:left;
+  transition:.15s; box-shadow:0 1px 2px rgba(0,0,0,.03);
+}
+.sp-btn:hover{background:var(--brand-l);border-color:var(--brand);}
+.sp-btn.active{background:var(--brand);border-color:var(--brand);color:#fff;}
+.sp-btn .ico{font-size:15px;width:20px;text-align:center;flex-shrink:0;}
+.sp-btn .tag{margin-left:auto;font-size:8.5px;font-weight:800;padding:2px 6px;border-radius:4px;text-transform:uppercase;letter-spacing:.3px;}
+.tag-new{background:var(--rfid-l);color:var(--rfid-d);}
+.tag-fix{background:#FFF4E5;color:#92400E;}
+.sp-btn.active .tag{background:rgba(255,255,255,.25);color:#fff;}
+.sp-legend{margin-top:24px;padding-top:18px;border-top:1px solid var(--gray-bd);
+  font-size:11px;color:var(--gray-t);line-height:1.8;}
+.sp-legend b{color:var(--dark);}
+
+.side-panel a{color: var(--brand-d);text-decoration:none;background:rgba(255,255,255,.18);
+  display: block; margin-bottom: 15px; border-radius:7px;font-size:13px;font-weight:600;}
+.side-panel a:hover{background:rgba(255,255,255,.3);}
+.side-panel .title{font-size:15px;font-weight:700;flex:1;}
+
+/* ══════════ DEVICE ══════════ */
+.pda-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;}
+.pda-device{
+  width:336px; background:linear-gradient(160deg,var(--case-2),var(--case) 60%,var(--case-3));
+  border-radius:34px; padding:16px 14px 20px; position:relative;
+  box-shadow:0 30px 70px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.06), 0 0 0 1px rgba(255,255,255,.03);
+}
+.pda-device::before{
+  content:''; position:absolute; left:0; top:70px; bottom:70px; width:14px;
+  background:repeating-linear-gradient(180deg, rgba(255,255,255,.05) 0 2px, transparent 2px 7px);
+  border-radius:8px;
+}
+.pda-hw-row{display:flex;align-items:center;justify-content:space-between;padding:0 6px 12px;}
+.pda-cam{width:9px;height:9px;border-radius:50%;background:#0a0b0d;box-shadow:inset 0 0 0 2px #34383f, 0 0 4px rgba(120,200,255,.4);}
+.pda-speaker{display:flex;gap:3px;}
+.pda-speaker span{width:4px;height:4px;border-radius:50%;background:#3a3e46;}
+.pda-antenna{width:34px;height:8px;border-radius:4px;background:linear-gradient(180deg,#3a3e46,#232630);
+  display:flex;align-items:center;justify-content:center;font-size:6px;letter-spacing:.5px;color:#6b7280;font-weight:700;}
+
+.pda-screen-frame{
+  background:#000; border-radius:20px; padding:8px; position:relative;
+  box-shadow:inset 0 0 0 2px #000, inset 0 0 12px rgba(0,0,0,.8);
+}
+.pda-lcd{
+  width:100%; height:600px; background:var(--bg); border-radius:13px; overflow:hidden;
+  position:relative; display:flex; flex-direction:column;
+}
+.pda-statusbar{
+  height:26px; background:var(--dark); color:#fff; display:flex; align-items:center;
+  justify-content:space-between; padding:0 12px; font-size:10px; font-weight:700; flex-shrink:0;
+}
+.pda-statusbar .sb-rfid{display:flex;align-items:center;gap:4px;color:#7EE0F0;}
+.pda-statusbar .sb-dot{width:6px;height:6px;border-radius:50%;background:var(--brand);box-shadow:0 0 5px var(--brand);}
+
+.app-content{flex:1;position:relative;overflow:hidden;}
+.scr{
+  position:absolute; inset:0; display:flex; flex-direction:column;
+  opacity:0; pointer-events:none; transform:translateX(8px); transition:opacity .18s, transform .18s;
+  background:var(--bg);
+}
+.scr.active{opacity:1; pointer-events:auto; transform:translateX(0);}
+
+/* header */
+.scr-header{
+  flex-shrink:0; background:linear-gradient(120deg,var(--brand-d),var(--brand) 65%);
+  color:#fff; display:flex; align-items:center; gap:10px; padding:0 12px; height:46px;
+}
+.scr-header.rfid{background:linear-gradient(120deg,var(--rfid-d),var(--rfid) 65%);}
+.hbtn{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.16);font-size:14px;cursor:pointer;border:none;color:#fff;flex-shrink:0;}
+.hbtn:active{background:rgba(255,255,255,.32);}
+.htitle{flex:1;font-size:14px;font-weight:800;line-height:1.2;}
+.htitle small{display:block;font-size:9.5px;font-weight:600;opacity:.85;}
+.hicons{display:flex;gap:6px;}
+
+.scr-body{flex:1;overflow-y:auto;padding:12px 12px 78px;}
+.scr-body::-webkit-scrollbar{width:0;}
+
+/* sticky filter bar */
+.stickybar{position:sticky;top:-1px;z-index:5;background:var(--bg);padding-bottom:8px;margin:-2px -12px 10px;padding-left:12px;padding-right:12px;padding-top:2px;}
+.searchrow{display:flex;gap:6px;margin-bottom:6px;}
+.search-input{flex:1;background:#fff;border:1.5px solid var(--gray-bd);border-radius:9px;
+  padding:8px 10px;font-size:12px;color:var(--gray-t);display:flex;align-items:center;gap:6px;}
+.pill{background:#fff;border:1.5px solid var(--gray-bd);border-radius:9px;padding:8px 10px;font-size:11px;
+  font-weight:700;color:var(--dark);display:flex;align-items:center;gap:4px;white-space:nowrap;}
+
+/* unified 2-state tab (fix #1: 3 kieu tab -> 1 chuan) */
+.tabs2{display:flex;gap:6px;background:#EDEFF3;padding:3px;border-radius:9px;}
+.tab2{flex:1;text-align:center;padding:7px 4px;border-radius:7px;font-size:11.5px;font-weight:700;color:var(--gray-t);cursor:pointer;}
+.tab2.active{background:var(--brand);color:#fff;}
+
+/* date group */
+.dgroup{position:sticky;top:78px;z-index:4;background:var(--dark);color:#fff;font-size:10.5px;font-weight:700;
+  padding:5px 10px;border-radius:6px;margin:10px 0 8px;letter-spacing:.3px;}
+
+/* generic card */
+.card{background:#fff;border:1px solid var(--gray-bd);border-radius:12px;padding:12px;margin-bottom:10px;
+  box-shadow:0 1px 2px rgba(0,0,0,.04);}
+.card:active{transform:scale(.99);}
+
+/* list row (danh sach phieu) */
+.lrow{background:#fff;border:1px solid var(--gray-bd);border-radius:12px;padding:11px 12px;margin-bottom:8px;cursor:pointer;transition:.12s;}
+.lrow:active{background:var(--brand-l);}
+.lrow-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;}
+.lrow-code{font-size:13px;font-weight:800;color:var(--dark);}
+.lrow-sub{font-size:10.5px;color:var(--gray-t);margin-top:1px;}
+.badge{display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:800;padding:3px 7px;border-radius:5px;white-space:nowrap;}
+.b-rfid{background:var(--rfid-l);color:var(--rfid-d);}
+.b-warn{background:var(--warn-l);color:#92400E;}
+.b-brand{background:var(--brand-l);color:var(--brand-d);}
+.b-danger{background:var(--danger-l);color:var(--danger);}
+.progress-wrap{display:flex;align-items:center;gap:8px;}
+.progress-track{flex:1;height:7px;background:#EEF0F3;border-radius:4px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--brand-d),var(--brand));border-radius:4px;}
+.progress-label{font-size:10px;font-weight:700;color:var(--gray-t);white-space:nowrap;}
+
+/* unified summary card (fix #3: gop card navy fill + outline ve 1 chuan) */
+.sumcard{background:linear-gradient(135deg,var(--brand-d),var(--brand));border-radius:13px;padding:13px 14px;color:#fff;margin-bottom:10px;}
+.sumcard-top{display:flex;justify-content:space-between;font-size:10px;font-weight:700;opacity:.9;margin-bottom:6px;}
+.sumcard .progress-track{background:rgba(255,255,255,.25);}
+.sumcard .progress-fill{background:#fff;}
+.sumcard-foot{display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-size:11px;font-weight:700;}
+
+/* action bar */
+.actionbar{display:flex;gap:8px;margin-bottom:12px;}
+.abtn{flex:1;min-height:42px;border-radius:10px;font-size:11.5px;font-weight:800;display:flex;align-items:center;
+  justify-content:center;gap:6px;cursor:pointer;border:none;}
+.abtn-outline{background:#fff;border:1.5px solid var(--gray-bd);color:var(--dark);}
+.abtn-rfid{background:linear-gradient(120deg,var(--rfid-d),var(--rfid));color:#fff;}
+
+/* weight circle — signature motif for kho nguyen lieu (fix #5: them don vi kg) */
+.wcircle{width:46px;height:46px;border-radius:50%;border:2.5px solid var(--brand);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;flex-shrink:0;background:#fff;}
+.wcircle.warn{border-color:var(--warn);}
+.wcircle.danger{border-color:var(--danger);}
+.wcircle b{font-size:12.5px;font-weight:800;color:var(--dark);line-height:1;}
+.wcircle span{font-size:6.5px;color:var(--gray-t);font-weight:700;letter-spacing:.2px;}
+
+/* vertical position tag — fix #11: tuong phan thap -> dam mau */
+.postag{writing-mode:vertical-rl;text-orientation:mixed;background:var(--dark);color:#fff;font-size:9.5px;
+  font-weight:800;padding:5px 3px;border-radius:5px;letter-spacing:.4px;flex-shrink:0;}
+
+/* roll row (chi tiet phieu list) */
+.rollrow{background:#fff;border:1px solid var(--gray-bd);border-radius:12px;padding:10px;margin-bottom:8px;
+  display:flex;gap:10px;align-items:stretch;cursor:pointer;}
+.rollrow-mid{flex:1;min-width:0;}
+.rollrow-top{display:flex;justify-content:space-between;align-items:flex-start;gap:6px;}
+.rollrow-name{font-size:12px;font-weight:800;color:var(--dark);}
+.rollrow-meta{font-size:10px;color:var(--gray-t);margin-top:2px;}
+.rollrow-tags{display:flex;gap:5px;margin-top:7px;}
+.rollrow-del{width:26px;height:26px;border-radius:7px;background:var(--danger-l);color:var(--danger);
+  display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;align-self:flex-start;border:none;cursor:pointer;}
+
+/* split QR / RFID badges — fix #4: tach badge "Da dan" chung thanh 2 rieng */
+.tag-qr{background:var(--brand-l);color:var(--brand-d);font-size:8.5px;font-weight:800;padding:2px 6px;border-radius:5px;display:flex;align-items:center;gap:2px;}
+.tag-rfid{background:var(--rfid-l);color:var(--rfid-d);font-size:8.5px;font-weight:800;padding:2px 6px;border-radius:5px;display:flex;align-items:center;gap:2px;}
+.tag-none{background:#F1F3F6;color:var(--gray-t);font-size:8.5px;font-weight:700;padding:2px 6px;border-radius:5px;}
+
+/* confirm delete overlay — fix #8: xac nhan truoc khi xoa */
+.confirm-overlay{position:absolute;inset:0;background:rgba(10,14,20,.5);display:none;align-items:center;justify-content:center;z-index:30;padding:26px;}
+.confirm-overlay.show{display:flex;}
+.confirm-box{background:#fff;border-radius:16px;padding:20px 18px;width:100%;max-width:250px;text-align:center;
+  box-shadow:0 20px 40px rgba(0,0,0,.3);}
+.confirm-box .ci{font-size:32px;margin-bottom:10px;}
+.confirm-box h4{font-size:13px;font-weight:800;margin-bottom:6px;color:var(--dark);}
+.confirm-box p{font-size:11px;color:var(--gray-t);margin-bottom:16px;line-height:1.55;}
+.confirm-actions{display:flex;gap:8px;}
+.confirm-btn{flex:1;min-height:40px;border-radius:9px;font-size:11.5px;font-weight:800;border:none;cursor:pointer;}
+.cb-cancel{background:#F1F3F6;color:var(--dark);}
+.cb-danger{background:var(--danger);color:#fff;}
+
+/* FAB */
+.fab{
+  position:absolute; right:16px; bottom:88px; width:52px; height:52px; border-radius:16px;
+  background:linear-gradient(145deg,var(--brand),var(--brand-d)); color:#fff; font-size:22px;
+  display:flex; align-items:center; justify-content:center; box-shadow:0 8px 18px rgba(94,179,50,.5);
+  cursor:pointer; z-index:6; border:none;
+}
+.fab:active{transform:scale(.93);}
+
+/* bottom app nav */
+.app-bottomnav{
+  position:absolute; left:0; right:0; bottom:0; height:60px; background:#fff;
+  border-top:1px solid var(--gray-bd); display:flex; align-items:center; z-index:6;
+}
+.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:8.5px;
+  font-weight:700;color:var(--gray-2);cursor:pointer;padding-top:4px;}
+.bn-item.active{color:var(--brand-d);}
+.bn-ico{font-size:16px;}
+.bn-center{position:relative;top:-16px;}
+.bn-center .bn-ico{
+  width:46px;height:46px;border-radius:50%;background:linear-gradient(145deg,var(--rfid),var(--rfid-d));
+  color:#fff;display:flex;align-items:center;justify-content:center;font-size:19px;
+  box-shadow:0 6px 14px rgba(8,145,178,.5);border:3px solid #fff;
+}
+
+/* RFID pulse rings */
+.pulse-wrap{position:relative;width:150px;height:150px;margin:14px auto 10px;display:flex;align-items:center;justify-content:center;}
+.pulse-ring{position:absolute;border-radius:50%;border:2px solid var(--rfid);opacity:0;animation:pulse 2.2s ease-out infinite;}
+.pulse-ring:nth-child(2){animation-delay:.6s;}
+.pulse-ring:nth-child(3){animation-delay:1.2s;}
+@keyframes pulse{0%{width:30px;height:30px;opacity:.8;}100%{width:150px;height:150px;opacity:0;}}
+.pulse-core{width:64px;height:64px;border-radius:50%;background:linear-gradient(145deg,var(--rfid),var(--rfid-d));
+  display:flex;align-items:center;justify-content:center;font-size:26px;color:#fff;box-shadow:0 6px 20px rgba(8,145,178,.5);z-index:2;}
+.pulse-core.calm{animation:none;}
+
+/* stat chips row */
+.statrow{display:flex;gap:6px;margin:12px 0;}
+.statchip{flex:1;text-align:center;border-radius:10px;padding:8px 4px;}
+.statchip b{display:block;font-size:15px;font-weight:800;}
+.statchip span{font-size:8px;color:var(--gray-t);font-weight:700;text-transform:uppercase;}
+.sc-green{background:var(--brand-l);} .sc-green b{color:var(--brand-d);}
+.sc-warn{background:var(--warn-l);} .sc-warn b{color:#92400E;}
+.sc-red{background:var(--danger-l);} .sc-red b{color:var(--danger);}
+.sc-gray{background:#F1F3F6;} .sc-gray b{color:var(--gray-t);}
+
+.scanfeed{display:flex;flex-direction:column-reverse;gap:6px;}
+.scanitem{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--gray-bd);border-radius:9px;
+  padding:8px 10px;animation:slidein .25s ease;}
+@keyframes slidein{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:translateY(0);}}
+.scanitem .si-ico{width:26px;height:26px;border-radius:7px;background:var(--brand-l);color:var(--brand-d);
+  display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+.scanitem.warn .si-ico{background:var(--warn-l);color:#92400E;}
+.scanitem .si-body{flex:1;}
+.scanitem .si-code{font-size:11px;font-weight:800;color:var(--dark);}
+.scanitem .si-epc{font-size:9px;color:var(--gray-t);}
+.scanitem .si-w{font-size:9px;color:var(--gray-t);font-weight:700;flex-shrink:0;text-align:right;}
+
+.sticky-cta{position:absolute;left:0;right:0;bottom:60px;padding:10px 12px;background:linear-gradient(0deg,#fff 70%,rgba(255,255,255,0));z-index:6;}
+.cta-btn{width:100%;min-height:46px;border-radius:11px;background:linear-gradient(120deg,var(--brand-d),var(--brand));
+  color:#fff;font-size:13px;font-weight:800;border:none;cursor:pointer;box-shadow:0 6px 16px rgba(94,179,50,.4);}
+
+/* EPC field */
+.epc-box{background:var(--rfid-l);border:1.5px solid var(--rfid);border-radius:11px;padding:12px;margin:10px 0;}
+.epc-box .epc-label{font-size:9.5px;font-weight:800;color:var(--rfid-d);text-transform:uppercase;letter-spacing:.5px;display:flex;justify-content:space-between;align-items:center;}
+.epc-box .epc-code{font-size:13px;font-weight:700;color:var(--dark);margin-top:4px;letter-spacing:.3px;}
+.epc-box.empty{background:#F1F3F6;border-color:var(--gray-bd);}
+.epc-box.empty .epc-label{color:var(--gray-t);}
+
+/* form field label-value rows (chi tiet cuon vai) */
+.formrow{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-bd);font-size:11.5px;}
+.formrow:last-child{border-bottom:none;}
+.formrow span{color:var(--gray-t);}
+.formrow b{color:var(--dark);font-weight:700;text-align:right;}
+.formgroup-title{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--gray-t);margin:12px 0 4px;}
+.formgroup-title:first-child{margin-top:0;}
+
+/* map grid */
+.kpi-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px;}
+.wgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;}
+.wcell{border-radius:12px;background:var(--brand-l);border:1.5px solid var(--brand);
+  display:flex;flex-direction:column;gap:4px;padding:10px;cursor:pointer;position:relative;}
+.wcell.full{background:var(--brand);border-color:var(--brand-d);}
+.wcell.full .wc-name,.wcell.full .wc-fill,.wcell.full .wc-sub{color:#fff;}
+.wcell.issue{border-color:var(--danger);background:#FEF2F2;}
+.wcell.issue::after{content:'⚠ lệch tồn';position:absolute;top:8px;right:8px;font-size:8px;font-weight:800;color:var(--danger);}
+.wc-name{font-size:12.5px;font-weight:800;color:var(--brand-d);}
+.wc-sub{font-size:9px;color:var(--gray-t);font-weight:600;}
+.wc-fill-row{display:flex;align-items:center;justify-content:space-between;margin-top:2px;}
+.wc-fill{font-size:10px;font-weight:800;color:var(--brand-d);}
+.wc-cov{font-size:8.5px;font-weight:800;background:rgba(255,255,255,.7);border-radius:5px;padding:2px 5px;color:var(--rfid-d);}
+
+/* stock cards */
+.stockcard{background:#fff;border:1px solid var(--gray-bd);border-radius:11px;padding:10px 12px;margin-bottom:8px;}
+.stockcard-top{display:flex;justify-content:space-between;font-size:12.5px;font-weight:800;color:var(--dark);margin-bottom:6px;}
+.stockcard-row{display:flex;justify-content:space-between;font-size:10.5px;color:var(--gray-t);margin-bottom:6px;}
+.rfidcov{display:flex;align-items:center;gap:6px;}
+.rfidcov .progress-track{background:var(--rfid-l);}
+.rfidcov .progress-fill{background:linear-gradient(90deg,var(--rfid-d),var(--rfid));}
+
+/* alerts dashboard (fix #13 — Phase 3, moi) */
+.alertcard{background:#fff;border:1.5px solid var(--gray-bd);border-radius:12px;padding:11px 12px;margin-bottom:9px;border-left-width:4px;}
+.alertcard.sev-high{border-left-color:var(--danger);}
+.alertcard.sev-mid{border-left-color:var(--warn);}
+.alertcard-top{display:flex;justify-content:space-between;align-items:flex-start;gap:6px;}
+.alertcard-title{font-size:12px;font-weight:800;color:var(--dark);}
+.alertcard-desc{font-size:10.5px;color:var(--gray-t);margin-top:3px;line-height:1.5;}
+.alertcard-meta{font-size:9.5px;color:var(--gray-2);margin-top:6px;font-weight:700;}
+
+/* empty state — fix #7 */
+.empty-wrap{display:flex;flex-direction:column;align-items:center;text-align:center;padding:44px 20px 20px;}
+.empty-ico{width:80px;height:80px;border-radius:22px;background:var(--brand-l);display:flex;align-items:center;
+  justify-content:center;font-size:34px;margin-bottom:16px;}
+.empty-title{font-size:14px;font-weight:800;color:var(--dark);margin-bottom:6px;}
+.empty-desc{font-size:11.5px;color:var(--gray-t);line-height:1.6;margin-bottom:18px;max-width:230px;}
+.empty-actions{display:flex;flex-direction:column;gap:8px;width:100%;max-width:220px;}
+
+/* home widget */
+.rfid-widget{background:linear-gradient(120deg,var(--rfid-d),var(--rfid) 80%);border-radius:14px;padding:14px;color:#fff;margin-bottom:12px;position:relative;overflow:hidden;}
+.rfid-widget::after{content:'';position:absolute;right:-30px;top:-30px;width:110px;height:110px;border-radius:50%;background:rgba(255,255,255,.08);}
+.rw-top{display:flex;justify-content:space-between;align-items:center;font-size:10.5px;font-weight:700;opacity:.9;}
+.rw-mid{display:flex;justify-content:space-between;align-items:flex-end;margin-top:8px;}
+.rw-mid b{font-size:22px;font-weight:900;}
+.rw-mid span{font-size:9.5px;opacity:.85;display:block;}
+.shortcut-card{background:linear-gradient(120deg,var(--brand-d),var(--brand));border-radius:13px;padding:13px 14px;
+  display:flex;align-items:center;gap:10px;color:#fff;margin-bottom:14px;cursor:pointer;}
+.shortcut-card .sc-ico{width:38px;height:38px;border-radius:11px;background:rgba(255,255,255,.2);display:flex;
+  align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.shortcut-card b{display:block;font-size:12.5px;}
+.shortcut-card small{font-size:10px;opacity:.85;}
+.shortcut-card .chev{margin-left:auto;font-size:16px;opacity:.8;}
+
+.menu-row{display:flex;align-items:center;gap:10px;padding:11px 4px;border-bottom:1px solid var(--gray-bd);cursor:pointer;}
+.menu-row:last-child{border-bottom:none;}
+.mr-ico{width:34px;height:34px;border-radius:9px;background:var(--brand-l);display:flex;align-items:center;
+  justify-content:center;font-size:15px;flex-shrink:0;}
+.menu-row b{font-size:12px;color:var(--dark);display:block;}
+.menu-row small{font-size:9.5px;color:var(--gray-t);}
+.menu-row .chev{margin-left:auto;color:var(--gray-2);}
+
+/* toast */
+.toastbox{position:absolute;left:12px;right:12px;bottom:70px;z-index:20;display:flex;flex-direction:column;gap:6px;
+  pointer-events:none;align-items:center;}
+.toast{background:var(--dark);color:#fff;font-size:11.5px;font-weight:700;padding:9px 14px;border-radius:9px;
+  box-shadow:0 6px 16px rgba(0,0,0,.3);animation:toastin .25s ease, toastout .3s ease 1.7s forwards;max-width:280px;text-align:center;}
+.toast.ok{background:var(--brand-d);} .toast.warn{background:#92400E;} .toast.err{background:var(--danger);}
+@keyframes toastin{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+@keyframes toastout{to{opacity:0;transform:translateY(-6px);}}
+
+/* device hw controls */
+.pda-hw-side{position:absolute;right:-3px;top:150px;width:6px;height:60px;background:linear-gradient(90deg,#3a3e46,#1a1c20);border-radius:0 4px 4px 0;}
+.pda-scan-trigger{
+  position:absolute;left:-6px;top:230px;width:11px;height:78px;border-radius:6px 0 0 6px;
+  background:linear-gradient(90deg,#d98f28,var(--accent-grip));cursor:pointer;box-shadow:inset 0 0 0 1px rgba(0,0,0,.2);
+}
+.pda-bottom-hw{display:flex;justify-content:space-around;align-items:center;padding-top:12px;}
+.pda-bottom-hw .hw-btn{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.06);
+  display:flex;align-items:center;justify-content:center;color:#7c8798;font-size:14px;cursor:pointer;border:1px solid rgba(255,255,255,.08);}
+.pda-bottom-hw .hw-btn:active{background:rgba(255,255,255,.15);}
+.pda-label{text-align:center;font-size:10px;color:var(--gray-t);font-weight:700;letter-spacing:.4px;margin-top:2px;}
+
+@media(max-width:760px){ .side-panel{order:2;width:336px;} }
+</style>
+</head>
+<body>
+
+<!-- ══════ SIDE PANEL ══════ -->
+<div class="side-panel">
+  <a href="../index.html">← Trang chủ</a>
+  <div class="sp-eyebrow">📡 TNG · Thiết kế nâng cấp RFID</div>
+  <div class="sp-title">Mô phỏng PDA <span>TO-BE</span></div>
+  <div class="sp-desc">Bản dựng tương tác trên khung thiết bị cầm tay Zebra-class cho app <b>Kho nguyên liệu</b>, áp dụng toàn bộ đề xuất nâng cấp: kích hoạt RFID song song QR, sửa 14 vấn đề UX AS-IS, đồng bộ 1 hệ màu/1 style card/1 style tab. Nhấn vào màn hình hoặc dùng menu bên dưới để điều hướng — nút vật lý dưới thiết bị hoạt động như back / home / trigger scan thật.</div>
+  <div class="sp-stats">
+    <div class="sp-stat"><b>9</b><span>Màn hình demo</span></div>
+    <div class="sp-stat"><b>14</b><span>Lỗi UX đã sửa</span></div>
+    <div class="sp-stat"><b>4</b><span>Màn hình RFID mới</span></div>
+  </div>
+
+  <div class="sp-nav-label">Điều hướng nhanh</div>
+  <div class="sp-nav" id="sidenav">
+    <button class="sp-btn active" data-nav="home"><span class="ico">🏠</span>Trang chủ<span class="tag tag-new">RFID widget</span></button>
+    <button class="sp-btn" data-nav="list"><span class="ico">📄</span>Danh sách BBGĐ<span class="tag tag-fix">Fix #1,2</span></button>
+    <button class="sp-btn" data-nav="detail"><span class="ico">📋</span>Chi tiết BBGĐ<span class="tag tag-fix">Fix #3,4,8</span></button>
+    <button class="sp-btn" data-nav="roll"><span class="ico">🧵</span>Chi tiết cuộn<span class="tag tag-new">RFID field</span></button>
+    <button class="sp-btn" data-nav="bulk"><span class="ico">📡</span>RFID Bulk Scan<span class="tag tag-new">Mới</span></button>
+    <button class="sp-btn" data-nav="position"><span class="ico">📍</span>Cập nhật vị trí<span class="tag tag-fix">Fix #2,7</span></button>
+    <button class="sp-btn" data-nav="map"><span class="ico">🗺️</span>Trực quan kho<span class="tag tag-fix">Fix #9</span></button>
+    <button class="sp-btn" data-nav="stock"><span class="ico">📊</span>Stock nguyên liệu</button>
+    <button class="sp-btn" data-nav="alerts"><span class="ico">🔔</span>Cảnh báo quản lý<span class="tag tag-new">Phase 3</span></button>
+  </div>
+
+  <div class="sp-legend">
+    <b>🟢 Xanh lá</b> — 1 màu hành động chính duy nhất cho toàn app (thay 3 màu cạnh tranh: xanh lá/xanh dương/navy AS-IS).<br>
+    <b>🔵 Xanh RFID (teal)</b> — mọi thao tác, field, badge, màn hình liên quan RFID mới, phân biệt tức thì với QR.<br>
+    <b>🔴 Đỏ</b> — chỉ dùng cho cảnh báo/xoá, luôn kèm bước xác nhận trước khi thực hiện.<br>
+    <b>Vòng tròn khối lượng (kg)</b> — mô-típ xuyên suốt, giữ nguyên từ AS-IS nhưng bổ sung đơn vị và viền cảnh báo khi lệch số liệu.
+  </div>
+</div>
+
+<!-- ══════ DEVICE ══════ -->
+<div class="pda-wrap">
+<div class="pda-device">
+  <div class="pda-hw-row">
+    <div class="pda-speaker"><span></span><span></span><span></span><span></span></div>
+    <div class="pda-antenna">UHF RFID</div>
+    <div class="pda-cam"></div>
+  </div>
+
+  <div class="pda-screen-frame">
+    <div class="pda-lcd">
+      <div class="pda-statusbar">
+        <span>09:41</span>
+        <span class="sb-rfid"><span class="sb-dot"></span>RFD4031 · 🔋79%</span>
+        <span>📶 🔋91%</span>
+      </div>
+
+      <div class="app-content" id="appContent">
+
+        <!-- ═══ HOME ═══ -->
+        <section class="scr active" data-screen="home">
+          <div class="scr-header">
+            <div class="htitle">TNG · Kho nguyên liệu<small>Chi nhánh: SC3 ⌄ · Nhân viên: Thu Hằng</small></div>
+            <div class="hicons"><button class="hbtn">🔔</button></div>
+          </div>
+          <div class="scr-body">
+            <div class="rfid-widget">
+              <div class="rw-top"><span>📡 Zebra RFD4031</span><span>● Đã kết nối</span></div>
+              <div class="rw-mid">
+                <div><b>2.104</b><span>Cuộn đã quét hôm nay</span></div>
+                <div><b>92%</b><span>RFID Coverage</span></div>
+              </div>
+            </div>
+            <div class="shortcut-card" data-nav="bulk">
+              <div class="sc-ico">📡</div>
+              <div><b>Scan RFID hàng loạt</b><small>Quét nhanh nhiều cuộn cùng lúc</small></div>
+              <div class="chev">›</div>
+            </div>
+
+            <div class="menu-row" data-nav="list"><div class="mr-ico">📋</div><div><b>Biên bản giám định</b><small>6 phiếu chờ duyệt</small></div><div class="chev">›</div></div>
+            <div class="menu-row" data-nav="list"><div class="mr-ico">🔄</div><div><b>Xuất chuyển mã hàng</b><small>3 phiếu hôm nay</small></div><div class="chev">›</div></div>
+            <div class="menu-row" data-nav="list"><div class="mr-ico">✂️</div><div><b>Xuất sản xuất</b><small>9 lệnh đang chờ</small></div><div class="chev">›</div></div>
+            <div class="menu-row" data-nav="position"><div class="mr-ico">📍</div><div><b>Cập nhật vị trí</b><small>Quét QR / RFID hàng loạt</small></div><div class="chev">›</div></div>
+
+            <div class="menu-row" data-nav="map"><div class="mr-ico">🗺️</div><div><b>Trực quan kho</b><small>Coverage RFID 92%</small></div><div class="chev">›</div></div>
+            <div class="menu-row" data-nav="stock"><div class="mr-ico">📊</div><div><b>Stock nguyên liệu</b><small>184 mã tồn kho</small></div><div class="chev">›</div></div>
+            <div class="menu-row" data-nav="alerts"><div class="mr-ico">🔔</div><div><b>Cảnh báo quản lý</b><small>4 exception cần xử lý</small></div><div class="chev">›</div></div>
+            <div class="menu-row" data-nav="bulk"><div class="mr-ico">🔍</div><div><b>Quét QR / RFID</b><small>Tự chuyển RFID khi có đầu đọc</small></div><div class="chev">›</div></div>
+          </div>
+        </section>
+
+        <!-- ═══ LIST (BBGĐ) ═══ -->
+        <section class="scr" data-screen="list">
+          <div class="scr-header">
+            <button class="hbtn" data-back>‹</button>
+            <div class="htitle">Biên bản giám định</div>
+            <div class="hicons"><button class="hbtn" data-home>⌂</button></div>
+          </div>
+          <div class="scr-body">
+            <div class="stickybar">
+              <div class="searchrow">
+                <div class="search-input">🔍 Tìm số BBGĐ, khách hàng…</div>
+                <div class="pill">Kho A ▾</div>
+              </div>
+              <div class="tabs2">
+                <div class="tab2 active">Chờ duyệt</div>
+                <div class="tab2">Đã nhập kho</div>
+              </div>
+            </div>
+
+            <div class="dgroup">📅 12/07/2026</div>
+            <div class="lrow" data-nav="detail">
+              <div class="lrow-top">
+                <div><div class="lrow-code">BBGĐ-2607-0312</div><div class="lrow-sub">Khách hàng Decathlon · Lot DL-4482</div></div>
+                <span class="badge b-rfid">📡 18/22 tag</span>
+              </div>
+              <div class="progress-wrap">
+                <div class="progress-track"><div class="progress-fill" style="width:82%"></div></div>
+                <div class="progress-label">18/22 cuộn</div>
+              </div>
+            </div>
+            <div class="lrow" data-nav="detail">
+              <div class="lrow-top">
+                <div><div class="lrow-code">BBGĐ-2607-0313</div><div class="lrow-sub">Khách hàng Nike · Lot NK-1190</div></div>
+                <span class="badge b-warn">🟠 Thiếu tag</span>
+              </div>
+              <div class="progress-wrap">
+                <div class="progress-track"><div class="progress-fill" style="width:34%;background:linear-gradient(90deg,#c98b1f,var(--warn));"></div></div>
+                <div class="progress-label">11/32 cuộn</div>
+              </div>
+            </div>
+
+            <div class="dgroup">📅 11/07/2026</div>
+            <div class="lrow" data-nav="detail">
+              <div class="lrow-top">
+                <div><div class="lrow-code">BBGĐ-2607-0298</div><div class="lrow-sub">Khách hàng Uniqlo · Lot UQ-7701</div></div>
+                <span class="badge b-brand">✅ Đủ tag</span>
+              </div>
+              <div class="progress-wrap">
+                <div class="progress-track"><div class="progress-fill" style="width:100%"></div></div>
+                <div class="progress-label">40/40 cuộn</div>
+              </div>
+            </div>
+          </div>
+          <button class="fab" data-nav="bulk">📡</button>
+        </section>
+
+        <!-- ═══ DETAIL (Chi tiet BBGD) ═══ -->
+        <section class="scr" data-screen="detail" style="position:relative;">
+          <div class="scr-header">
+            <button class="hbtn" data-back>‹</button>
+            <div class="htitle">BBGĐ-2607-0312<small>Decathlon · Lot DL-4482</small></div>
+            <div class="hicons"><button class="hbtn" data-home>⌂</button></div>
+          </div>
+          <div class="scr-body">
+            <div class="sumcard">
+              <div class="sumcard-top"><span>Tiến độ nhập kho</span><span>82%</span></div>
+              <div class="progress-track" style="height:9px;"><div class="progress-fill" style="width:82%"></div></div>
+              <div class="sumcard-foot"><span>18/22 cuộn đã ghi thẻ kho</span><span class="badge" style="background:rgba(255,255,255,.22);color:#fff;">📡 18/22 tag</span></div>
+            </div>
+
+            <div class="actionbar">
+              <button class="abtn abtn-outline" onclick="toast('📷 Đang mở camera quét QR…','ok')">📷 Quét QR</button>
+              <button class="abtn abtn-rfid" data-nav="bulk">📡 RFID Scan tất cả</button>
+            </div>
+
+            <div class="formgroup-title">Danh sách cuộn (22)</div>
+
+            <div class="rollrow" data-nav="roll">
+              <div class="wcircle"><b>55.9</b><span>KG</span></div>
+              <div class="rollrow-mid">
+                <div class="rollrow-top">
+                  <div><div class="rollrow-name">Chính TC-65/35</div><div class="rollrow-meta">Xanh Navy · Khổ 1.5m</div></div>
+                </div>
+                <div class="rollrow-tags"><span class="tag-qr">🏷️ QR</span><span class="tag-rfid">📡 RFID</span></div>
+              </div>
+              <div class="postag">4C-K3</div>
+              <button class="rollrow-del" onclick="event.stopPropagation();confirmDelete()">✕</button>
+            </div>
+
+            <div class="rollrow" data-nav="roll">
+              <div class="wcircle"><b>60.2</b><span>KG</span></div>
+              <div class="rollrow-mid">
+                <div class="rollrow-top">
+                  <div><div class="rollrow-name">Chính TC-65/35</div><div class="rollrow-meta">Xanh Navy · Khổ 1.5m</div></div>
+                </div>
+                <div class="rollrow-tags"><span class="tag-qr">🏷️ QR</span><span class="tag-rfid">📡 RFID</span></div>
+              </div>
+              <div class="postag">4C-K3</div>
+              <button class="rollrow-del" onclick="event.stopPropagation();confirmDelete()">✕</button>
+            </div>
+
+            <div class="rollrow" data-nav="roll">
+              <div class="wcircle warn"><b>48.1</b><span>KG</span></div>
+              <div class="rollrow-mid">
+                <div class="rollrow-top">
+                  <div><div class="rollrow-name">Lót TC-80/20</div><div class="rollrow-meta">Trắng ngà · Khổ 1.4m</div></div>
+                </div>
+                <div class="rollrow-tags"><span class="tag-qr">🏷️ QR</span><span class="tag-none">Chưa gắn RFID</span></div>
+              </div>
+              <div class="postag">4C-K5</div>
+              <button class="rollrow-del" onclick="event.stopPropagation();confirmDelete()">✕</button>
+            </div>
+
+            <div class="rollrow" data-nav="roll">
+              <div class="wcircle"><b>9.4</b><span>KG</span></div>
+              <div class="rollrow-mid">
+                <div class="rollrow-top">
+                  <div><div class="rollrow-name">Phối lưới 3D</div><div class="rollrow-meta">Đen · Khổ 1.2m</div></div>
+                </div>
+                <div class="rollrow-tags"><span class="tag-qr">🏷️ QR</span><span class="tag-rfid">📡 RFID</span></div>
+              </div>
+              <div class="postag">4C-K8</div>
+              <button class="rollrow-del" onclick="event.stopPropagation();confirmDelete()">✕</button>
+            </div>
+          </div>
+
+          <div class="confirm-overlay" id="confirmOverlay">
+            <div class="confirm-box">
+              <div class="ci">⚠️</div>
+              <h4>Xoá cuộn khỏi phiếu?</h4>
+              <p>Cuộn sẽ được gỡ khỏi Biên bản giám định BBGĐ-2607-0312. Hành động này không thể hoàn tác.</p>
+              <div class="confirm-actions">
+                <button class="confirm-btn cb-cancel" onclick="closeConfirm()">Huỷ</button>
+                <button class="confirm-btn cb-danger" onclick="doDelete()">Xoá</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ═══ ROLL DETAIL (Chi tiet cuon vai) ═══ -->
+        <section class="scr" data-screen="roll">
+          <div class="scr-header">
+            <button class="hbtn" data-back>‹</button>
+            <div class="htitle">Cuộn #TNG-VL-08842<small>Vị trí 4C-K3</small></div>
+            <div class="hicons"><button class="hbtn" data-home>⌂</button></div>
+          </div>
+          <div class="scr-body">
+            <div style="display:flex;justify-content:center;margin:6px 0 12px;">
+              <div class="wcircle" style="width:74px;height:74px;"><b style="font-size:19px;">55.9</b><span style="font-size:8px;">KG</span></div>
+            </div>
+
+            <div class="epc-box" id="epcBox">
+              <div class="epc-label"><span>📡 RFID EPC Tag</span><span class="badge b-brand" id="epcStatus">✅ Đã gắn</span></div>
+              <div class="epc-code mono">E280 11A0 4F3A 0921 0006</div>
+            </div>
+
+            <div class="card">
+              <div class="formgroup-title">Thông tin cuộn</div>
+              <div class="formrow"><span>Mã hàng</span><b>TN-8842</b></div>
+              <div class="formrow"><span>Lot</span><b>DL-4482</b></div>
+              <div class="formrow"><span>Phân loại</span><b>Chính TC-65/35</b></div>
+              <div class="formrow"><span>Màu / Khổ</span><b>Xanh Navy · 1.5m</b></div>
+              <div class="formrow"><span>Khối lượng</span><b>55.9 kg</b></div>
+
+              <div class="formgroup-title">Thông tin nhập kho</div>
+              <div class="formrow"><span>Khách hàng</span><b>Decathlon</b></div>
+              <div class="formrow"><span>Ngày nhập</span><b>11/07/2026</b></div>
+              <div class="formrow"><span>Vị trí</span><b>Kho A · 4C-K3</b></div>
+              <div class="formrow"><span>Trạng thái</span><span class="badge b-brand">Đang lưu kho</span></div>
+            </div>
+
+            <div class="actionbar">
+              <button class="abtn abtn-outline" onclick="toast('📷 Đổi QRCode thành công','ok')">🔁 Đổi mã QR</button>
+              <button class="abtn abtn-rfid" onclick="reattachRfid()">🔁 Đổi RFID</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ═══ RFID BULK SCAN ═══ -->
+        <section class="scr" data-screen="bulk">
+          <div class="scr-header rfid">
+            <button class="hbtn" data-back>‹</button>
+            <div class="htitle">Scan RFID hàng loạt<small>Biên bản BBGĐ-2607-0312</small></div>
+            <div class="hicons"><button class="hbtn" data-home>⌂</button></div>
+          </div>
+          <div class="scr-body" style="padding-bottom:120px;">
+            <div class="pulse-wrap" id="bulkPulse">
+              <div class="pulse-ring" style="width:150px;height:150px;top:0;left:0;"></div>
+              <div class="pulse-ring" style="width:150px;height:150px;top:0;left:0;"></div>
+              <div class="pulse-ring" style="width:150px;height:150px;top:0;left:0;"></div>
+              <div class="pulse-core calm" id="bulkCore">📡</div>
+            </div>
+            <div style="text-align:center;">
+              <button class="cta-btn" style="width:auto;padding:0 22px;" id="bulkToggle" onclick="toggleBulk()">▶ Bắt đầu quét</button>
+            </div>
+
+            <div class="statrow">
+              <div class="statchip sc-green"><b id="stKhop">18</b><span>Khớp</span></div>
+              <div class="statchip sc-warn"><b id="stThieu">4</b><span>Thiếu</span></div>
+              <div class="statchip sc-red"><b id="stLech">0</b><span>Lệch KL</span></div>
+              <div class="statchip sc-gray"><b id="stLoi">0</b><span>Tag lỗi</span></div>
+            </div>
+
+            <div class="scanfeed" id="scanFeed">
+              <div class="scanitem"><div class="si-ico">✅</div><div class="si-body"><div class="si-code">Cuộn #TNG-VL-08842</div><div class="si-epc mono">EPC E280 11A0 4F3A</div></div><div class="si-w">55.9 kg</div></div>
+              <div class="scanitem"><div class="si-ico">✅</div><div class="si-body"><div class="si-code">Cuộn #TNG-VL-08841</div><div class="si-epc mono">EPC E280 11A0 4F39</div></div><div class="si-w">60.2 kg</div></div>
+            </div>
+          </div>
+          <div class="sticky-cta"><button class="cta-btn" onclick="toast('✅ Đã lưu kết quả scan RFID','ok')">✅ Xác nhận &amp; Lưu</button></div>
+        </section>
+
+        <!-- ═══ POSITION UPDATE (Cap nhat vi tri) ═══ -->
+        <section class="scr" data-screen="position">
+          <div class="scr-header">
+            <button class="hbtn" data-back>‹</button>
+            <div class="htitle">Cập nhật vị trí<small>Kho A · Khu vực 4C</small></div>
+            <div class="hicons"><button class="hbtn" data-home>⌂</button></div>
+          </div>
+          <div class="scr-body">
+            <div class="stickybar">
+              <div class="searchrow"><div class="pill">Kho A ▾</div><div class="pill">Vị trí 4C ▾</div></div>
+            </div>
+            <div class="actionbar" style="margin-top:4px;">
+              <button class="abtn abtn-outline" onclick="toast('📷 Đang mở camera quét QR…','ok')">📷 Quét QRCode</button>
+              <button class="abtn abtn-rfid" onclick="toast('📡 Đưa đầu đọc RFID lại gần cuộn…','ok')">📡 Quét RFID hàng loạt</button>
+            </div>
+
+            <div class="empty-wrap">
+              <div class="empty-ico">📍</div>
+              <div class="empty-title">Chưa có cuộn nào được quét</div>
+              <div class="empty-desc">Quét mã QR từng cuộn hoặc dùng RFID hàng loạt để cập nhật vị trí nhanh cho nhiều cuộn cùng lúc tại khu vực 4C.</div>
+              <div class="empty-actions">
+                <button class="cta-btn" onclick="toast('📡 Bắt đầu quét RFID hàng loạt…','ok');go('bulk')">📡 Quét RFID hàng loạt</button>
+                <button class="abtn abtn-outline" style="width:100%;" onclick="toast('📷 Đang mở camera quét QR…','ok')">📷 Quét QRCode từng cuộn</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ═══ WAREHOUSE MAP ═══ -->
+        <section class="scr" data-screen="map">
+          <div class="scr-header">
+            <button class="hbtn" data-back>‹</button>
+            <div class="htitle">Trực quan kho<small>Kho A · Tổng 48 khoang</small></div>
+            <div class="hicons"><button class="hbtn" data-home>⌂</button></div>
+          </div>
+          <div class="scr-body">
+            <div class="kpi-strip">
+              <div class="statchip sc-green"><b>3.206</b><span>Tổng tag</span></div>
+              <div class="statchip sc-green"><b>2.949</b><span>Tag OK</span></div>
+              <div class="statchip sc-warn"><b>257</b><span>Tag lỗi</span></div>
+              <div class="statchip sc-gray"><b>92%</b><span>Coverage</span></div>
+            </div>
+            <div class="wgrid">
+              <div class="wcell full" onclick="toast('📦 Khoang 4C-K3 · 42 cuộn · 100% RFID','ok')">
+                <div class="wc-name">4C-K3</div><div class="wc-sub">TC-65/35 · Navy</div>
+                <div class="wc-fill-row"><span class="wc-fill">42 cuộn</span><span class="wc-cov">100%</span></div>
+              </div>
+              <div class="wcell" onclick="toast('📦 Khoang 4C-K5 · 26 cuộn · 58% RFID','ok')">
+                <div class="wc-name">4C-K5</div><div class="wc-sub">TC-80/20 · Trắng ngà</div>
+                <div class="wc-fill-row"><span class="wc-fill">26 cuộn</span><span class="wc-cov">58%</span></div>
+              </div>
+              <div class="wcell issue" onclick="toast('⚠ Khoang 4C-K7 · lệch tồn 3 cuộn, cần kiểm tra','warn')">
+                <div class="wc-name">4C-K7</div><div class="wc-sub">Phối lưới 3D</div>
+                <div class="wc-fill-row"><span class="wc-fill">18 cuộn</span><span class="wc-cov">74%</span></div>
+              </div>
+              <div class="wcell full" onclick="toast('📦 Khoang 4C-K8 · 36 cuộn','ok')">
+                <div class="wc-name">4C-K8</div><div class="wc-sub">TC-65/35 · Đen</div>
+                <div class="wc-fill-row"><span class="wc-fill">36 cuộn</span><span class="wc-cov">100%</span></div>
+              </div>
+              <div class="wcell" onclick="toast('📦 Khoang 5A-K1 · 12 cuộn','ok')">
+                <div class="wc-name">5A-K1</div><div class="wc-sub">Lót Rib 2×1</div>
+                <div class="wc-fill-row"><span class="wc-fill">12 cuộn</span><span class="wc-cov">33%</span></div>
+              </div>
+              <div class="wcell full" onclick="toast('📦 Khoang 5A-K3 · 40 cuộn','ok')">
+                <div class="wc-name">5A-K3</div><div class="wc-sub">TC-65/35 · Be</div>
+                <div class="wc-fill-row"><span class="wc-fill">40 cuộn</span><span class="wc-cov">100%</span></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ═══ STOCK ═══ -->
+        <section class="scr" data-screen="stock">
+          <div class="scr-header">
+            <button class="hbtn" data-back>‹</button>
+            <div class="htitle">Stock nguyên liệu<small>Kho A · 184 mã</small></div>
+            <div class="hicons"><button class="hbtn" data-home>⌂</button></div>
+          </div>
+          <div class="scr-body">
+            <div class="stickybar">
+              <div class="searchrow">
+                <div class="search-input">🔍 Tìm mã, khách hàng…</div>
+              </div>
+              <div class="searchrow" style="margin-bottom:0;">
+                <div class="pill">Tất cả kho ▾</div>
+                <div class="pill" style="color:var(--rfid-d);border-color:var(--rfid);">📡 RFID: Thiếu tag ▾</div>
+              </div>
+            </div>
+
+            <div class="stockcard">
+              <div class="stockcard-top"><span>Chính TC-65/35</span><span>412 cuộn · 23.980 kg</span></div>
+              <div class="stockcard-row"><span>Xanh Navy · Khổ 1.5m</span><span>Tồn 14 ngày</span></div>
+              <div class="rfidcov"><span style="font-size:9.5px;color:var(--rfid-d);font-weight:800;">RFID</span>
+                <div class="progress-track"><div class="progress-fill" style="width:96%"></div></div>
+                <span style="font-size:10px;font-weight:800;color:var(--rfid-d);">96%</span></div>
+            </div>
+            <div class="stockcard">
+              <div class="stockcard-top"><span>Lót TC-80/20</span><span>186 cuộn · 8.940 kg</span></div>
+              <div class="stockcard-row"><span>Trắng ngà · Khổ 1.4m</span><span>Tồn 38 ngày</span></div>
+              <div class="rfidcov"><span style="font-size:9.5px;color:var(--rfid-d);font-weight:800;">RFID</span>
+                <div class="progress-track"><div class="progress-fill" style="width:58%"></div></div>
+                <span style="font-size:10px;font-weight:800;color:var(--rfid-d);">58%</span></div>
+            </div>
+            <div class="stockcard">
+              <div class="stockcard-top"><span>Phối lưới 3D</span><span>94 cuộn · 1.120 kg</span></div>
+              <div class="stockcard-row"><span>Đen</span><span>Tồn 5 ngày</span></div>
+              <div class="rfidcov"><span style="font-size:9.5px;color:var(--rfid-d);font-weight:800;">RFID</span>
+                <div class="progress-track"><div class="progress-fill" style="width:100%"></div></div>
+                <span style="font-size:10px;font-weight:800;color:var(--rfid-d);">100%</span></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ═══ ALERTS DASHBOARD (Phase 3, moi) ═══ -->
+        <section class="scr" data-screen="alerts">
+          <div class="scr-header rfid">
+            <button class="hbtn" data-back>‹</button>
+            <div class="htitle">Cảnh báo quản lý<small>13 nhà máy · Cập nhật realtime</small></div>
+            <div class="hicons"><button class="hbtn" data-home>⌂</button></div>
+          </div>
+          <div class="scr-body">
+            <div class="kpi-strip">
+              <div class="statchip sc-red"><b>4</b><span>Exception</span></div>
+              <div class="statchip sc-warn"><b>2</b><span>Lệch tồn</span></div>
+              <div class="statchip sc-warn"><b>2</b><span>Tồn &gt;30 ngày</span></div>
+              <div class="statchip sc-green"><b>92%</b><span>Coverage</span></div>
+            </div>
+
+            <div class="alertcard sev-high">
+              <div class="alertcard-top"><div class="alertcard-title">⚠️ Khoang 4C-K7 lệch tồn 3 cuộn</div><span class="badge b-danger">Cao</span></div>
+              <div class="alertcard-desc">RFID đếm được 18 cuộn nhưng hệ thống ghi nhận 21 cuộn — chênh lệch 3 cuộn cần đối chiếu thủ công.</div>
+              <div class="alertcard-meta">Phát hiện 2 giờ trước · Kho A</div>
+            </div>
+            <div class="alertcard sev-high">
+              <div class="alertcard-top"><div class="alertcard-title">⚠️ 2 cuộn tồn kho &gt;30 ngày chưa gắn tag</div><span class="badge b-danger">Cao</span></div>
+              <div class="alertcard-desc">Cuộn #TNG-VL-07621, #TNG-VL-07622 nhập kho từ 08/06/2026, chưa gắn RFID và chưa xuất.</div>
+              <div class="alertcard-meta">Phát hiện hôm nay · Kho B</div>
+            </div>
+            <div class="alertcard sev-mid">
+              <div class="alertcard-top"><div class="alertcard-title">🟠 BBGĐ-2607-0313 thiếu tag quá hạn</div><span class="badge b-warn">Trung bình</span></div>
+              <div class="alertcard-desc">Chỉ 11/32 cuộn được gắn RFID sau 2 ngày kể từ khi giám định — vượt SLA gắn tag nội bộ.</div>
+              <div class="alertcard-meta">Phát hiện 6 giờ trước · Kho A</div>
+            </div>
+            <div class="alertcard sev-mid">
+              <div class="alertcard-top"><div class="alertcard-title">🟠 Khoang 5A-K1 coverage thấp (33%)</div><span class="badge b-warn">Trung bình</span></div>
+              <div class="alertcard-desc">Chỉ 4/12 cuộn tại khoang này có RFID tag hợp lệ, cần rà soát gắn bổ sung.</div>
+              <div class="alertcard-meta">Phát hiện hôm qua · Kho A</div>
+            </div>
+          </div>
+        </section>
+
+      </div><!-- /app-content -->
+
+      <div class="toastbox" id="toastBox"></div>
+
+      <div class="app-bottomnav">
+        <div class="bn-item active" data-nav="home" data-bn><span class="bn-ico">🏠</span>Trang chủ</div>
+        <div class="bn-item" data-nav="map" data-bn><span class="bn-ico">🗺️</span>Kho</div>
+        <div class="bn-item bn-center" data-nav="bulk" data-bn><span class="bn-ico">📡</span></div>
+        <div class="bn-item" data-nav="stock" data-bn><span class="bn-ico">📊</span>Tồn kho</div>
+        <div class="bn-item" data-nav="alerts" data-bn><span class="bn-ico">🔔</span>Cảnh báo</div>
+      </div>
+    </div><!-- /pda-lcd -->
+  </div><!-- /pda-screen-frame -->
+
+  <div class="pda-scan-trigger" title="Trigger scan RFID vật lý" onclick="physicalTrigger()"></div>
+  <div class="pda-hw-side"></div>
+
+  <div class="pda-bottom-hw">
+    <div class="hw-btn" data-back title="Back">◁</div>
+    <div class="hw-btn" data-home title="Home">◯</div>
+    <div class="hw-btn" title="Recent">▢</div>
+  </div>
+</div>
+<div class="pda-label">Zebra-class Android PDA · UHF RFID Sled · 4.3″</div>
+</div>
+
+<script>
+const content = document.getElementById('appContent');
+const screens = [...content.querySelectorAll('.scr')];
+let stack = ['home'];
+
+function render(){
+  const cur = stack[stack.length-1];
+  screens.forEach(s => s.classList.toggle('active', s.dataset.screen === cur));
+  document.querySelectorAll('[data-bn]').forEach(b => b.classList.toggle('active', b.dataset.nav === cur));
+  document.querySelectorAll('.sp-btn').forEach(b => b.classList.toggle('active', b.dataset.nav === cur));
+}
+function go(id){ stack.push(id); render(); }
+function goReset(id){ stack = [id]; render(); }
+function goBack(){ if(stack.length>1){ stack.pop(); render(); } }
+function goHome(){ stack = ['home']; render(); }
+
+document.addEventListener('click', e => {
+  const navEl = e.target.closest('[data-nav]');
+  if(navEl){
+    const id = navEl.dataset.nav;
+    if(navEl.hasAttribute('data-bn') || navEl.classList.contains('sp-btn')) goReset(id);
+    else go(id);
+    return;
+  }
+  if(e.target.closest('[data-back]')){ goBack(); return; }
+  if(e.target.closest('[data-home]')){ goHome(); return; }
+});
+
+function toast(msg, type){
+  const box = document.getElementById('toastBox');
+  const t = document.createElement('div');
+  t.className = 'toast ' + (type||'');
+  t.textContent = msg;
+  box.appendChild(t);
+  setTimeout(()=>t.remove(), 2000);
+}
+
+/* ── Confirm delete (fix #8) ── */
+function confirmDelete(){ document.getElementById('confirmOverlay').classList.add('show'); }
+function closeConfirm(){ document.getElementById('confirmOverlay').classList.remove('show'); }
+function doDelete(){
+  closeConfirm();
+  toast('🗑️ Đã xoá cuộn khỏi phiếu BBGĐ-2607-0312','ok');
+}
+
+/* ── Bulk scan simulation (weight reconciliation) ── */
+let bulkRunning = false, bulkTimer = null, bulkCount = 0;
+const rolls = [
+  {code:'TNG-VL-08843', w:'52.4 kg'}, {code:'TNG-VL-08844', w:'49.8 kg'},
+  {code:'TNG-VL-08845', w:'55.1 kg'}, {code:'TNG-VL-08846', w:'60.0 kg'}
+];
+function toggleBulk(){
+  bulkRunning = !bulkRunning;
+  const btn = document.getElementById('bulkToggle');
+  const core = document.getElementById('bulkCore');
+  const pulse = document.getElementById('bulkPulse');
+  if(bulkRunning){
+    btn.textContent = '⏸ Dừng quét';
+    core.classList.remove('calm');
+    pulse.querySelectorAll('.pulse-ring').forEach(r=>r.style.animationPlayState='running');
+    bulkTimer = setInterval(addScan, 900);
+  } else {
+    btn.textContent = '▶ Bắt đầu quét';
+    core.classList.add('calm');
+    clearInterval(bulkTimer);
+  }
+}
+function addScan(){
+  if(bulkCount >= rolls.length){ toggleBulk(); toast('✅ Hoàn tất quét — 4 cuộn mới đã ghi nhận','ok'); return; }
+  const r = rolls[bulkCount++];
+  const feed = document.getElementById('scanFeed');
+  const roll = Math.random();
+  let ico='✅', cls='', epc='E280 11A0 4F' + (50+bulkCount);
+  if(roll>0.8){ ico='⚠'; cls='warn'; document.getElementById('stLech').textContent = +document.getElementById('stLech').textContent+1; }
+  else { document.getElementById('stKhop').textContent = +document.getElementById('stKhop').textContent+1;
+         document.getElementById('stThieu').textContent = Math.max(0, +document.getElementById('stThieu').textContent-1); }
+  const item = document.createElement('div');
+  item.className = 'scanitem ' + cls;
+  item.innerHTML = `<div class="si-ico">${ico}</div><div class="si-body"><div class="si-code">Cuộn #${r.code}</div><div class="si-epc mono">EPC ${epc}</div></div><div class="si-w">${r.w}</div>`;
+  feed.appendChild(item);
+  toast('🔔 Đã đọc cuộn #' + r.code, ico==='✅' ? 'ok':'warn');
+}
+
+/* ── Roll reattach RFID ── */
+function reattachRfid(){
+  const status = document.getElementById('epcStatus');
+  status.textContent = '⏳ Đang quét…';
+  toast('📡 Đưa đầu đọc lại gần thẻ RFID…','ok');
+  setTimeout(()=>{ status.textContent = '✅ Đã gắn'; toast('✅ Đổi RFID thành công','ok'); }, 1200);
+}
+
+/* ── Physical scan trigger button ── */
+function physicalTrigger(){
+  const cur = stack[stack.length-1];
+  if(cur === 'bulk'){ if(!bulkRunning) toggleBulk(); else addScan(); }
+  else if(cur === 'roll'){ reattachRfid(); }
+  else { toast('🔘 Trigger scan — mở nhanh Bulk Scan','ok'); go('bulk'); }
+}
+</script>
+</body>
+</html>

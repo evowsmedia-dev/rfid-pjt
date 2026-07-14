@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sitemap & Design Analysis – App Kho phụ liệu TNG</title>
+<style>
+:root{
+  --green:#5EB332; --green-d:#4a9228; --green-l:rgba(94,179,50,.09);
+  --blue:#2563EB; --orange:#EA8C00; --red:#DC2626; --purple:#7C3AED; --teal:#0891B2;
+  --gray-bg:#F5F6F8; --gray-bd:#DDE1E7; --gray-t:#6B7280; --gray-2:#94A3B8;
+  --dark:#1A2332; --white:#fff;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,sans-serif;
+  background:var(--gray-bg);color:var(--dark);line-height:1.5;}
+
+/* HEADER */
+.g-header{
+  background:linear-gradient(135deg,var(--green-d),var(--green) 60%,#7ecf3a);
+  color:#fff;padding:0 32px;height:56px;display:flex;align-items:center;gap:14px;
+  position:sticky;top:0;z-index:200;box-shadow:0 2px 10px rgba(0,0,0,.18);
+}
+.g-header a{color:#fff;text-decoration:none;background:rgba(255,255,255,.18);
+  padding:5px 14px;border-radius:7px;font-size:13px;font-weight:600;}
+.g-header a:hover{background:rgba(255,255,255,.3);}
+.g-header .title{font-size:15px;font-weight:700;flex:1;}
+
+/* BREADCRUMB */
+.bc{background:#fff;border-bottom:1px solid var(--gray-bd);padding:9px 32px;
+  font-size:12px;color:var(--gray-t);display:flex;gap:6px;align-items:center;}
+.bc a{color:var(--green-d);text-decoration:none;font-weight:600;}
+.bc .sep{color:var(--gray-bd);}
+
+/* PAGE LAYOUT */
+.page{max-width:1280px;margin:0 auto;padding:32px 32px 60px;}
+
+/* SECTION */
+.section{margin-bottom:48px;}
+.section-title{
+  font-size:11px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;
+  color:var(--gray-t);margin-bottom:20px;display:flex;align-items:center;gap:10px;
+}
+.section-title::after{content:'';flex:1;height:1px;background:var(--gray-bd);}
+.section-title span{white-space:nowrap;}
+
+/* CARD */
+.card{background:#fff;border:1px solid var(--gray-bd);border-radius:12px;
+  padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.06);}
+.card+.card{margin-top:16px;}
+.card h3{font-size:15px;font-weight:700;margin-bottom:12px;color:var(--dark);}
+.card p{font-size:13px;color:var(--gray-t);line-height:1.65;}
+
+/* BADGE */
+.badge{display:inline-flex;align-items:center;font-size:10px;font-weight:700;
+  padding:3px 8px;border-radius:4px;gap:3px;}
+.b-green{background:var(--green-l);color:var(--green-d);}
+.b-blue{background:#EFF6FF;color:var(--blue);}
+.b-orange{background:#FFF7ED;color:var(--orange);}
+.b-red{background:#FEF2F2;color:var(--red);}
+.b-purple{background:#F5F3FF;color:var(--purple);}
+.b-teal{background:#ECFEFF;color:var(--teal);}
+.b-gray{background:#F1F5F9;color:#475569;}
+
+/* ─── SITEMAP TREE ─── */
+.sitemap{overflow-x:auto;padding-bottom:8px;}
+.sm-root{
+  display:inline-flex;align-items:center;gap:10px;
+  background:var(--green);color:#fff;padding:12px 20px;border-radius:10px;
+  font-weight:800;font-size:14px;margin-bottom:24px;
+}
+.sm-section{margin-bottom:24px;}
+.sm-section-title{
+  font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;
+  color:var(--gray-t);margin-bottom:10px;padding-left:2px;
+}
+.sm-modules{display:flex;flex-wrap:wrap;gap:10px;}
+.sm-module{
+  background:#fff;border:1.5px solid var(--gray-bd);border-radius:10px;
+  width:220px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06);flex-shrink:0;
+}
+.sm-module-head{
+  background:var(--green);color:#fff;padding:10px 12px;
+  font-size:12px;font-weight:700;display:flex;align-items:center;gap:7px;
+}
+.sm-module-head.blue{background:var(--blue);}
+.sm-module-head.orange{background:var(--orange);}
+.sm-module-head.purple{background:var(--purple);}
+.sm-module-head.teal{background:var(--teal);}
+.sm-screen{
+  display:flex;align-items:flex-start;gap:6px;padding:8px 12px;
+  border-bottom:1px solid var(--gray-bd);font-size:11px;color:var(--dark);
+}
+.sm-screen:last-child{border-bottom:none;}
+.sm-screen-ico{font-size:13px;flex-shrink:0;margin-top:1px;}
+.sm-screen-body{}
+.sm-screen-name{font-weight:600;}
+.sm-screen-desc{font-size:10px;color:var(--gray-t);margin-top:1px;}
+.sm-sub{padding:4px 12px 0 28px;font-size:10px;color:var(--gray-2);}
+.sm-sub li{margin-bottom:2px;padding-left:4px;}
+
+/* CONNECTOR LINE */
+.sm-connector{
+  display:flex;align-items:center;gap:0;margin:0 0 12px 12px;
+}
+.sm-conn-line{width:20px;height:2px;background:var(--gray-bd);}
+
+/* FLOW ARROW between screens */
+.flow-arr{color:var(--gray-2);font-size:14px;margin:0 4px;}
+
+/* ─── DESIGN ANALYSIS GRID ─── */
+.da-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.da-grid.three{grid-template-columns:1fr 1fr 1fr;}
+.da-item{background:#fff;border:1.5px solid var(--gray-bd);border-radius:10px;padding:16px;}
+.da-item h4{font-size:12px;font-weight:700;margin-bottom:8px;color:var(--dark);}
+.da-item ul{list-style:none;padding:0;}
+.da-item ul li{font-size:12px;color:var(--gray-t);padding:4px 0;border-bottom:1px solid var(--gray-bd);display:flex;align-items:flex-start;gap:6px;}
+.da-item ul li:last-child{border-bottom:none;}
+.li-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:4px;}
+
+/* COLOR SWATCH */
+.swatch-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;}
+.swatch{width:48px;height:48px;border-radius:8px;border:1px solid rgba(0,0,0,.08);flex-shrink:0;}
+.swatch-info{font-size:10px;color:var(--gray-t);margin-top:3px;text-align:center;}
+
+/* FONT SAMPLE */
+.font-sample{
+  background:var(--gray-bg);border-radius:8px;padding:12px;margin-top:8px;
+}
+.fs-row{display:flex;align-items:baseline;gap:10px;margin-bottom:6px;}
+.fs-row:last-child{margin-bottom:0;}
+.fs-size{font-size:10px;color:var(--gray-t);min-width:30px;}
+.fs-text{color:var(--dark);}
+
+/* ─── ISSUE TABLE ─── */
+.issue-table{width:100%;border-collapse:collapse;font-size:13px;}
+.issue-table th{
+  background:var(--green);color:#fff;padding:10px 14px;text-align:left;
+  font-size:11px;font-weight:700;
+}
+.issue-table td{padding:10px 14px;border-bottom:1px solid var(--gray-bd);vertical-align:top;}
+.issue-table tr:last-child td{border-bottom:none;}
+.issue-table tr:nth-child(even) td{background:#FAFAFA;}
+.sev{font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;white-space:nowrap;}
+.sev-high{background:#FEE2E2;color:#991B1B;}
+.sev-mid {background:#FEF3C7;color:#92400E;}
+.sev-low {background:#F0FDF4;color:#166534;}
+
+/* ─── UPGRADE PROPOSAL ─── */
+.up-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.up-card{background:#fff;border:1.5px solid var(--gray-bd);border-radius:12px;overflow:hidden;}
+.up-card-head{
+  padding:12px 16px;font-size:12px;font-weight:800;
+  display:flex;align-items:center;gap:8px;
+  border-bottom:1px solid var(--gray-bd);
+}
+.up-card-body{padding:14px 16px;}
+.up-card-body p{font-size:12px;color:var(--gray-t);line-height:1.6;margin-bottom:10px;}
+.up-card-body ul{list-style:none;}
+.up-card-body ul li{font-size:12px;color:var(--dark);padding:5px 0;
+  border-bottom:1px solid var(--gray-bd);display:flex;align-items:flex-start;gap:7px;}
+.up-card-body ul li:last-child{border-bottom:none;}
+.up-ico{font-size:13px;flex-shrink:0;margin-top:1px;}
+
+/* ─── RFID DELTA TABLE ─── */
+.delta-table{width:100%;border-collapse:collapse;font-size:12px;}
+.delta-table th{background:var(--dark);color:#fff;padding:9px 12px;text-align:left;font-size:11px;font-weight:700;}
+.delta-table td{padding:9px 12px;border-bottom:1px solid var(--gray-bd);vertical-align:top;}
+.delta-table tr:nth-child(even) td{background:#FAFAFA;}
+.delta-table tr:last-child td{border-bottom:none;}
+.delta-add{background:#F0FDF4;border-left:3px solid var(--green);padding:4px 8px;border-radius:0 5px 5px 0;font-size:11px;color:#166534;font-weight:600;}
+.delta-mod{background:#EFF6FF;border-left:3px solid var(--blue);padding:4px 8px;border-radius:0 5px 5px 0;font-size:11px;color:#1E40AF;font-weight:600;}
+.delta-keep{font-size:11px;color:var(--gray-t);}
+
+/* PRIORITY MATRIX */
+.matrix{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;}
+.mx-cell{background:#fff;border:1.5px solid var(--gray-bd);border-radius:10px;padding:14px;}
+.mx-cell h5{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;}
+.mx-item{font-size:12px;color:var(--dark);padding:4px 0;display:flex;gap:6px;align-items:flex-start;}
+.mx-num{background:var(--gray-bg);color:var(--gray-t);font-size:10px;font-weight:800;
+  min-width:18px;height:18px;border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.mx-num.green{background:var(--green);color:#fff;}
+.mx-num.blue{background:var(--blue);color:#fff;}
+.mx-num.orange{background:var(--orange);color:#fff;}
+
+/* Summary header box */
+.summary-box{
+  background:linear-gradient(135deg,var(--green-d),var(--green));
+  color:#fff;border-radius:14px;padding:28px 32px;margin-bottom:32px;
+}
+.summary-box h1{font-size:24px;font-weight:800;margin-bottom:8px;}
+.summary-box p{font-size:13px;opacity:.88;line-height:1.6;max-width:780px;}
+.summary-box .meta{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;}
+.summary-box .meta-item{
+  background:rgba(255,255,255,.18);border-radius:7px;
+  padding:5px 12px;font-size:12px;font-weight:700;
+}
+
+/* Tab nav */
+.tab-nav{
+  display:flex;gap:4px;background:#fff;border:1px solid var(--gray-bd);
+  border-radius:10px;padding:4px;margin-bottom:24px;
+}
+.tab-btn{
+  flex:1;padding:9px 8px;border-radius:7px;border:none;background:none;
+  font-size:12px;font-weight:600;color:var(--gray-t);cursor:pointer;transition:all .15s;
+}
+.tab-btn.active{background:var(--green);color:#fff;}
+.tab-btn:hover:not(.active){background:var(--green-l);color:var(--green-d);}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+
+@media(max-width:900px){
+  .da-grid,.up-grid,.da-grid.three{grid-template-columns:1fr;}
+  .sm-modules{flex-direction:column;}
+  .sm-module{width:100%;}
+  .page{padding:20px 16px 60px;}
+  .g-header,.bc{padding-left:16px;padding-right:16px;}
+}
+</style>
+</head>
+<body>
+
+<div class="g-header">
+  <a href="../index.html">← Trang chủ</a>
+  <span class="title">Sitemap & Design Analysis – App Kho phụ liệu</span>
+  <span style="font-size:11px;opacity:.8;">v1.0 · 2026</span>
+</div>
+
+<div class="page">
+
+<!-- TAB NAV -->
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab(0,this)">🗺️ Sitemap</button>
+  <button class="tab-btn" onclick="switchTab(1,this)">🎨 Design AS-IS</button>
+  <button class="tab-btn" onclick="switchTab(2,this)">⚠️ Vấn đề UX</button>
+  <button class="tab-btn" onclick="switchTab(3,this)">📡 Đề xuất RFID</button>
+  <button class="tab-btn" onclick="switchTab(4,this)">🚀 Lộ trình</button>
+  <a class="tab-btn" href="pda-mockup-kho-PL.html">📡 Thiết kế mô phỏng PDA</a>
+</div>
+
+<!-- ════════════════════════════════════
+     TAB 0: SITEMAP
+════════════════════════════════════ -->
+<div class="tab-panel active" id="tab-0">
+
+<div class="section">
+  <div class="section-title"><span>🗺️ Sitemap tổng thể – App kho phụ liệu (AS-IS)</span></div>
+
+  <!-- Nhóm: Phụ liệu -->
+  <div class="sm-section">
+    <div class="sm-section-title">Nhóm A · Nghiệp vụ phụ liệu (Accessory Warehouse)</div>
+    <div class="sm-modules">
+
+      <div class="sm-module">
+        <div class="sm-module-head">📋 A1 · Giám định phụ liệu</div>
+        <div class="sm-screen">
+          <span class="sm-screen-ico">📄</span>
+          <div class="sm-screen-body">
+            <div class="sm-screen-name">Danh sách BBGĐ</div>
+            <div class="sm-screen-desc">Filter: kho · Tab: Chờ / Đã nhập · Search</div>
+          </div>
+        </div>
+        <div class="sm-screen">
+          <span class="sm-screen-ico">📋</span>
+          <div class="sm-screen-body">
+            <div class="sm-screen-name">Chi tiết giám định</div>
+            <div class="sm-screen-desc">Nhập số thùng · FAB camera scan · Danh sách carton</div>
+          </div>
+        </div>
+        <div class="sm-screen">
+          <span class="sm-screen-ico">📦</span>
+          <div class="sm-screen-body">
+            <div class="sm-screen-name">Chi tiết carton</div>
+            <div class="sm-screen-desc">Thông tin thùng · Danh sách phụ liệu · Đổi QR</div>
+          </div>
+        </div>
+        <div class="sm-screen">
+          <span class="sm-screen-ico">🔖</span>
+          <div class="sm-screen-body">
+            <div class="sm-screen-name">Chi tiết phụ liệu</div>
+            <div class="sm-screen-desc">Chủng loại · Màu · Cỡ · Qty · Đổi QRCode</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sm-module">
+        <div class="sm-module-head orange">🔄 A2 · Xuất chuyển mã hàng</div>
+        <div class="sm-screen">
+          <span class="sm-screen-ico">📄</span>
+          <div class="sm-screen-body">
+            <div class="sm-screen-name">Danh sách phiếu</div>
+            <div class="sm-screen-desc">Filter: kho · Mã phiếu / Ngày / Khách hàng</div>
+          </div>
+        </div>
+        <div class="sm-screen">
+          <span class="sm-screen-ico">📋</span>
+          <div class="sm-screen-body">
+            <div class="sm-screen-name">Chi tiết xuất chuyển</div>
+            <div class="sm-screen-desc">Header phiếu · Chi tiết lệnh grid · Gợi ý · Quét QR</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sm-module">
+        <div class="sm-module-head orange">🚛 A3 · Xuất lên chuyền may</div>
+        <div class="sm-screen">
+          <span class="sm-screen-ico">📄</span>
+          <div class="sm-screen-body">
+            <div class="sm-screen-name">Danh sách lệnh</div>
+            <div class="sm-screen-desc">Filter: kho, loại cấp · Date range · Group theo ngày</div>
+          </div>
+        </div>
+        <div class="sm-screen">
+          <span class="sm-screen-ico">📋</span>
+          <div class="sm-screen-body">
+            <div class="sm-screen-name">Chi tiết lệnh cấp</div>
+            <div class="sm-screen-desc">Header · Chi tiết lệnh grid · Gợi ý · Quét QR</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sm-module">
+        <div class="sm-module-head orange">📤 A4 · Xuất kho nội bộ</div>
+        <div class="sm-screen">
+          <span class="sm-screen-ico">📄</span>
+          <div class="sm-screen-body">
+            <div class="sm-screen-name">Danh sách phiếu</div>
+            <div class="sm-screen-desc">Mã phiếu · Mã hàng · Loại xuất · NCC · Ngày</div>
+          </div>
+        </div>
+        <div class="sm-screen">
+          <span class="sm-screen-ico">📋</span>
+          <div class="sm-screen-body">
+            <div class="sm-screen-name">Chi tiết xuất nội bộ</div>
+            <div class="sm-screen-desc">Header · Chi tiết lệnh · Danh sách NPL xuất · Quét QR</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sm-module">
+        <div class="sm-module-head blue">↩️ A5 · Nhập lại sau sản xuất</div>
+        <div class="sm-screen">
+          <span class="sm-screen-ico">📄</span>
+          <div class="sm-screen-body">
+            <div class="sm-screen-name">Danh sách phiếu</div>
+            <div class="sm-screen-desc">Filter: kho · Tab: Chờ / Đã nhập · Group ngày</div>
+          </div>
+        </div>
+        <div class="sm-screen">
+          <span class="sm-screen-ico">📋</span>
+          <div class="sm-screen-body">
+            <div class="sm-screen-name">Chi tiết nhập lại</div>
+            <div class="sm-screen-desc">Nhập số thùng · FAB camera · Danh sách carton</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sm-module">
+        <div class="sm-module-head blue">📥 A6 · Nhập chuyển nội bộ</div>
+        <div class="sm-screen">
+          <span class="sm-screen-ico">📄</span>
+          <div class="sm-screen-body">
+            <div class="sm-screen-name">Danh sách phiếu</div>
+            <div class="sm-screen-desc">Filter: kho · Tab: Chờ / Đã nhập · List phiếu</div>
+          </div>
+        </div>
+        <div class="sm-screen">
+          <span class="sm-screen-ico">📋</span>
+          <div class="sm-screen-body">
+            <div class="sm-screen-name">Chi tiết nhập nội bộ</div>
+            <div class="sm-screen-desc">Nhập số thùng · FAB camera · Danh sách carton</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Nhóm: Vị trí & Kho -->
+  <div class="sm-section">
+    <div class="sm-section-title">Nhóm B · Vị trí & Tồn kho</div>
+    <div class="sm-modules">
+
+      <div class="sm-module">
+        <div class="sm-module-head teal">📍 B1 · Cập nhật vị trí thùng</div>
+        <div class="sm-screen">
+          <span class="sm-screen-ico">📍</span>
+          <div class="sm-screen-body">
+            <div class="sm-screen-name">Màn hình cập nhật vị trí</div>
+            <div class="sm-screen-desc">Filter: kho, vị trí · Quét QR · Danh sách carton · CTA Cập nhật</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sm-module">
+        <div class="sm-module-head teal">🗺️ B2 · Trực quan kho PL</div>
+        <div class="sm-screen">
+          <span class="sm-screen-ico">🗺️</span>
+          <div class="sm-screen-body">
+            <div class="sm-screen-name">Dashboard trực quan</div>
+            <div class="sm-screen-desc">Filter: kho · Sơ đồ vị trí (grid) · Sức chứa %</div>
+          </div>
+        </div>
+        <div class="sm-screen">
+          <span class="sm-screen-ico">📦</span>
+          <div class="sm-screen-body">
+            <div class="sm-screen-name">Chi tiết trực quan</div>
+            <div class="sm-screen-desc">Header thông tin vị trí · Danh sách carton</div>
+          </div>
+        </div>
+        <div class="sm-screen">
+          <span class="sm-screen-ico">📋</span>
+          <div class="sm-screen-body">
+            <div class="sm-screen-name">Chi tiết carton</div>
+            <div class="sm-screen-desc">Thông tin thùng đầy đủ · Danh sách PL · Đổi QR</div>
+          </div>
+        </div>
+        <div class="sm-screen">
+          <span class="sm-screen-ico">🔖</span>
+          <div class="sm-screen-body">
+            <div class="sm-screen-name">Chi tiết phụ liệu</div>
+            <div class="sm-screen-desc">Số lượng · Đã xuất · Còn lại · Hạn SD · Đổi QR</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sm-module">
+        <div class="sm-module-head teal">📊 B3 · Stock kho phụ liệu</div>
+        <div class="sm-screen">
+          <span class="sm-screen-ico">📊</span>
+          <div class="sm-screen-body">
+            <div class="sm-screen-name">Bảng tồn kho</div>
+            <div class="sm-screen-desc">Table: Chủng loại / Màu / Cỡ / Nhập / Qty / Days</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Nhóm: Báo cáo & Tiện ích -->
+  <div class="sm-section">
+    <div class="sm-section-title">Nhóm C · Báo cáo & Tiện ích</div>
+    <div class="sm-modules">
+
+      <div class="sm-module">
+        <div class="sm-module-head purple">🔍 C1 · Quét QRCode</div>
+        <div class="sm-screen">
+          <span class="sm-screen-ico">📷</span>
+          <div class="sm-screen-body">
+            <div class="sm-screen-name">Camera scan</div>
+            <div class="sm-screen-desc">Quét QR Code phụ liệu → Xem chi tiết</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sm-module">
+        <div class="sm-module-head purple">⚠️ C2 · Theo dõi hạn sử dụng</div>
+        <div class="sm-screen">
+          <span class="sm-screen-ico">📅</span>
+          <div class="sm-screen-body">
+            <div class="sm-screen-name">Danh sách hạn SD</div>
+            <div class="sm-screen-desc">Filter: kho · Table: Chủng loại / Quy cách / SL / Hạn SD · Highlight đỏ/cam</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sm-module">
+        <div class="sm-module-head purple">📈 C3 · Báo cáo</div>
+        <div class="sm-screen">
+          <span class="sm-screen-ico">📈</span>
+          <div class="sm-screen-body">
+            <div class="sm-screen-name">Dashboard báo cáo</div>
+            <div class="sm-screen-desc">Chưa chụp được – inference từ menu</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sm-module">
+        <div class="sm-module-head purple">🌡️ C4 · Báo cáo nhiệt độ & độ ẩm</div>
+        <div class="sm-screen">
+          <span class="sm-screen-ico">🌡️</span>
+          <div class="sm-screen-body">
+            <div class="sm-screen-name">Dashboard nhiệt độ</div>
+            <div class="sm-screen-desc">Chưa chụp được – inference từ menu</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Navigation flow -->
+  <div class="card">
+    <h3>🔀 Navigation flow chính</h3>
+    <div style="display:flex;flex-direction:column;gap:12px;margin-top:4px;">
+      <div style="font-size:12px;color:var(--gray-t);line-height:1.8;">
+        <b style="color:var(--dark);">Entry point:</b> Menu home (danh sách list item) → Mỗi module<br>
+        <b style="color:var(--dark);">Pattern phổ biến:</b> List → Detail → Sub-detail (1–2 cấp)<br>
+        <b style="color:var(--dark);">Back navigation:</b> Nút "‹" góc trái header<br>
+        <b style="color:var(--dark);">Home:</b> Icon nhà ⌂ góc phải header mọi màn hình<br>
+        <b style="color:var(--dark);">Scan:</b> FAB (+) màu đỏ → Camera QR; hoặc CTA "Quét QRCode" cố định dưới<br>
+        <b style="color:var(--dark);">Gợi ý cuộn/thùng:</b> Button "Gợi ý" nội tuyến trong chi tiết lệnh
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen count summary -->
+  <div class="da-grid three" style="margin-top:16px;">
+    <div class="da-item">
+      <h4>📊 Tổng số màn hình (AS-IS)</h4>
+      <ul>
+        <li><span class="li-dot" style="background:var(--green)"></span>Nhóm A – Nghiệp vụ: <b>~14 màn</b></li>
+        <li><span class="li-dot" style="background:var(--blue)"></span>Nhóm B – Kho/Vị trí: <b>~6 màn</b></li>
+        <li><span class="li-dot" style="background:var(--purple)"></span>Nhóm C – Báo cáo: <b>~4 màn</b></li>
+        <li><span class="li-dot" style="background:var(--orange)"></span><b>Tổng: ~24 màn hình</b></li>
+      </ul>
+    </div>
+    <div class="da-item">
+      <h4>📐 Depth điều hướng</h4>
+      <ul>
+        <li><span class="li-dot" style="background:var(--green)"></span>Level 1: Menu home</li>
+        <li><span class="li-dot" style="background:var(--green)"></span>Level 2: Danh sách phiếu/lệnh</li>
+        <li><span class="li-dot" style="background:var(--orange)"></span>Level 3: Chi tiết phiếu</li>
+        <li><span class="li-dot" style="background:var(--red)"></span>Level 4: Chi tiết PL/carton</li>
+      </ul>
+    </div>
+    <div class="da-item">
+      <h4>🔄 Pattern lặp lại</h4>
+      <ul>
+        <li><span class="li-dot" style="background:var(--blue)"></span>Header xanh + back + home</li>
+        <li><span class="li-dot" style="background:var(--blue)"></span>Dropdown chọn kho</li>
+        <li><span class="li-dot" style="background:var(--blue)"></span>Tab: Chờ / Đã xử lý</li>
+        <li><span class="li-dot" style="background:var(--blue)"></span>FAB đỏ mở camera scan</li>
+        <li><span class="li-dot" style="background:var(--blue)"></span>CTA "Quét QRCode" ở footer</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+</div><!-- /tab-0 -->
+
+<!-- ════════════════════════════════════
+     TAB 1: DESIGN AS-IS
+════════════════════════════════════ -->
+<div class="tab-panel" id="tab-1">
+<div class="section">
+  <div class="section-title"><span>🎨 Mô tả Design System AS-IS</span></div>
+
+  <div class="da-grid" style="margin-bottom:16px;">
+    <!-- Color -->
+    <div class="card">
+      <h3>🎨 Color System</h3>
+      <p style="margin-bottom:12px;">App dùng 1 primary brand color nhất quán. Status colors không được định nghĩa rõ, dùng ngầm.</p>
+      <div class="swatch-row">
+        <div>
+          <div class="swatch" style="background:#5EB332;"></div>
+          <div class="swatch-info"><b>#5EB332</b><br>Primary<br>Header / CTA / Tab active</div>
+        </div>
+        <div>
+          <div class="swatch" style="background:#4a9228;"></div>
+          <div class="swatch-info"><b>#4a9228</b><br>Primary Dark<br>Gradient / Pressed</div>
+        </div>
+        <div>
+          <div class="swatch" style="background:#ffffff;border:1px solid #DDE1E7;"></div>
+          <div class="swatch-info"><b>#FFFFFF</b><br>Background<br>Screen / Card</div>
+        </div>
+        <div>
+          <div class="swatch" style="background:#F0F0F0;"></div>
+          <div class="swatch-info"><b>#F0F0F0</b><br>Section header<br>Divider bg</div>
+        </div>
+        <div>
+          <div class="swatch" style="background:#E53935;"></div>
+          <div class="swatch-info"><b>#E53935</b><br>FAB / Error<br>Cảnh báo hạn SD</div>
+        </div>
+        <div>
+          <div class="swatch" style="background:#2563EB;"></div>
+          <div class="swatch-info"><b>#2563EB</b><br>Sắp dùng (grid cell header)</div>
+        </div>
+        <div>
+          <div class="swatch" style="background:#1A2332;"></div>
+          <div class="swatch-info"><b>#1A2332</b><br>Dark text<br>Header title</div>
+        </div>
+        <div>
+          <div class="swatch" style="background:#6B7280;"></div>
+          <div class="swatch-info"><b>#6B7280</b><br>Gray text<br>Sub-label</div>
+        </div>
+      </div>
+      <div style="margin-top:14px;padding:10px 14px;background:var(--green-l);border-radius:8px;border-left:3px solid var(--green);">
+        <div style="font-size:12px;color:var(--dark);">
+          <b>Nhận xét:</b> Tab active dùng background fill xanh (text trắng) vs tab inactive text xanh (background trắng) — 2 biến thể tab inconsistent. Trực quan kho dùng hàng header cell màu xanh dương (#2563EB) khác brand, chưa đồng bộ với design system.
+        </div>
+      </div>
+    </div>
+
+    <!-- Typography -->
+    <div class="card">
+      <h3>📝 Typography</h3>
+      <p style="margin-bottom:12px;">Không có design token typography chính thức. Qua phân tích ảnh, các size ước tính:</p>
+      <div class="font-sample">
+        <div class="fs-row"><span class="fs-size">18px</span><span class="fs-text" style="font-size:18px;font-weight:700;color:var(--dark);">Tên màn hình (Header title)</span></div>
+        <div class="fs-row"><span class="fs-size">16px</span><span class="fs-text" style="font-size:16px;font-weight:700;color:var(--dark);">Mã phiếu PXVT-2026-07</span></div>
+        <div class="fs-row"><span class="fs-size">14px</span><span class="fs-text" style="font-size:14px;color:var(--dark);">Danh sách item – nhãn</span></div>
+        <div class="fs-row"><span class="fs-size">13px</span><span class="fs-text" style="font-size:13px;color:var(--gray-t);">Sub text · Mã hàng, ngày tháng</span></div>
+        <div class="fs-row"><span class="fs-size">12px</span><span class="fs-text" style="font-size:12px;color:var(--gray-t);">Chi tiết nhỏ · Size, màu, qty</span></div>
+        <div class="fs-row"><span class="fs-size">10px</span><span class="fs-text" style="font-size:10px;color:var(--gray-2);">Label cột bảng, section header</span></div>
+      </div>
+      <div style="margin-top:12px;padding:10px 14px;background:#FFF7ED;border-radius:8px;border-left:3px solid var(--orange);">
+        <div style="font-size:12px;color:var(--dark);">
+          <b>Vấn đề:</b> Font size không có token chuẩn, dùng system font mặc định Android/iOS. Các màn hình chi tiết (image 11, 13, 14) dùng grid 2 cột text nhỏ ~11px – khó đọc trên PDA màn 4".
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="da-grid" style="margin-bottom:16px;">
+    <!-- Layout & Spacing -->
+    <div class="card">
+      <h3>📐 Layout & Spacing</h3>
+      <ul style="list-style:none;">
+        <li style="padding:6px 0;border-bottom:1px solid var(--gray-bd);display:flex;gap:8px;font-size:13px;">
+          <span>📱</span><span><b>Viewport:</b> ~390×844px (iPhone-like). App chạy native Android → screen thực tế PDA ~480×800px</span>
+        </li>
+        <li style="padding:6px 0;border-bottom:1px solid var(--gray-bd);display:flex;gap:8px;font-size:13px;">
+          <span>📏</span><span><b>Margin ngang:</b> ~14–16px nhất quán trên hầu hết màn hình</span>
+        </li>
+        <li style="padding:6px 0;border-bottom:1px solid var(--gray-bd);display:flex;gap:8px;font-size:13px;">
+          <span>🗂️</span><span><b>List item height:</b> ~52–56px (vừa đủ tap target 44px)</span>
+        </li>
+        <li style="padding:6px 0;border-bottom:1px solid var(--gray-bd);display:flex;gap:8px;font-size:13px;">
+          <span>📊</span><span><b>Chi tiết lệnh (img 11,13,14):</b> 2-column grid card – mỗi ô ~150px, text dense, không có card border rõ ràng</span>
+        </li>
+        <li style="padding:6px 0;border-bottom:1px solid var(--gray-bd);display:flex;gap:8px;font-size:13px;">
+          <span>🗺️</span><span><b>Trực quan kho (img 6):</b> 2-column grid với card màu xanh – dense, khó scan nhanh</span>
+        </li>
+        <li style="padding:6px 0;display:flex;gap:8px;font-size:13px;">
+          <span>📋</span><span><b>Bảng stock/hạn SD (img 19,20):</b> Full-width table, 5 cột – overflow ngang trên màn nhỏ</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Components -->
+    <div class="card">
+      <h3>🧩 Components đang dùng</h3>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="padding:8px 12px;background:var(--gray-bg);border-radius:8px;font-size:12px;">
+          <b>Header bar</b> — Sticky, xanh gradient, title canh giữa, back trái, icon(s) phải (search 🔍, filter ▼, home 🏠)
+        </div>
+        <div style="padding:8px 12px;background:var(--gray-bg);border-radius:8px;font-size:12px;">
+          <b>Dropdown</b> — Select native OS, border xanh nhạt khi selected, full-width
+        </div>
+        <div style="padding:8px 12px;background:var(--gray-bg);border-radius:8px;font-size:12px;">
+          <b>Tab 2 trạng thái</b> — Active: fill xanh + text trắng; Inactive: text xanh + bg trắng. Chiều cao ~40px
+        </div>
+        <div style="padding:8px 12px;background:var(--gray-bg);border-radius:8px;font-size:12px;">
+          <b>List item row</b> — Icon trái, 2 dòng text (title bold + sub gray), giá trị phải, divider 1px
+        </div>
+        <div style="padding:8px 12px;background:var(--gray-bg);border-radius:8px;font-size:12px;">
+          <b>Section header</b> — Background xanh lá đậm, text trắng, nhóm theo ngày (09/07/2026)
+        </div>
+        <div style="padding:8px 12px;background:var(--gray-bg);border-radius:8px;font-size:12px;">
+          <b>FAB (+)</b> — Màu đỏ (#E53935), vị trí bottom-right, mở camera scan QR
+        </div>
+        <div style="padding:8px 12px;background:var(--gray-bg);border-radius:8px;font-size:12px;">
+          <b>CTA footer sticky</b> — "Quét QRCode" / "Cập nhật vị trí", fill xanh, full-width, height ~48px
+        </div>
+        <div style="padding:8px 12px;background:var(--gray-bg);border-radius:8px;font-size:12px;">
+          <b>Input text + button</b> — "Nhập số thùng" + "Thêm" button xanh, row layout
+        </div>
+        <div style="padding:8px 12px;background:var(--gray-bg);border-radius:8px;font-size:12px;">
+          <b>Data table</b> — Header row xanh lá, alternating white/gray, border-bottom divider
+        </div>
+        <div style="padding:8px 12px;background:var(--gray-bg);border-radius:8px;font-size:12px;">
+          <b>Detail info row</b> — Label trái, value phải canh phải, divider 1px — pattern "≡ form-like"
+        </div>
+        <div style="padding:8px 12px;background:var(--gray-bg);border-radius:8px;font-size:12px;">
+          <b>Chi tiết lệnh 2-col card</b> — Grid 2 cột, mỗi ô có title+sub+yêu cầu+xuất+Gợi ý link
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interaction patterns -->
+  <div class="card">
+    <h3>👆 Interaction patterns quan sát được</h3>
+    <div class="da-grid three" style="margin-top:8px;">
+      <div style="padding:12px;background:var(--gray-bg);border-radius:8px;">
+        <div style="font-size:12px;font-weight:700;margin-bottom:6px;color:var(--dark);">Scan flow</div>
+        <div style="font-size:11px;color:var(--gray-t);line-height:1.7;">
+          FAB đỏ → Camera QR scan<br>
+          Hoặc nhập thủ công số thùng<br>
+          Hoặc CTA "Quét QRCode" footer<br>
+          → Validate → Thêm vào danh sách
+        </div>
+      </div>
+      <div style="padding:12px;background:var(--gray-bg);border-radius:8px;">
+        <div style="font-size:12px;font-weight:700;margin-bottom:6px;color:var(--dark);">Gợi ý cuộn</div>
+        <div style="font-size:11px;color:var(--gray-t);line-height:1.7;">
+          Button "Gợi ý" trong mỗi ô lệnh<br>
+          Suggest thùng/PL theo lệnh<br>
+          User confirm → cập nhật xuất<br>
+          Hiển thị yêu cầu vs đã xuất
+        </div>
+      </div>
+      <div style="padding:12px;background:var(--gray-bg);border-radius:8px;">
+        <div style="font-size:12px;font-weight:700;margin-bottom:6px;color:var(--dark);">Đổi QRCode</div>
+        <div style="font-size:11px;color:var(--gray-t);line-height:1.7;">
+          CTA "Đổi QRCode" / "Đổi qrcode"<br>
+          Trong chi tiết carton hoặc PL<br>
+          → Scan QR mới thay thế<br>
+          Cập nhật toàn hệ thống
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div><!-- /tab-1 -->
+
+<!-- ════════════════════════════════════
+     TAB 2: UX ISSUES
+════════════════════════════════════ -->
+<div class="tab-panel" id="tab-2">
+<div class="section">
+  <div class="section-title"><span>⚠️ Nhận diện vấn đề UX hiện tại</span></div>
+
+  <div class="card" style="margin-bottom:16px;">
+    <div style="overflow-x:auto;">
+    <table class="issue-table">
+      <thead>
+        <tr>
+          <th style="width:32px;">#</th>
+          <th>Vấn đề</th>
+          <th>Màn hình</th>
+          <th>Mức độ</th>
+          <th>Tác động</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>1</b></td>
+          <td><b>Chi tiết lệnh 2-col grid quá dense.</b> Img 11, 13, 14: grid 2 cột với text ~11px, không có border card rõ, khó scan nhanh khi đứng ở kho. Người dùng phải cúi gần màn hình để đọc.</td>
+          <td>Xuất chuyển mã, Xuất lên chuyền, Xuất nội bộ</td>
+          <td><span class="sev sev-high">Cao</span></td>
+          <td>Chậm thao tác, dễ nhầm lệnh</td>
+        </tr>
+        <tr>
+          <td><b>2</b></td>
+          <td><b>FAB màu đỏ không đồng bộ brand.</b> FAB (+) dùng màu đỏ (#E53935) – xung đột với design language xanh lá. Người dùng mới có thể hiểu nhầm là nút "xóa" hoặc "lỗi".</td>
+          <td>Chi tiết GĐ, Nhập lại, Nhập nội bộ</td>
+          <td><span class="sev sev-mid">Trung bình</span></td>
+          <td>Confusion affordance</td>
+        </tr>
+        <tr>
+          <td><b>3</b></td>
+          <td><b>Không có trạng thái tiến độ (progress) ở màn danh sách.</b> List phiếu (img 3, 15, 17) chỉ show mã phiếu + ngày + khách hàng, không thấy % hoàn thành / số thùng đã quét. User phải mở từng phiếu mới biết tiến độ.</td>
+          <td>Danh sách tất cả modules</td>
+          <td><span class="sev sev-high">Cao</span></td>
+          <td>Không thể prioritize công việc</td>
+        </tr>
+        <tr>
+          <td><b>4</b></td>
+          <td><b>Bảng stock 5 cột (img 19) tràn ngang.</b> Trên PDA màn 4–5", bảng 5 cột (Chủng loại / Màu / Cỡ / Nhập / Qty / Days) bị cắt ngang, user phải scroll ngang – không tự nhiên trên thiết bị dọc.</td>
+          <td>Stock kho PL</td>
+          <td><span class="sev sev-mid">Trung bình</span></td>
+          <td>Khó đọc, dễ bỏ sót cột</td>
+        </tr>
+        <tr>
+          <td><b>5</b></td>
+          <td><b>Trực quan kho (img 6) dùng màu xanh dương (#2563EB) cho cell header</b> – khác hoàn toàn với brand green. Text trắng trên xanh dương nhỏ, padding thiếu. Grid 2 cột làm thông tin bị chật.</td>
+          <td>Trực quan kho PL</td>
+          <td><span class="sev sev-mid">Trung bình</span></td>
+          <td>Off-brand, thông tin dense</td>
+        </tr>
+        <tr>
+          <td><b>6</b></td>
+          <td><b>Không có feedback tức thì khi scan QR.</b> Sau khi quét QR, app xử lý nhưng không có loading indicator, success/error toast, hoặc animation xác nhận. User không biết scan có thành công không.</td>
+          <td>Tất cả màn scan</td>
+          <td><span class="sev sev-high">Cao</span></td>
+          <td>Người dùng scan lại nhiều lần, lỗi duplicate</td>
+        </tr>
+        <tr>
+          <td><b>7</b></td>
+          <td><b>Empty state "No data / Không có dữ liệu" không có hướng dẫn.</b> Img 2, 4, 5: màn hình trống chỉ text "No data" / "Không có dữ liệu", không có hành động tiếp theo, không giải thích vì sao trống.</td>
+          <td>Chi tiết GĐ, Cập nhật vị trí, Nhập lại</td>
+          <td><span class="sev sev-mid">Trung bình</span></td>
+          <td>User bị stuck, không biết phải làm gì</td>
+        </tr>
+        <tr>
+          <td><b>8</b></td>
+          <td><b>Không có bottom navigation bar.</b> Điều hướng giữa các module chính buộc user phải back về màn home (dùng icon ⌂). Không có shortcut nhanh giữa các chức năng thường dùng.</td>
+          <td>Toàn app</td>
+          <td><span class="sev sev-low">Thấp</span></td>
+          <td>Thao tác nhiều bước hơn cần thiết</td>
+        </tr>
+        <tr>
+          <td><b>9</b></td>
+          <td><b>Header title bị che bởi notch / status bar</b> trên một số thiết bị PDA. "TNGOffice" title bar của OS chồng lên app header (img 1–9 thấy cả 2 thanh).</td>
+          <td>Toàn app</td>
+          <td><span class="sev sev-mid">Trung bình</span></td>
+          <td>Mất 30–40px hiển thị trên màn hình nhỏ</td>
+        </tr>
+        <tr>
+          <td><b>10</b></td>
+          <td><b>Không có RFID field trong bất kỳ màn hình nào.</b> AS-IS thuần QR. Khi nâng cấp RFID cần thêm field EPC, trạng thái tag vào tất cả màn liên quan đến carton/PL.</td>
+          <td>Toàn app</td>
+          <td><span class="sev sev-high">Cao</span></td>
+          <td>Blocking cho roadmap RFID</td>
+        </tr>
+        <tr>
+          <td><b>11</b></td>
+          <td><b>Nút "Gợi ý" quá nhỏ (img 11, 13, 14).</b> Nằm inline trong grid cell 2 cột, font size nhỏ, tap target ước tính &lt;30px – không đạt tiêu chuẩn 44px tối thiểu cho PDA.</td>
+          <td>Chi tiết lệnh xuất</td>
+          <td><span class="sev sev-mid">Trung bình</span></td>
+          <td>Miss tap, cần thao tác nhiều lần</td>
+        </tr>
+        <tr>
+          <td><b>12</b></td>
+          <td><b>Search bar và filter không sticky.</b> Khi scroll danh sách dài (img 3, 10, 12, 15), search bar và dropdown kho bị scroll off. User phải scroll lên lại để thay đổi filter.</td>
+          <td>Tất cả màn danh sách</td>
+          <td><span class="sev sev-low">Thấp</span></td>
+          <td>UX kém trên danh sách dài</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</div>
+</div><!-- /tab-2 -->
+<!-- ════════════════════════════════════
+     TAB 3: RFID UPGRADE PROPOSAL
+════════════════════════════════════ -->
+<div class="tab-panel" id="tab-3">
+<div class="section">
+  <div class="section-title"><span>📡 Đề xuất nâng cấp tích hợp RFID</span></div>
+
+  <!-- Delta per screen -->
+  <div class="card" style="margin-bottom:16px;">
+    <h3>📋 Thay đổi theo từng màn hình – AS-IS QR → TO-BE QR + RFID</h3>
+    <div style="overflow-x:auto;margin-top:12px;">
+    <table class="delta-table">
+      <thead>
+        <tr>
+          <th>Màn hình</th>
+          <th>AS-IS (QR only)</th>
+          <th>TO-BE thêm (RFID)</th>
+          <th>Loại</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>Home – Menu chính</b></td>
+          <td class="delta-keep">Danh sách list item 12 chức năng</td>
+          <td><div class="delta-add">+ Widget RFID Status (online/pin/tag count)</div><div class="delta-add">+ Shortcut "Scan RFID hàng loạt"</div></td>
+          <td><span class="badge b-orange">Nâng cấp</span></td>
+        </tr>
+        <tr>
+          <td><b>Giám định PL – Danh sách BBGĐ</b></td>
+          <td class="delta-keep">Tab Chờ/Đã nhập · Search · Dropdown kho</td>
+          <td><div class="delta-add">+ Badge "X RFID tags" trên mỗi phiếu</div><div class="delta-add">+ Indicator trạng thái RFID: Đủ / Thiếu tag</div></td>
+          <td><span class="badge b-green">RFID mới</span></td>
+        </tr>
+        <tr>
+          <td><b>Chi tiết giám định (carton list)</b></td>
+          <td class="delta-keep">Nhập số thùng + FAB camera QR</td>
+          <td><div class="delta-add">+ FAB mở bottom sheet: QR scan / RFID scan</div><div class="delta-add">+ Hiển thị RFID EPC bên cạnh số thùng</div><div class="delta-add">+ Scan RFID hàng loạt nhiều thùng cùng lúc</div></td>
+          <td><span class="badge b-green">RFID mới</span></td>
+        </tr>
+        <tr>
+          <td><b>Chi tiết carton (thùng)</b></td>
+          <td class="delta-keep">Thông tin thùng · Danh sách PL · Đổi QR</td>
+          <td><div class="delta-add">+ Field "RFID EPC Tag" (highlight xanh)</div><div class="delta-add">+ Trạng thái tag: Đã gắn / Chưa gắn / Lỗi</div><div class="delta-add">+ Button "Gắn RFID" nếu chưa có</div></td>
+          <td><span class="badge b-green">RFID mới</span></td>
+        </tr>
+        <tr>
+          <td><b>Chi tiết phụ liệu</b></td>
+          <td class="delta-keep">Chủng loại · Màu · Cỡ · Qty · Đổi QR</td>
+          <td><div class="delta-add">+ Field "RFID" (EPC của PL/thùng chứa)</div><div class="delta-add">+ Lịch sử scan RFID (di chuyển vị trí)</div></td>
+          <td><span class="badge b-green">RFID mới</span></td>
+        </tr>
+        <tr>
+          <td><b>Cập nhật vị trí thùng</b></td>
+          <td class="delta-keep">Dropdown kho/vị trí · Quét QR · Cập nhật</td>
+          <td><div class="delta-add">+ Nút "Scan RFID" song song Quét QR</div><div class="delta-add">+ Scan hàng loạt nhiều thùng cùng lúc qua RFID</div><div class="delta-add">+ Field RFID trong danh sách carton</div></td>
+          <td><span class="badge b-orange">Nâng cấp</span></td>
+        </tr>
+        <tr>
+          <td><b>Trực quan kho PL</b></td>
+          <td class="delta-keep">Sơ đồ vị trí · Sức chứa %</td>
+          <td><div class="delta-add">+ Badge RFID tag count per ô vị trí</div><div class="delta-add">+ Indicator ô có tag lỗi (màu cam/đỏ)</div><div class="delta-add">+ KPI: RFID Coverage % tổng kho</div></td>
+          <td><span class="badge b-orange">Nâng cấp</span></td>
+        </tr>
+        <tr>
+          <td><b>Xuất chuyển mã / Xuất lên chuyền / Xuất nội bộ</b></td>
+          <td class="delta-keep">Chi tiết lệnh grid · Quét QR · Gợi ý</td>
+          <td><div class="delta-add">+ Nút "RFID Bulk Scan" trong action bar</div><div class="delta-add">+ Đối chiếu lệnh tự động sau khi scan bulk</div><div class="delta-add">+ Cảnh báo realtime: khớp / thiếu / sai lệnh</div><div class="delta-add">+ RFID tag trong danh sách NPL xuất</div></td>
+          <td><span class="badge b-green">RFID mới</span></td>
+        </tr>
+        <tr>
+          <td><b>Nhập lại sau SX / Nhập chuyển nội bộ</b></td>
+          <td class="delta-keep">Nhập số thùng + FAB QR scan</td>
+          <td><div class="delta-add">+ Scan RFID thùng khi nhập (đối chiếu ngay)</div><div class="delta-add">+ Hiển thị trạng thái RFID từng thùng</div></td>
+          <td><span class="badge b-orange">Nâng cấp</span></td>
+        </tr>
+        <tr>
+          <td><b>Stock kho PL</b></td>
+          <td class="delta-keep">Bảng tồn kho 5 cột</td>
+          <td><div class="delta-add">+ Cột RFID Coverage (%) theo mã hàng</div><div class="delta-add">+ Filter theo trạng thái RFID</div></td>
+          <td><span class="badge b-orange">Nâng cấp</span></td>
+        </tr>
+        <tr>
+          <td><b>Quét QRCode (menu item)</b></td>
+          <td class="delta-keep">Camera scan QR</td>
+          <td><div class="delta-add">+ Tích hợp RFID: scan tag → xem chi tiết</div><div class="delta-add">+ Chuyển tự động sang RFID scan khi có thiết bị</div></td>
+          <td><span class="badge b-orange">Nâng cấp</span></td>
+        </tr>
+        <tr>
+          <td><b>Màn hình RFID mới – Bulk Scan</b></td>
+          <td style="color:var(--gray-2);">Không tồn tại</td>
+          <td><div class="delta-add">+ Scan hàng loạt nhiều tag cùng lúc</div><div class="delta-add">+ Counter realtime: Khớp / Thiếu / Sai / Tag lỗi</div><div class="delta-add">+ Liên kết với lệnh xuất/nhập hiện tại</div></td>
+          <td><span class="badge b-green">Màn hình mới</span></td>
+        </tr>
+        <tr>
+          <td><b>Màn hình RFID mới – Tìm thùng Geiger</b></td>
+          <td style="color:var(--gray-2);">Không tồn tại</td>
+          <td><div class="delta-add">+ Geiger-counter mode: RSSI tăng khi gần tag</div><div class="delta-add">+ Tìm thùng/PL cụ thể trong kho lớn</div><div class="delta-add">+ Xác nhận tìm thấy → cập nhật vị trí</div></td>
+          <td><span class="badge b-green">Màn hình mới</span></td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <!-- UX improvements bundled with RFID -->
+  <div class="up-grid">
+    <div class="up-card">
+      <div class="up-card-head" style="background:var(--green-l);color:var(--green-d);">
+        <span>📡</span> Nâng cấp core: RFID Scan Engine
+      </div>
+      <div class="up-card-body">
+        <p>Tích hợp RFID Zebra RFD4031 vào core scan engine. FAB không còn chỉ mở camera – mở bottom sheet chọn phương thức:</p>
+        <ul>
+          <li><span class="up-ico">📷</span>Quét QR Code (giữ nguyên flow cũ)</li>
+          <li><span class="up-ico">📡</span>Scan RFID đơn lẻ (1 tag)</li>
+          <li><span class="up-ico">📡</span>Scan RFID hàng loạt (bulk mode)</li>
+          <li><span class="up-ico">🎯</span>Geiger-counter tìm thùng cụ thể</li>
+          <li><span class="up-ico">✏️</span>Nhập thủ công số thùng (giữ nguyên)</li>
+        </ul>
+      </div>
+    </div>
+    <div class="up-card">
+      <div class="up-card-head" style="background:#EFF6FF;color:var(--blue);">
+        <span>📋</span> Nâng cấp UX: Chi tiết lệnh
+      </div>
+      <div class="up-card-body">
+        <p>Redesign màn "Chi tiết lệnh" (hiện dùng 2-col grid dense) sang layout dễ đọc hơn trên PDA:</p>
+        <ul>
+          <li><span class="up-ico">📦</span>Card 1 cột / mỗi chủng loại PL – dễ scan mắt</li>
+          <li><span class="up-ico">📊</span>Progress bar yêu cầu/đã xuất nổi bật</li>
+          <li><span class="up-ico">🟢</span>Chip trạng thái RFID inline (Đủ tag / Thiếu)</li>
+          <li><span class="up-ico">🎯</span>Nút "Gợi ý" tăng tap target lên ≥44px</li>
+          <li><span class="up-ico">📡</span>Nút "RFID Scan tất cả" ở action bar</li>
+        </ul>
+      </div>
+    </div>
+    <div class="up-card">
+      <div class="up-card-head" style="background:#FFF7ED;color:var(--orange);">
+        <span>⚠️</span> Fix FAB + Feedback tức thì
+      </div>
+      <div class="up-card-body">
+        <p>FAB đổi màu về xanh lá (đồng bộ brand) với icon phù hợp hơn. Thêm feedback scan:</p>
+        <ul>
+          <li><span class="up-ico">✅</span>Toast success khi scan thành công: "✓ Đã thêm carton-8-..."</li>
+          <li><span class="up-ico">❌</span>Toast error khi scan sai: "⚠ Thùng không thuộc phiếu này"</li>
+          <li><span class="up-ico">🔄</span>Loading skeleton khi đang fetch dữ liệu</li>
+          <li><span class="up-ico">📡</span>RFID: beep + vibration phản hồi khi tag được đọc</li>
+          <li><span class="up-ico">🎨</span>FAB màu xanh lá (#5EB332), icon thay đổi theo context</li>
+        </ul>
+      </div>
+    </div>
+    <div class="up-card">
+      <div class="up-card-head" style="background:#F5F3FF;color:var(--purple);">
+        <span>📊</span> Nâng cấp: Danh sách phiếu
+      </div>
+      <div class="up-card-body">
+        <p>Thêm progress indicator và RFID status vào từng row trong danh sách phiếu:</p>
+        <ul>
+          <li><span class="up-ico">📊</span>Progress bar mini: X/Y thùng đã scan</li>
+          <li><span class="up-ico">🟢</span>Chip RFID: "X tags đã link" hoặc "Cần gắn tag"</li>
+          <li><span class="up-ico">📅</span>Ngày tháng group header giữ sticky khi scroll</li>
+          <li><span class="up-ico">🔍</span>Search + filter sticky khi scroll danh sách</li>
+          <li><span class="up-ico">🏷️</span>Badge loại phiếu màu sắc rõ ràng</li>
+        </ul>
+      </div>
+    </div>
+    <div class="up-card">
+      <div class="up-card-head" style="background:#ECFEFF;color:var(--teal);">
+        <span>🗺️</span> Nâng cấp: Trực quan kho
+      </div>
+      <div class="up-card-body">
+        <p>Đồng bộ màu sắc về brand green, thêm RFID overlay trên sơ đồ:</p>
+        <ul>
+          <li><span class="up-ico">🎨</span>Cell header về màu xanh lá (đồng bộ brand)</li>
+          <li><span class="up-ico">📡</span>Badge RFID tag count góc phải mỗi ô</li>
+          <li><span class="up-ico">⚠️</span>Indicator màu cam khi ô có tag lỗi</li>
+          <li><span class="up-ico">📊</span>KPI strip: Tổng tag / Tag OK / Tag lỗi / Coverage %</li>
+          <li><span class="up-ico">🔍</span>Tap vào ô → chi tiết khoang + danh sách RFID</li>
+        </ul>
+      </div>
+    </div>
+    <div class="up-card">
+      <div class="up-card-head" style="background:#F0FDF4;color:var(--green-d);">
+        <span>📋</span> Nâng cấp: Empty state & Onboarding
+      </div>
+      <div class="up-card-body">
+        <p>Thay "No data / Không có dữ liệu" bằng empty state có hướng dẫn:</p>
+        <ul>
+          <li><span class="up-ico">🖼️</span>Illustration nhỏ + tiêu đề + mô tả ngắn</li>
+          <li><span class="up-ico">▶️</span>CTA action: "Bắt đầu quét QR" hoặc "Scan RFID"</li>
+          <li><span class="up-ico">📡</span>Empty state RFID: "Chưa có thùng nào được gắn RFID tag"</li>
+          <li><span class="up-ico">ℹ️</span>Giải thích ngắn khi chọn kho chưa có dữ liệu</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div><!-- /tab-3 -->
+
+<!-- ════════════════════════════════════
+     TAB 4: ROADMAP
+════════════════════════════════════ -->
+<div class="tab-panel" id="tab-4">
+<div class="section">
+  <div class="section-title"><span>🚀 Lộ trình triển khai nâng cấp</span></div>
+
+  <!-- Priority matrix -->
+  <div class="card" style="margin-bottom:16px;">
+    <h3>📊 Ma trận ưu tiên (Impact × Effort)</h3>
+    <div class="matrix">
+      <div class="mx-cell" style="border-color:#DC2626;background:#FEF2F2;">
+        <h5 style="color:#991B1B;">🔴 High Impact · Low Effort – Làm ngay</h5>
+        <div class="mx-item"><span class="mx-num green">1</span>Thêm progress bar vào danh sách phiếu (X/Y thùng)</div>
+        <div class="mx-item"><span class="mx-num green">2</span>Toast feedback scan QR thành công/lỗi</div>
+        <div class="mx-item"><span class="mx-num green">3</span>Đổi FAB màu đỏ → xanh lá (#5EB332)</div>
+        <div class="mx-item"><span class="mx-num green">4</span>Sticky search + filter khi scroll</div>
+        <div class="mx-item"><span class="mx-num green">5</span>Empty state có hướng dẫn thay "No data"</div>
+      </div>
+      <div class="mx-cell" style="border-color:var(--orange);background:#FFF7ED;">
+        <h5 style="color:#92400E;">🟠 High Impact · High Effort – Phase 1</h5>
+        <div class="mx-item"><span class="mx-num orange">1</span>Tích hợp RFID scan engine (Zebra RFD4031 SDK)</div>
+        <div class="mx-item"><span class="mx-num orange">2</span>Màn hình RFID Bulk Scan (mới)</div>
+        <div class="mx-item"><span class="mx-num orange">3</span>Thêm RFID EPC field vào Chi tiết carton</div>
+        <div class="mx-item"><span class="mx-num orange">4</span>Redesign Chi tiết lệnh → 1-col card layout</div>
+        <div class="mx-item"><span class="mx-num orange">5</span>RFID Bulk scan cho Cập nhật vị trí</div>
+      </div>
+      <div class="mx-cell" style="border-color:var(--blue);background:#EFF6FF;">
+        <h5 style="color:#1E40AF;">🔵 Medium Impact · Low Effort – Phase 2</h5>
+        <div class="mx-item"><span class="mx-num blue">1</span>Trực quan kho: badge RFID + đồng bộ màu brand</div>
+        <div class="mx-item"><span class="mx-num blue">2</span>RFID status widget trên Home</div>
+        <div class="mx-item"><span class="mx-num blue">3</span>Bảng Stock: cột RFID Coverage %</div>
+        <div class="mx-item"><span class="mx-num blue">4</span>RFID field trong Chi tiết phụ liệu</div>
+        <div class="mx-item"><span class="mx-num blue">5</span>Filter RFID status trong tất cả danh sách</div>
+      </div>
+      <div class="mx-cell" style="border-color:var(--purple);background:#F5F3FF;">
+        <h5 style="color:#5B21B6;">🟣 Medium Impact · High Effort – Phase 3</h5>
+        <div class="mx-item"><span class="mx-num" style="background:var(--purple);color:#fff;">1</span>Màn hình Geiger Tìm thùng (mới)</div>
+        <div class="mx-item"><span class="mx-num" style="background:var(--purple);color:#fff;">2</span>Tích hợp IoT cảm biến nhiệt độ + RFID reader cố định</div>
+        <div class="mx-item"><span class="mx-num" style="background:var(--purple);color:#fff;">3</span>Dashboard RFID analytics (coverage trend)</div>
+        <div class="mx-item"><span class="mx-num" style="background:var(--purple);color:#fff;">4</span>Quản lý vòng đời RFID tag (gắn/thu hồi/hủy)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phase timeline -->
+  <div class="card">
+    <h3>📅 Timeline đề xuất</h3>
+    <div style="display:flex;flex-direction:column;gap:0;margin-top:12px;">
+
+      <div style="display:flex;gap:0;align-items:stretch;">
+        <div style="width:110px;flex-shrink:0;padding:14px 14px 14px 0;text-align:right;">
+          <div style="font-size:11px;font-weight:700;color:var(--green-d);">Ngay lập tức</div>
+          <div style="font-size:10px;color:var(--gray-t);">1–2 tuần</div>
+        </div>
+        <div style="width:3px;background:var(--green);flex-shrink:0;border-radius:2px;position:relative;">
+          <div style="position:absolute;top:16px;left:50%;transform:translateX(-50%);width:12px;height:12px;background:var(--green);border-radius:50%;"></div>
+        </div>
+        <div style="flex:1;padding:14px 0 14px 14px;border-bottom:1px solid var(--gray-bd);">
+          <div style="font-size:13px;font-weight:700;color:var(--dark);margin-bottom:6px;">Quick Wins (5 items)</div>
+          <div style="font-size:12px;color:var(--gray-t);">Progress bar · Toast feedback · FAB xanh · Sticky filter · Empty state. Không cần tích hợp RFID SDK, developer thực hiện trong 1–2 sprint.</div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:0;align-items:stretch;">
+        <div style="width:110px;flex-shrink:0;padding:14px 14px 14px 0;text-align:right;">
+          <div style="font-size:11px;font-weight:700;color:var(--orange);">Phase 1</div>
+          <div style="font-size:10px;color:var(--gray-t);">4–8 tuần</div>
+        </div>
+        <div style="width:3px;background:var(--orange);flex-shrink:0;border-radius:2px;position:relative;">
+          <div style="position:absolute;top:16px;left:50%;transform:translateX(-50%);width:12px;height:12px;background:var(--orange);border-radius:50%;"></div>
+        </div>
+        <div style="flex:1;padding:14px 0 14px 14px;border-bottom:1px solid var(--gray-bd);">
+          <div style="font-size:13px;font-weight:700;color:var(--dark);margin-bottom:6px;">Core RFID Integration</div>
+          <div style="font-size:12px;color:var(--gray-t);">Tích hợp Zebra RFD4031 SDK · Màn hình RFID Bulk Scan · RFID field trong Chi tiết carton · Redesign Chi tiết lệnh. Cần test thực tế trên thiết bị PDA tại 1 nhà máy pilot.</div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:0;align-items:stretch;">
+        <div style="width:110px;flex-shrink:0;padding:14px 14px 14px 0;text-align:right;">
+          <div style="font-size:11px;font-weight:700;color:var(--blue);">Phase 2</div>
+          <div style="font-size:10px;color:var(--gray-t);">4–6 tuần</div>
+        </div>
+        <div style="width:3px;background:var(--blue);flex-shrink:0;border-radius:2px;position:relative;">
+          <div style="position:absolute;top:16px;left:50%;transform:translateX(-50%);width:12px;height:12px;background:var(--blue);border-radius:50%;"></div>
+        </div>
+        <div style="flex:1;padding:14px 0 14px 14px;border-bottom:1px solid var(--gray-bd);">
+          <div style="font-size:13px;font-weight:700;color:var(--dark);margin-bottom:6px;">RFID Coverage & Visibility</div>
+          <div style="font-size:12px;color:var(--gray-t);">Trực quan kho + badge RFID · Stock table RFID coverage · RFID status widget · Rollout toàn bộ 13 nhà máy sau pilot thành công.</div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:0;align-items:stretch;">
+        <div style="width:110px;flex-shrink:0;padding:14px 14px 14px 0;text-align:right;">
+          <div style="font-size:11px;font-weight:700;color:var(--purple);">Phase 3</div>
+          <div style="font-size:10px;color:var(--gray-t);">6–10 tuần</div>
+        </div>
+        <div style="width:3px;background:var(--purple);flex-shrink:0;border-radius:2px;position:relative;">
+          <div style="position:absolute;top:16px;left:50%;transform:translateX(-50%);width:12px;height:12px;background:var(--purple);border-radius:50%;"></div>
+        </div>
+        <div style="flex:1;padding:14px 0 14px 14px;">
+          <div style="font-size:13px;font-weight:700;color:var(--dark);margin-bottom:6px;">Advanced RFID Features</div>
+          <div style="font-size:12px;color:var(--gray-t);">Geiger Tìm thùng · RFID tag lifecycle quản lý · Analytics dashboard · Tích hợp IoT reader cố định tại cổng kho. Cần đánh giá ROI sau Phase 1–2 trước khi commit.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Key technical requirements -->
+  <div class="da-grid" style="margin-top:16px;">
+    <div class="card">
+      <h3>⚙️ Yêu cầu kỹ thuật</h3>
+      <ul style="list-style:none;">
+        <li style="padding:6px 0;border-bottom:1px solid var(--gray-bd);display:flex;gap:8px;font-size:12px;"><span>📡</span><span><b>Zebra RFD4031 SDK:</b> Tích hợp DataWedge API hoặc EMDK (Android). Cần build APK riêng cho PDA.</span></li>
+        <li style="padding:6px 0;border-bottom:1px solid var(--gray-bd);display:flex;gap:8px;font-size:12px;"><span>💾</span><span><b>Database:</b> Thêm bảng rfid_tag (EPC, carton_id, status, last_scan). Foreign key với bảng carton/PL hiện tại.</span></li>
+        <li style="padding:6px 0;border-bottom:1px solid var(--gray-bd);display:flex;gap:8px;font-size:12px;"><span>🔌</span><span><b>API:</b> Thêm endpoints: POST /rfid/scan-bulk, GET /rfid/tag/{epc}, PUT /rfid/link-carton, GET /rfid/status.</span></li>
+        <li style="padding:6px 0;border-bottom:1px solid var(--gray-bd);display:flex;gap:8px;font-size:12px;"><span>📶</span><span><b>Offline support:</b> RFID scan khi mất WiFi → cache local → sync khi có kết nối (quan trọng cho kho rộng).</span></li>
+        <li style="padding:6px 0;display:flex;gap:8px;font-size:12px;"><span>🔒</span><span><b>Security:</b> Audit log mọi thao tác scan RFID (user, time, device, EPC, action).</span></li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>🧪 Tiêu chí thành công (KPI)</h3>
+      <ul style="list-style:none;">
+        <li style="padding:6px 0;border-bottom:1px solid var(--gray-bd);display:flex;gap:8px;font-size:12px;"><span>📊</span><span><b>RFID Coverage ≥ 95%:</b> Ít nhất 95% thùng phụ liệu nhập kho được gắn RFID tag trong 3 tháng đầu.</span></li>
+        <li style="padding:6px 0;border-bottom:1px solid var(--gray-bd);display:flex;gap:8px;font-size:12px;"><span>⚡</span><span><b>Thời gian scan giảm 60%:</b> Bulk RFID scan 42 thùng trong &lt;30 giây so với QR đơn lẻ &gt;5 phút.</span></li>
+        <li style="padding:6px 0;border-bottom:1px solid var(--gray-bd);display:flex;gap:8px;font-size:12px;"><span>❌</span><span><b>Lỗi xuất nhầm giảm 80%:</b> RFID đối chiếu lệnh tự động, cảnh báo ngay khi sai.</span></li>
+        <li style="padding:6px 0;border-bottom:1px solid var(--gray-bd);display:flex;gap:8px;font-size:12px;"><span>🎯</span><span><b>Tìm thùng &lt;2 phút:</b> Geiger mode thay thế tìm bằng mắt trong kho lớn.</span></li>
+        <li style="padding:6px 0;display:flex;gap:8px;font-size:12px;"><span>😊</span><span><b>UX score ≥ 4/5:</b> Khảo sát nhân viên kho sau 1 tháng sử dụng phiên bản nâng cấp.</span></li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+</div><!-- /tab-4 -->
+
+</div><!-- /page -->
+
+<footer style="text-align:center;padding:24px;font-size:11px;color:var(--gray-t);border-top:1px solid var(--gray-bd);background:#fff;">
+  TNG Office · Sitemap & Design Analysis · Kho phụ liệu RFID · v1.0 · 2026 ·
+  <a href="../index.html" style="color:var(--green-d);">← Index tổng</a> ·
+  <a href="03-ux-asistobe.html" style="color:var(--green-d);">Mô phỏng PDA →</a>
+</footer>
+
+<script>
+function switchTab(idx, btn){
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>{
+    b.classList.toggle('active', i===idx);
+  });
+  document.querySelectorAll('.tab-panel').forEach((p,i)=>{
+    p.classList.toggle('active', i===idx);
+  });
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+</script>
+</body>
+</html>

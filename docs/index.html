@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tre RFID – Hệ thống kho</title>
+  <style>
+    /* ── CSS Variables ── */
+    :root {
+      --green: #5EB332;
+      --green-dark: #4a9228;
+      --green-light: rgba(94, 179, 50, 0.10);
+      --gray-bg: #F5F6F8;
+      --gray-border: #DDE1E7;
+      --gray-text: #6B7280;
+      --dark: #1A2332;
+      --white: #FFFFFF;
+      --blue: #2563EB;
+      --orange: #EA8C00;
+      --red: #DC2626;
+      --purple: #7C3AED;
+      --teal: #0891B2;
+      --pink: #DB2777;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--gray-bg);
+      color: var(--dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(135deg, var(--green-dark) 0%, var(--green) 60%, #7ecf3a 100%);
+      color: var(--white);
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      flex-shrink: 0;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, .18);
+      z-index: 100;
+      position: sticky;
+      top: 0;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo-badge {
+      background: var(--white);
+      color: var(--green);
+      font-weight: 800;
+      font-size: 14px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      letter-spacing: .5px;
+    }
+    .header-title {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: .2px;
+    }
+    .header-meta {
+      font-size: 12px;
+      opacity: .82;
+    }
+
+    /* ── APP LAYOUT (Sidebar + Content) ── */
+    .app {
+      display: flex;
+      flex: 1;
+      min-height: 0;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: 280px;
+      background: var(--white);
+      border-right: 1px solid var(--gray-border);
+      overflow-y: auto;
+      flex-shrink: 0;
+      padding: 12px 0 24px;
+    }
+
+    .sidebar-header {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      color: var(--gray-text);
+      padding: 0 20px 12px 20px;
+      border-bottom: 1px solid var(--gray-border);
+      margin-bottom: 12px;
+    }
+
+    .sidebar-nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar-nav>ul>li {
+      margin-bottom: 2px;
+    }
+
+    .group-title {
+      display: block;
+      font-weight: 700;
+      font-size: 13px;
+      padding: 8px 20px 6px 20px;
+      color: var(--dark);
+      cursor: default;
+      letter-spacing: .3px;
+    }
+
+    .sidebar-nav ul ul {
+      padding-left: 20px;
+      margin-bottom: 6px;
+    }
+
+    .sidebar-nav ul ul li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 4px 20px 4px 20px;
+      font-size: 13px;
+      border-radius: 4px;
+      transition: background .15s;
+      cursor: default;
+    }
+
+    .sidebar-nav ul ul li:hover {
+      background: var(--green-light);
+    }
+
+    .sidebar-nav ul ul li a {
+      text-decoration: none;
+      color: var(--dark);
+      display: block;
+      flex: 1;
+      padding: 3px 0;
+    }
+
+    .sidebar-nav ul ul li a:hover {
+      color: var(--green-dark);
+    }
+
+    .status-badge {
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 12px;
+      white-space: nowrap;
+      margin-left: 8px;
+      flex-shrink: 0;
+    }
+
+    .status-done {
+      background: #DCFCE7;
+      color: #166534;
+    }
+    .status-wip {
+      background: #FEF3C7;
+      color: #92400E;
+    }
+    .status-todo {
+      background: #F1F5F9;
+      color: #64748B;
+    }
+
+    /* ── CONTENT ── */
+    .content {
+      flex: 1;
+      padding: 24px 32px 32px 32px;
+      overflow-y: auto;
+      background: var(--gray-bg);
+    }
+
+    .content-hero {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 24px 28px;
+      margin-bottom: 28px;
+      border: 1px solid var(--gray-border);
+    }
+
+    .content-hero h1 {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 6px;
+    }
+
+    .content-hero p {
+      color: var(--gray-text);
+      font-size: 15px;
+      line-height: 1.6;
+      max-width: 720px;
+    }
+
+    .content-hero .tags {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 12px;
+      border-radius: 20px;
+      letter-spacing: .4px;
+      text-transform: uppercase;
+      border: 1px solid transparent;
+    }
+    .tag-green {
+      background: var(--green-light);
+      color: var(--green-dark);
+      border-color: rgba(94, 179, 50, .3);
+    }
+    .tag-blue {
+      background: #EFF6FF;
+      color: var(--blue);
+      border-color: #BFDBFE;
+    }
+    .tag-orange {
+      background: #FFF7ED;
+      color: var(--orange);
+      border-color: #FED7AA;
+    }
+    .tag-purple {
+      background: #F5F3FF;
+      color: var(--purple);
+      border-color: #DDD6FE;
+    }
+
+    /* ── DIAGRAM SECTION ── */
+    .diagram-wrapper {
+      background: var(--white);
+      border: 1px solid var(--gray-border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .diagram-section {
+      border-bottom: 1px solid var(--gray-border);
+    }
+
+    .diagram-header {
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      background: #fafbfc;
+    }
+
+    .diagram-img-wrap {
+      min-height: 200px;
+      background: #f8fafc;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .diagram-img-wrap img {
+      max-width: 100%;
+      display: block;
+      padding: 16px;
+    }
+
+    .diagram-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: 40px 20px;
+      color: var(--gray-text);
+    }
+
+    .diagram-placeholder svg {
+      opacity: .35;
+    }
+    .diagram-placeholder p {
+      font-size: 13px;
+    }
+
+    .paste-url-btn {
+      background: var(--green);
+      color: #fff;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 7px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .15s;
+    }
+    .paste-url-btn:hover {
+      background: var(--green-dark);
+    }
+
+    .url-input-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-top: 4px;
+      flex-wrap: wrap;
+    }
+    .url-input-row input {
+      flex: 1;
+      min-width: 200px;
+      border: 1.5px solid var(--gray-border);
+      border-radius: 6px;
+      padding: 7px 12px;
+      font-size: 12px;
+      outline: none;
+    }
+    .url-input-row input:focus {
+      border-color: var(--green);
+    }
+    .url-input-row button {
+      background: var(--green);
+      color: #fff;
+      border: none;
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .15s;
+    }
+    .url-input-row button:hover {
+      background: var(--green-dark);
+    }
+    .url-input-row .cancel-btn {
+      background: #fff;
+      color: var(--gray-text);
+      border: 1px solid var(--gray-border);
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .url-input-row .cancel-btn:hover {
+      border-color: var(--gray-text);
+    }
+
+    .img-change-btn {
+      background: none;
+      border: 1px solid var(--gray-border);
+      color: var(--gray-text);
+      padding: 4px 14px;
+      border-radius: 5px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all .15s;
+    }
+    .img-change-btn:hover {
+      border-color: var(--green);
+      color: var(--green-dark);
+      background: var(--green-light);
+    }
+
+    .diagram-caption {
+      padding: 16px 20px;
+      font-size: 13px;
+      color: var(--gray-text);
+      text-align: center;
+      background: #fafbfc;
+    }
+    .diagram-caption strong {
+      color: var(--dark);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 20px 32px;
+      font-size: 12px;
+      color: var(--gray-text);
+      border-top: 1px solid var(--gray-border);
+      background: var(--white);
+      flex-shrink: 0;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      header {
+        padding: 0 16px;
+        flex-wrap: wrap;
+        height: auto;
+        min-height: 56px;
+      }
+      .header-title {
+        font-size: 14px;
+      }
+      .app {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--gray-border);
+        max-height: 260px;
+        overflow-y: auto;
+        padding: 8px 0;
+      }
+      .sidebar-nav ul ul {
+        padding-left: 16px;
+      }
+      .content {
+        padding: 16px;
+      }
+      .content-hero h1 {
+        font-size: 20px;
+      }
+      .url-input-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .url-input-row input {
+        min-width: unset;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo">
+      <span class="logo-badge">Tre</span>
+      <span class="header-title">Hệ thống quản lý kho – Tích hợp RFID</span>
+    </div>
+    <span class="header-meta">Phiên bản tài liệu v1.0 · 2026</span>
+  </header>
+
+  <!-- APP -->
+  <div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-header">📂 Tài liệu dự án</div>
+      <nav class="sidebar-nav">
+        <ul>
+          <!-- Nghiệp vụ -->
+          <li>
+            <span class="group-title">📋 Nghiệp vụ</span>
+            <ul>
+              <li><a href="02-process-flow.html">Sơ đồ quy trình nghiệp vụ</a><span class="status-badge status-done">Done</span></li>
+            </ul>
+          </li>
+
+          <!-- Đặc tả -->
+          <li>
+            <span class="group-title">📝 Đặc tả chức năng</span>
+            <ul>
+              <li><a href="05-kho-nguyen-lieu-analysis.html">FRD · Kho Nguyên liệu</a><span class="status-badge status-done">Done</span></li>
+              <li><a href="04-sitemap-analysis.html">FRD · Kho Phụ liệu</a><span class="status-badge status-done">Done</span></li>
+            </ul>
+          </li>
+
+          <!-- UX/UI -->
+          <li>
+            <span class="group-title">🎨 Thiết kế UX/UI</span>
+            <ul>
+              <li><a href="pda-mockup-kho-nguyen-lieu.html">Mô phỏng thiết bị PDA – Kho NL</a><span class="status-badge status-done">Done</span></li>
+              <li><a href="pda-mockup-kho-PL.html">Mô phỏng thiết bị PDA – Kho PL</a><span class="status-badge status-done">Done</span></li>
+            </ul>
+          </li>
+
+          <!-- Kỹ thuật -->
+          <li>
+            <span class="group-title">⚙️ Kỹ thuật</span>
+            <ul>
+              <li><a href="#">SRS · System Requirements</a><span class="status-badge status-todo">TODO</span></li>
+            </ul>
+          </li>
+
+          <!-- Kiểm thử -->
+          <li>
+            <span class="group-title">🧪 Kiểm thử QA</span>
+            <ul>
+              <li><a href="#">Test Plan tổng thể</a><span class="status-badge status-todo">TODO</span></li>
+              <li><a href="#">Test Cases – RFID Scan</a><span class="status-badge status-todo">TODO</span></li>
+              <li><a href="#">Test Cases – Từng module</a><span class="status-badge status-todo">TODO</span></li>
+              <li><a href="#">UAT Script &amp; Checklist</a><span class="status-badge status-todo">TODO</span></li>
+              <li><a href="#">Performance – Bulk RFID Scan</a><span class="status-badge status-todo">TODO</span></li>
+            </ul>
+          </li>
+
+          <!-- Vận hành -->
+          <li>
+            <span class="group-title">🚀 Triển khai & Đào tạo</span>
+            <ul>
+              <li><a href="#">Hướng dẫn sử dụng</a><span class="status-badge status-todo">TODO</span></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- CONTENT -->
+    <main class="content">
+
+      <!-- Hero -->
+      <div class="content-hero">
+        <h1>Sơ đồ cấu trúc hệ thống kho</h1>
+        <p>
+          Tổng quan kiến trúc tích hợp RFID cho kho nguyên phụ liệu và kho thành phẩm,
+          kết nối với ERP, WMS, ứng dụng di động và thiết bị đọc thẻ Zebra RFD4031.
+        </p>
+        <div class="tags">
+          <span class="tag tag-green">RFID · PDA Zebra RFD4031</span>
+          <span class="tag tag-blue">ERP · WMS</span>
+          <span class="tag tag-orange">Mobile App · Android/iOS</span>
+          <span class="tag tag-purple">Song song QR + RFID</span>
+        </div>
+      </div>
+
+      <!-- Diagram -->
+      <div class="diagram-wrapper">
+
+        <div class="diagram-section">
+          <div class="diagram-header">
+            <button class="img-change-btn" onclick="changeDiagram('q01-diag')">🔗 Đổi link ảnh</button>
+          </div>
+          <div class="diagram-img-wrap" id="q01-diag-wrap">
+            <!-- Placeholder -->
+            <div class="diagram-placeholder" id="q01-diag-placeholder">
+              <svg width="56" height="56" viewBox="0 0 56 56">
+                <rect x="4" y="4" width="48" height="48" rx="8" fill="none" stroke="#CBD5E1" stroke-width="2" stroke-dasharray="6,3"/>
+                <path d="M28 18v12M22 25l6-7 6 7" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <rect x="14" y="34" width="28" height="8" rx="3" fill="#E2E8F0"/>
+              </svg>
+              <p style="font-weight:600;color:#64748B;">Chưa có sơ đồ</p>
+              <p style="font-size:11px;color:#94A3B8;">Dán URL ảnh sơ đồ quy trình vào đây</p>
+              <button class="paste-url-btn" onclick="showUrlInput('q01-diag')">🔗 Dán URL ảnh</button>
+            </div>
+
+            <!-- Input URL -->
+            <div id="q01-diag-input" style="display:none;padding:20px;width:100%;">
+              <div style="font-size:12px;color:var(--gray-text);margin-bottom:8px;">Nhập URL ảnh sơ đồ (PNG, JPG, SVG, hoặc link Figma export...)</div>
+              <div class="url-input-row">
+                <input type="text" id="q01-diag-url" placeholder="https://..." />
+                <button onclick="applyDiagramUrl('q01-diag')">Áp dụng</button>
+                <button class="cancel-btn" onclick="cancelUrlInput('q01-diag')">Huỷ</button>
+              </div>
+            </div>
+
+            <!-- Ảnh hiển thị -->
+            <img id="q01-diag-img" style="display:none;max-width:100%;padding:16px;" src="" alt="Sơ đồ quy trình 01" />
+          </div>
+        </div>
+
+        <div class="diagram-caption">
+          <strong>Sơ đồ luồng dữ liệu chính:</strong> ERP và WMS quản lý thông tin kho;
+          Ứng dụng di động kết hợp PDA Zebra RFD4031 thực hiện quét RFID nhập/xuất/kiểm kê;
+          Thẻ RFID được gắn trên nguyên phụ liệu và thành phẩm, hỗ trợ song song với QR Code.
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    TNG Office · Hệ thống quản lý kho tích hợp RFID · Tài liệu nội bộ v1.0 · 2026<br />
+    <span style="opacity:.6">Được tạo bởi BA Team</span>
+  </footer>
+
+  <script>
+    (function() {
+      'use strict';
+
+      // ── Lưu trữ với localStorage ──
+      const STORAGE_KEY = 'tre_rfid_diagram_url';
+
+      // ── Hiển thị ảnh, ẩn placeholder và input ──
+      function showImage(id, url) {
+        const placeholder = document.getElementById(id + '-placeholder');
+        const inputDiv = document.getElementById(id + '-input');
+        const img = document.getElementById(id + '-img');
+
+        if (placeholder) placeholder.style.display = 'none';
+        if (inputDiv) inputDiv.style.display = 'none';
+        if (img) {
+          img.src = url;
+          img.style.display = 'block';
+        }
+      }
+
+      // ── Hiển thị placeholder, ẩn ảnh và input ──
+      function showPlaceholder(id) {
+        const placeholder = document.getElementById(id + '-placeholder');
+        const inputDiv = document.getElementById(id + '-input');
+        const img = document.getElementById(id + '-img');
+
+        if (placeholder) placeholder.style.display = 'flex';
+        if (inputDiv) inputDiv.style.display = 'none';
+        if (img) {
+          img.style.display = 'none';
+          img.src = '';
+        }
+        localStorage.removeItem(STORAGE_KEY);
+      }
+
+      // ── Hiển thị ô nhập URL, ẩn placeholder và ảnh ──
+      window.showUrlInput = function(id) {
+        const placeholder = document.getElementById(id + '-placeholder');
+        const inputDiv = document.getElementById(id + '-input');
+        const img = document.getElementById(id + '-img');
+        const urlInput = document.getElementById(id + '-url');
+
+        if (placeholder) placeholder.style.display = 'none';
+        if (img) img.style.display = 'none';
+        if (inputDiv) inputDiv.style.display = 'block';
+        if (urlInput) {
+          urlInput.value = localStorage.getItem(STORAGE_KEY) || '';
+          urlInput.focus();
+        }
+      };
+
+      // ── Áp dụng URL từ input ──
+      window.applyDiagramUrl = function(id) {
+        const urlInput = document.getElementById(id + '-url');
+        const url = urlInput.value.trim();
+
+        if (!url) {
+          alert('Vui lòng nhập URL ảnh hợp lệ.');
+          return;
+        }
+
+        // Kiểm tra sơ bộ: có vẻ như URL hợp lệ
+        try {
+          new URL(url);
+        } catch (_) {
+          alert('URL không đúng định dạng. Vui lòng nhập đầy đủ (ví dụ: https://...).');
+          return;
+        }
+
+        // Lưu vào localStorage
+        localStorage.setItem(STORAGE_KEY, url);
+        showImage(id, url);
+      };
+
+      // ── Huỷ nhập URL, quay lại trạng thái trước ──
+      window.cancelUrlInput = function(id) {
+        const savedUrl = localStorage.getItem(STORAGE_KEY);
+        if (savedUrl) {
+          showImage(id, savedUrl);
+        } else {
+          showPlaceholder(id);
+        }
+      };
+
+      // ── Nút "Đổi link ảnh" ──
+      window.changeDiagram = function(id) {
+        showUrlInput(id);
+      };
+
+      // ── Khởi tạo khi trang load ──
+      document.addEventListener('DOMContentLoaded', function() {
+        const savedUrl = localStorage.getItem(STORAGE_KEY);
+        if (savedUrl) {
+          // Kiểm tra xem ảnh có load được không (tuỳ chọn)
+          showImage('q01-diag', savedUrl);
+        } else {
+          showPlaceholder('q01-diag');
+        }
+      });
+
+    })();
+  </script>
+
+</body>
+</html>

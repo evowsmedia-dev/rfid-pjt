@@ -1,8 +1,8 @@
 {
   "pages": {
     "/Di_hoc_hoi.html": {
-      "ch1:p:1": "\n      Nội dung chương này sử dụng Sơ đồ Flowchart đã thống nhất ở bước trước để biểu diễn luồng đi của dữ liệu, từ lúc CBQL nhập nhật ký trên app đến khi kết xuất báo cáo."
+      "ch1:p:1": "\n      Nội dung chương này sử dụng Sơ đồ Flowchart đã thống nhất ở bước trước để biểu diễn luồng đi của dữ liệu, từ lúc CBQL nhập nhật ký trên app đến khi kết xuất báo cáo.<br>1.1. Sơ đồ quy trình tổng quát hoạt động đào tạo và học hỏi CBQL<br><br>Sơ đồ dưới đây mô tả luồng nghiệp vụ chính xuyên suốt quá trình CBQL nhập liệu → đồng bộ dữ liệu → tổng hợp báo cáo → kết xuất và chia sẻ:"
     }
   },
-  "updatedAt": "2026-07-15T04:30:57.611Z"
+  "updatedAt": "2026-07-15T04:31:34.570Z"
 }

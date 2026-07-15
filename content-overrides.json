@@ -45,8 +45,9 @@
       "step6:h4:1": "6. Lọc báo cáo CBQL",
       "step7:h4:1": "7. Xem kết quả lọc",
       "step8:h4:1": "8. Xuất và chia sẻ file báo cáo",
-      "step5:h5:5": "<br>"
+      "step5:h5:5": "<br>",
+      "step5:p:7": "<br>"
     }
   },
-  "updatedAt": "2026-07-15T06:48:03.104Z"
+  "updatedAt": "2026-07-15T06:48:10.383Z"
 }

@@ -38,8 +38,9 @@
       "step3:td:46": "9",
       "step3:div:3": "Nhấn nút <code>[Xác nhận]</code> ở thanh dưới cùng để lưu. Hệ thống lưu thành công",
       "step3:li:2": "<br>",
-      "step3:li:1": "<strong>Nội dung (Thu hoạch)</strong> không được rỗng."
+      "step3:li:1": "<strong>Nội dung (Thu hoạch)</strong> không được rỗng.",
+      "step4:h4:1": "4: Chỉnh sửa dòng học hỏi"
     }
   },
-  "updatedAt": "2026-07-15T06:39:09.429Z"
+  "updatedAt": "2026-07-15T06:39:28.156Z"
 }

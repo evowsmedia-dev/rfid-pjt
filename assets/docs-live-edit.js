@@ -1,6 +1,11 @@
 (function () {
   var apiUrl = '/api/docs-content';
-  var editMode = new URLSearchParams(window.location.search).get('edit') === '1';
+  function paramsFromHash() {
+    var hash = window.location.hash || '';
+    var queryStart = hash.indexOf('?');
+    return new URLSearchParams(queryStart === -1 ? '' : hash.slice(queryStart + 1));
+  }
+  var editMode = new URLSearchParams(window.location.search).get('edit') === '1' || paramsFromHash().get('edit') === '1';
   var password = null;
   var saveTimers = new Map();
 

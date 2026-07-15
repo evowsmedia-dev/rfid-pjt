@@ -672,6 +672,10 @@ body.tabs-ready .node.lvl-2.tab-visible{margin-top:0;padding-top:0;border-top:0;
   const nodes = Array.from(document.querySelectorAll('.node.lvl-1, .node.lvl-2, .node.lvl-3'));
   const chapters = Array.from(document.querySelectorAll('.chapter-wrap'));
 
+  function hashTarget(){
+    return decodeURIComponent(location.hash.slice(1).split('?')[0]);
+  }
+
   function getNode(target){
     return nodes.find(node => node.id === target) || null;
   }
@@ -798,12 +802,12 @@ body.tabs-ready .node.lvl-2.tab-visible{margin-top:0;padding-top:0;border-top:0;
   });
 
   window.addEventListener('hashchange', () => {
-    const target = decodeURIComponent(location.hash.slice(1));
+    const target = hashTarget();
     if(target) activate(target, {updateHash:false});
   });
 
   document.body.classList.add('tabs-ready');
-  const initialTarget = decodeURIComponent(location.hash.slice(1));
+  const initialTarget = hashTarget();
   if(!activate(initialTarget || 'ch1', {updateHash:!!initialTarget, instant:true})){
     activate('ch1', {updateHash:false, instant:true});
   }

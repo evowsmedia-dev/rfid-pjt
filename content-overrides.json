@@ -11,8 +11,9 @@
       "step2:td:9": "4 cột: <code>CBQL</code> · <code>Mã CN</code> · <code>Giờ</code> · <code>Nội dung</code>",
       "step1:p:1": "Màn hình chính là nơi bạn quản lý tất cả các hoạt động học hỏi của CBQL theo tuần.",
       "step1:div:2": "\n            Chọn chức năng <code>Nhân sự → Đi học hỏi</code>. Màn hình hiển thị danh sách các tuần học hỏi.\n          ",
-      "step1:h4:1": "Đăng nhập và truy cập chức năng"
+      "step1:h4:1": "Đăng nhập và truy cập chức năng",
+      "step2:h4:1": "Xem danh sách tuần và thống kê"
     }
   },
-  "updatedAt": "2026-07-15T06:19:07.044Z"
+  "updatedAt": "2026-07-15T06:19:07.865Z"
 }

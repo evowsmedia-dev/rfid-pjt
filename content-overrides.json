@@ -56,8 +56,9 @@
       "step5:p:5": "Bấm vào icon kính lúp ở góc trên cùng bên phải. Lúc này sẽ hiện ra thanh bar trống để điền thông tin cần tìm và bấm Enter để tìm kiếm",
       "step5:h5:1": "Cấu trúc bảng danh sách",
       "step5:h5:2": "Quy tắc màu badge Giờ",
-      "step6:p:1": "<em>(Dành cho CBQL có quyền)</em>"
+      "step6:p:1": "<em>(Dành cho CBQL có quyền)</em>",
+      "step6:div:1": "Chọn chức năng <strong>Nhân sự → Báo cáo CBQL</strong>. Hệ thống kiểm tra quyền <code>canViewCBQLReport()</code>:<ul style=\"margin-top:8px;\"><li>Có quyền → vào màn hình <strong>Lọc báo cáo</strong>.</li><li>Không có quyền → hiển thị thông báo <span class=\"badge badge-red\">\"Không có quyền truy cập báo cáo CBQL\"</span> và quay lại.</li></ul>"
     }
   },
-  "updatedAt": "2026-07-15T07:01:04.671Z"
+  "updatedAt": "2026-07-15T07:01:14.812Z"
 }

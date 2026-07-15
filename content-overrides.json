@@ -37,8 +37,9 @@
       "step3:td:41": "8",
       "step3:td:46": "9",
       "step3:div:3": "Nhấn nút <code>[Xác nhận]</code> ở thanh dưới cùng để lưu. Hệ thống lưu thành công",
-      "step3:li:2": "<br>"
+      "step3:li:2": "<br>",
+      "step3:li:1": "<br>"
     }
   },
-  "updatedAt": "2026-07-15T06:39:03.595Z"
+  "updatedAt": "2026-07-15T06:39:06.000Z"
 }

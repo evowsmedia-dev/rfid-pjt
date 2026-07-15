@@ -2,8 +2,9 @@
   "pages": {
     "/Di_hoc_hoi.html": {
       "ch1-2:li:3": "Nhấn icon add (+) để nhập học hỏi mới và điền các trường bắt buộc.",
-      "ch1-2:h5:1": "Giai đoạn 1 — Khởi tạo &amp; Nhập liệu"
+      "ch1-2:h5:1": "Giai đoạn 1 — Khởi tạo &amp; Nhập liệu",
+      "ch1:p:1": "\n      Nội dung chương này diễn giải các giai đoạn nghiệp vụ chính, từ lúc CBQL nhập học hỏi trên app đến khi hệ thống tổng hợp và phục vụ báo cáo.<br><br>"
     }
   },
-  "updatedAt": "2026-07-15T04:57:45.687Z"
+  "updatedAt": "2026-07-15T05:00:16.481Z"
 }

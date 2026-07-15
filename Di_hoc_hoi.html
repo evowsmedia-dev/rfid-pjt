@@ -147,18 +147,6 @@ tr:last-child td{border-bottom:none;}
 .col-card ul{margin-left:16px;}
 .col-card p{font-size:11.5px;}
 
-/* Flowchart (chapter 1.1) */
-.flowchart{display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:10px;}
-.flow-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center;}
-.flow-node{background:var(--rfid-l);border:1px solid var(--rfid);color:var(--rfid-d);
-  font-size:11px;font-weight:700;text-align:center;padding:8px 12px;border-radius:8px;min-width:110px;}
-.flow-node.start,.flow-node.end{background:var(--brand);color:#fff;border-color:var(--brand-d);}
-.flow-node.decision{background:var(--warn-l);border-color:var(--warn);color:var(--warn);}
-.flow-arrow{font-size:14px;color:var(--gray-2);font-weight:800;}
-.flow-arrow-down{font-size:14px;color:var(--gray-2);font-weight:800;}
-.flow-label{font-size:10px;color:var(--gray-t);font-weight:700;}
-.flow-description{font-size:11px;color:var(--gray-t);margin-top:8px;text-align:center;max-width:600px;}
-
 .local-shot{margin-top:12px;border:1px dashed var(--gray-bd);border-radius:12px;background:#fff;padding:12px;box-shadow:var(--shadow-sm);}
 .local-shot-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;}
 .local-shot-title{font-size:12px;font-weight:800;color:var(--dark);}
@@ -212,79 +200,12 @@ body.tabs-ready .node.lvl-2.tab-visible{margin-top:0;padding-top:0;border-top:0;
 }
 
 </style><link rel="stylesheet" href="assets/erp-sidebar.css">
-</head><body><div class="side-panel"><div class="sp-doc-title">HDSD App Đào tạo &amp; Học hỏi CBQL</div><div class="sp-nav-label">Mục lục</div><nav class="sp-nav" id="sidenav"><a class="sp-link lvl-1" data-target="ch1" href="#ch1">Chương 1. Quy trình phần mềm</a><a class="sp-link lvl-2" data-target="ch1-1" href="#ch1-1">1.1. Sơ đồ quy trình tổng quát hoạt động đào tạo và học hỏi CBQL</a><a class="sp-link lvl-2" data-target="ch1-2" href="#ch1-2">1.2. Diễn giải các giai đoạn nghiệp vụ</a><a class="sp-link lvl-1" data-target="ch2" href="#ch2">Chương 2. Hướng dẫn sử dụng phần mềm</a><a class="sp-link lvl-2" data-target="ch2-1" href="#ch2-1">Vào Nhân sự/Học hỏi tại CN</a><a class="sp-link lvl-3" data-target="step1" href="#step1">Bước 1: Đăng nhập và truy cập</a><a class="sp-link lvl-3" data-target="step2" href="#step2">Bước 2: Xem danh sách tuần và thống kê</a><a class="sp-link lvl-3" data-target="step3" href="#step3">Bước 3: Nhập học hỏi mới</a><a class="sp-link lvl-3" data-target="step4" href="#step4">Bước 4: Chỉnh sửa dòng học hỏi</a><a class="sp-link lvl-3" data-target="step5" href="#step5">Bước 5: Theo dõi danh sách và tìm kiếm</a><a class="sp-link lvl-3" data-target="step6" href="#step6">Bước 6: Lọc báo cáo CBQL</a><a class="sp-link lvl-3" data-target="step7" href="#step7">Bước 7: Xem kết quả lọc</a><a class="sp-link lvl-3" data-target="step8" href="#step8">Bước 8: Xuất và chia sẻ file báo cáo</a></nav></div><div class="main-content"><div class="main-content-inner"><div class="mini-cover"><h1>Hệ thống Đào tạo &amp; Học hỏi<br/>Cán bộ Quản lý (CBQL)</h1><p class="mini-sub">Tài liệu hướng dẫn quy trình phần mềm và thao tác sử dụng dành cho CBQL trên hệ thống TNG Office</p><div class="mini-meta"><div class="mm-chip"><b>1.0</b><span>Phiên bản</span></div><div class="mm-chip"><b>13/07/2026</b><span>Ngày phát hành</span></div><div class="mm-chip"><b>CBQL</b><span>Đối tượng</span></div><div class="mm-chip"><b>TNG Office</b><span>Nền tảng</span></div></div></div><section class="chapter-wrap" id="ch1"><div class="node lvl-1" id="ch1"><div class="chapter-header">
+</head><body><div class="side-panel"><div class="sp-doc-title">HDSD App Đào tạo &amp; Học hỏi CBQL</div><div class="sp-nav-label">Mục lục</div><nav class="sp-nav" id="sidenav"><a class="sp-link lvl-1" data-target="ch1" href="#ch1">Chương 1. Quy trình phần mềm</a><a class="sp-link lvl-2" data-target="ch1-2" href="#ch1-2">1.1. Diễn giải các giai đoạn nghiệp vụ</a><a class="sp-link lvl-1" data-target="ch2" href="#ch2">Chương 2. Hướng dẫn sử dụng phần mềm</a><a class="sp-link lvl-2" data-target="ch2-1" href="#ch2-1">Vào Nhân sự/Học hỏi tại CN</a><a class="sp-link lvl-3" data-target="step1" href="#step1">Bước 1: Đăng nhập và truy cập</a><a class="sp-link lvl-3" data-target="step2" href="#step2">Bước 2: Xem danh sách tuần và thống kê</a><a class="sp-link lvl-3" data-target="step3" href="#step3">Bước 3: Nhập học hỏi mới</a><a class="sp-link lvl-3" data-target="step4" href="#step4">Bước 4: Chỉnh sửa dòng học hỏi</a><a class="sp-link lvl-3" data-target="step5" href="#step5">Bước 5: Theo dõi danh sách và tìm kiếm</a><a class="sp-link lvl-3" data-target="step6" href="#step6">Bước 6: Lọc báo cáo CBQL</a><a class="sp-link lvl-3" data-target="step7" href="#step7">Bước 7: Xem kết quả lọc</a><a class="sp-link lvl-3" data-target="step8" href="#step8">Bước 8: Xuất và chia sẻ file báo cáo</a></nav></div><div class="main-content"><div class="main-content-inner"><div class="mini-cover"><h1>Hệ thống Đào tạo &amp; Học hỏi<br/>Cán bộ Quản lý (CBQL)</h1><p class="mini-sub">Tài liệu hướng dẫn quy trình phần mềm và thao tác sử dụng dành cho CBQL trên hệ thống TNG Office</p><div class="mini-meta"><div class="mm-chip"><b>1.0</b><span>Phiên bản</span></div><div class="mm-chip"><b>13/07/2026</b><span>Ngày phát hành</span></div><div class="mm-chip"><b>CBQL</b><span>Đối tượng</span></div><div class="mm-chip"><b>TNG Office</b><span>Nền tảng</span></div></div></div><section class="chapter-wrap" id="ch1"><div class="node lvl-1" id="ch1"><div class="chapter-header">
 <div class="chapter-badge">CH1</div>
 <h2>Chương 1. Quy trình phần mềm</h2>
 </div><div class="full-text"><p class="chapter-intro">
-      Nội dung chương này sử dụng Sơ đồ Flowchart đã thống nhất ở bước trước để biểu diễn luồng đi của dữ liệu, từ lúc CBQL nhập nhật ký trên app đến khi kết xuất báo cáo.
-    </p></div></div><div class="node lvl-2" id="ch1-1"><h3>1.1. Sơ đồ quy trình tổng quát hoạt động đào tạo và học hỏi CBQL</h3><div class="full-text"><p>Sơ đồ dưới đây mô tả luồng nghiệp vụ chính xuyên suốt quá trình CBQL nhập liệu → đồng bộ dữ liệu → tổng hợp báo cáo → kết xuất và chia sẻ:</p><div class="flowchart">
-<!-- Row 1: Khởi đầu -->
-<div class="flow-row">
-<div class="flow-node start">Bắt đầu</div>
-<span class="flow-arrow">→</span>
-<div class="flow-node">CBQL đăng nhập<br/>TNG Office</div>
-</div>
-<div class="flow-arrow-down">↓</div>
-<!-- Row 2: Nhập liệu -->
-<div class="flow-row">
-<div class="flow-node">Tạo <br/>học hỏi mới</div>
-<span class="flow-arrow">→</span>
-<div class="flow-node">Điền thông tin<br/>bắt buộc <code style="background:rgba(255,255,255,0.9); padding:2px 6px; border-radius:4px; font-size:11px;">*</code></div>
-</div>
-<div class="flow-arrow-down">↓</div>
-<!-- Row 3: Cho phép chỉnh sửa -->
-<div class="flow-row">
-<div class="flow-node decision">Đã đầy đủ<br/>thông tin?</div>
-</div>
-<div class="flow-row" style="gap: 60px;">
-<div style="display: flex; align-items: center; gap: 12px;">
-<span class="flow-label">Chưa đủ</span>
-<span class="flow-arrow">→</span>
-<div class="flow-node">Chỉnh sửa<br/>bổ sung</div>
-</div>
-<div style="display: flex; align-items: center; gap: 12px;">
-<span class="flow-label">Đã đủ</span>
-<span class="flow-arrow">→</span>
-<div class="flow-node">Gửi xác nhận<br/>đồng bộ lên hệ thống</div>
-</div>
-</div>
-<div class="flow-arrow-down">↓</div>
-<!-- Row 4: Xử lý -->
-<div class="flow-row">
-<div class="flow-node">Hệ thống tính<br/>Duration (giờ tích lũy)</div>
-<span class="flow-arrow">→</span>
-<div class="flow-node">Lưu trữ CSDL</div>
-</div>
-<div class="flow-arrow-down">↓</div>
-<!-- Row 5: Quản lý/HR -->
-<div class="flow-row">
-<div class="flow-node">Quản lý truy cập<br/>TNG Office</div>
-<span class="flow-arrow">→</span>
-<div class="flow-node">Theo dõi CBQL<br/>theo tuần</div>
-</div>
-<div class="flow-arrow-down">↓</div>
-<!-- Row 6: Lọc -->
-<div class="flow-row">
-<div class="flow-node">Thiết lập<br/>bộ lọc báo cáo</div>
-<span class="flow-arrow">→</span>
-<div class="flow-node">Hệ thống trả về<br/>Quick List &amp; Preview</div>
-</div>
-<div class="flow-arrow-down">↓</div>
-<!-- Row 7: Kết xuất -->
-<div class="flow-row">
-<div class="flow-node">Xuất báo cáo<br/>Excel / PDF</div>
-<span class="flow-arrow">→</span>
-<div class="flow-node">Chia sẻ file<br/>tới người nhận</div>
-</div>
-<div class="flow-arrow-down">↓</div>
-<!-- Row 8: Kết thúc -->
-<div class="flow-row">
-<div class="flow-node end">Kết thúc quy trình</div>
-</div>
-<p class="flow-description">
-<strong>Luồng dữ liệu:</strong> App TNG Office (CBQL) → API đồng bộ → CSDL → Báo cáo Quản lý/HR → Xuất file &amp; Chia sẻ.
-        </p>
-</div></div></div><div class="node lvl-2" id="ch1-2"><h3>1.2. Diễn giải các giai đoạn nghiệp vụ</h3><div class="full-text"><div class="two-col">
+      Nội dung chương này diễn giải các giai đoạn nghiệp vụ chính, từ lúc CBQL nhập học hỏi trên app đến khi hệ thống tổng hợp và phục vụ báo cáo.
+    </p></div></div><div class="node lvl-2" id="ch1-2"><h3>1.1. Diễn giải các giai đoạn nghiệp vụ</h3><div class="full-text"><div class="two-col">
 <div class="col-card">
 <h5>Giai đoạn 1 — Khởi tạo &amp; Nhập liệu</h5>
 <ul>

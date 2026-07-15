@@ -1,17 +1,9 @@
 {
   "pages": {
     "/Di_hoc_hoi.html": {
-      "ch1:p:1": "Giai đoạn 1 — Khởi tạo &amp; Nhập liệu",
       "ch1-2:li:3": "Nhấn icon add (+) để nhập học hỏi mới và điền các trường bắt buộc.",
-      "ch1-2:h5:1": "Giai đoạn 1 — Khởi tạo &amp; Nhập liệu",
-      "ch1-2:h3:1": "1.2. Diễn giải các giai đoạn nghiệp vụ",
-      "ch1-1:div:11": "Theo dõi CBQL<br>theo tuần",
-      "ch1-1:div:1": "Bắt đầu",
-      "ch1-1:p:1": "Sơ đồ dưới đây mô tả luồng nghiệp vụ chính xuyên suốt quá trình CBQL nhập liệu → đồng bộ dữ liệu → tổng hợp báo cáo → kết xuất và chia sẻ:<br><br><img src=\"/api/content-asset?path=content-assets%2FDi_hoc_hoi%2Fch1-1-p-1-inline-image-1784091259256.png\" alt=\"Ảnh minh họa\" loading=\"lazy\" style=\"max-width: 60%; height: auto; display: block; margin: 10px auto;\">",
-      "ch1-1:p:2": "<br>",
-      "ch1-1:div:16": "<br>",
-      "ch1-1:div:15": "Chia sẻ file<br>tới ngườinhận"
+      "ch1-2:h5:1": "Giai đoạn 1 — Khởi tạo &amp; Nhập liệu"
     }
   },
-  "updatedAt": "2026-07-15T04:54:58.286Z"
+  "updatedAt": "2026-07-15T04:57:45.687Z"
 }

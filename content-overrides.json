@@ -1,8 +1,8 @@
 {
   "pages": {
     "/Di_hoc_hoi.html": {
-      "ch1:p:1": "\n      Nội dung chương này sử dụng Sơ đồ Flowchart đã thống nhất ở bước trước để biểu diễn luồng đi của dữ liệu, từ lúc CBQL nhập nhật ký trên app đến khi kết xuất báo cáo.<br><br>1.1. Sơ đồ quy trình tổng quát hoạt động đào tạo và học hỏi CBQL<br><br>Sơ đồ dưới đây mô tả luồng nghiệp vụ chính xuyên suốt quá trình CBQL nhập liệu → đồng bộ dữ liệu → tổng hợp báo cáo → kết xuất và chia sẻ:<br><br><img src=\"/api/content-asset?path=content-assets%2FDi_hoc_hoi%2Fch1-p-1-inline-image-1784090555875.png\" alt=\"Ảnh minh họa\" loading=\"lazy\" style=\"max-width: 60%; height: auto; display: block; margin: 10px auto;\"><br><h3 data-live-key=\"ch1-2:h3:1\"><br></h3>"
+      "ch1:p:1": "\n      Nội dung chương này sử dụng Sơ đồ Flowchart đã thống nhất ở bước trước để biểu diễn luồng đi của dữ liệu, từ lúc CBQL nhập nhật ký trên app đến khi kết xuất báo cáo.<br><br>1.1. Sơ đồ quy trình tổng quát hoạt động đào tạo và học hỏi CBQL<br><br>Sơ đồ dưới đây mô tả luồng nghiệp vụ chính xuyên suốt quá trình CBQL nhập liệu → đồng bộ dữ liệu → tổng hợp báo cáo → kết xuất và chia sẻ:<br><br><img src=\"/api/content-asset?path=content-assets%2FDi_hoc_hoi%2Fch1-p-1-inline-image-1784090555875.png\" alt=\"Ảnh minh họa\" loading=\"lazy\" style=\"max-width: 60%; height: auto; display: block; margin: 10px auto;\"><br><br><h3 data-live-key=\"ch1-2:h3:1\"><br></h3>"
     }
   },
-  "updatedAt": "2026-07-15T04:48:53.161Z"
+  "updatedAt": "2026-07-15T04:48:57.633Z"
 }

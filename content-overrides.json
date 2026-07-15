@@ -31,9 +31,9 @@
       "step3:td:38": "<br>",
       "step3:td:37": "<br>",
       "step3:td:36": "<br>",
-      "step3:td:33": "<br>",
+      "step3:td:33": "&lt;span class=\"badge badge-blue\"&gt;Thông tin cơ bản&lt;/span&gt;",
       "step3:td:28": "<span class=\"badge badge-blue\">Thông tin cơ bản</span>"
     }
   },
-  "updatedAt": "2026-07-15T06:36:17.845Z"
+  "updatedAt": "2026-07-15T06:36:18.984Z"
 }

@@ -277,6 +277,7 @@ Thành phần kỹ thuật:
 - `api/admin-login.js`, `api/admin-logout.js`, `api/admin-session.js`: quản lý session admin bằng cookie HttpOnly.
 - `api/docs-content.js`: đọc/ghi override nội dung trong `content-overrides.json`.
 - `api/page-image.js`: upload ảnh vào `content-assets/` và ghi override ảnh.
+- `api/content-asset.js`: phục vụ ảnh từ GitHub qua URL public để preview/FE hiển thị ngay sau khi upload.
 - `scripts/inject-admin-editor.js`: tự gắn editor vào file HTML mới khi build/deploy.
 - `docs/admin-editing-guide.md`: tài liệu vận hành cơ chế chỉnh sửa.
 

@@ -37,6 +37,10 @@ function imageBuffer(payload) {
   return { buffer, ext, mime };
 }
 
+function publicAssetUrl(filePath) {
+  return `/api/content-asset?path=${encodeURIComponent(filePath)}`;
+}
+
 module.exports = async function handler(req, res) {
   try {
     if (req.method !== 'POST') return json(res, 405, { error: 'Method not allowed.' });
@@ -55,21 +59,24 @@ module.exports = async function handler(req, res) {
 
     await githubPutContent(config, filePath, buffer, `Upload document image for ${page}`, existing.sha);
 
+    const src = publicAssetUrl(filePath);
+
     if (payload.inlineOnly === true) {
-      return json(res, 200, { ok: true, page, key, src: `/${filePath}` });
+      return json(res, 200, { ok: true, page, key, src, assetPath: `/${filePath}` });
     }
 
     const { sha, data } = await readContentStore(config);
     const next = ensurePageStore(data, page);
     next.pages[page][key] = {
       type: 'image',
-      src: `/${filePath}`,
+      src,
+      assetPath: `/${filePath}`,
       alt: String(payload.alt || 'Ảnh minh họa').slice(0, 160)
     };
     next.updatedAt = new Date().toISOString();
 
     await writeContentStore(config, sha, next);
-    return json(res, 200, { ok: true, page, key, src: `/${filePath}` });
+    return json(res, 200, { ok: true, page, key, src, assetPath: `/${filePath}` });
   } catch (error) {
     return json(res, error.statusCode || 500, { error: error.message || 'Unknown error.' });
   }

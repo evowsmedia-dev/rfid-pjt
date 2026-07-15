@@ -9,7 +9,7 @@ Nội dung sau khi lưu không nằm ở cache trình duyệt. Hệ thống ghi 
 - Text override: `content-overrides.json`.
 - Ảnh upload: `content-assets/<page>/<key>-<timestamp>.<ext>`.
 
-Vercel phục vụ lại các file này cho mọi người xem.
+Ảnh được load qua `/api/content-asset?path=...`, nên preview và FE người xem có thể hiển thị ngay sau khi upload, không cần chờ Vercel deploy static asset mới.
 
 ## Biến môi trường trên Vercel
 
@@ -71,6 +71,7 @@ Page trong `docs/`:
 - `GET /api/docs-content?page=/path.html`: đọc override public.
 - `POST /api/docs-content`: lưu/xóa override text hoặc ảnh, yêu cầu admin session.
 - `POST /api/page-image`: upload ảnh vào repo, yêu cầu admin session.
+- `GET /api/content-asset?path=content-assets/...`: đọc ảnh đã upload từ GitHub để hiển thị public.
 
 ## Ghi chú kỹ thuật
 
@@ -78,5 +79,5 @@ Page trong `docs/`:
 - Thanh công cụ admin chỉ xuất hiện sau khi đăng nhập.
 - Các key text được sinh theo vùng gần nhất có `id` và thứ tự tag, ví dụ `ch1:p:1`.
 - Ảnh minh họa HR có key ổn định theo bước, ví dụ `step1:image`.
-- Ảnh chèn inline vào box text được upload vào `content-assets/` rồi lưu URL trong HTML override của box đó.
+- Ảnh chèn inline vào box text được upload vào `content-assets/` rồi lưu URL proxy `/api/content-asset?path=...` trong HTML override của box đó.
 - Ảnh tối đa 5MB, hỗ trợ PNG, JPG, WEBP và GIF.

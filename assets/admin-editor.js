@@ -34,6 +34,17 @@
     return new URLSearchParams(window.location.search).get('edit') === '1' || hashParams().get('edit') === '1';
   }
 
+  function assetSrc(src) {
+    var value = String(src || '');
+    if (!value) return '';
+    if (value.indexOf('/api/content-asset?') === 0) return value;
+    if (value.indexOf(window.location.origin + '/api/content-asset?') === 0) return value.replace(window.location.origin, '');
+    if (value.indexOf(window.location.origin + '/content-assets/') === 0) return '/api/content-asset?path=' + encodeURIComponent(value.replace(window.location.origin + '/', ''));
+    if (value.indexOf('/content-assets/') === 0) return '/api/content-asset?path=' + encodeURIComponent(value.slice(1));
+    if (value.indexOf('content-assets/') === 0) return '/api/content-asset?path=' + encodeURIComponent(value);
+    return value;
+  }
+
   function textSelector() {
     return [
       'main h1', 'main h2', 'main h3', 'main h4', 'main h5', 'main h6',
@@ -123,7 +134,7 @@
   }
 
   function setImageSlot(element, edit) {
-    var src = edit && edit.src ? edit.src : '';
+    var src = edit && edit.src ? assetSrc(edit.src) : '';
     if (!src) return;
     if (element.matches('.local-shot-preview[data-image-preview]')) {
       element.innerHTML = '';
@@ -154,10 +165,20 @@
       var edit = currentEdits[element.dataset.liveKey];
       if (typeof edit === 'string') element.innerHTML = edit;
       if (edit && typeof edit.html === 'string') element.innerHTML = edit.html;
+      normalizeInlineImages(element);
     });
     imageElements.forEach(function (element) {
       var edit = currentEdits[element.dataset.liveImageKey];
       if (edit && edit.type === 'image') setImageSlot(element, edit);
+    });
+  }
+
+  function normalizeInlineImages(root) {
+    Array.prototype.forEach.call(root.querySelectorAll ? root.querySelectorAll('img') : [], function (img) {
+      var next = assetSrc(img.getAttribute('src'));
+      if (next && next !== img.getAttribute('src')) img.setAttribute('src', next);
+      if (!img.style.maxWidth) img.style.maxWidth = '60%';
+      if (!img.style.height) img.style.height = 'auto';
     });
   }
 
@@ -280,7 +301,7 @@
     if (!response.ok) throw new Error(payload.error || 'Không tải được ảnh.');
 
     var img = document.createElement('img');
-    img.src = payload.src;
+    img.src = assetSrc(payload.src);
     img.alt = 'Ảnh minh họa';
     img.loading = 'lazy';
     img.style.maxWidth = '60%';
@@ -288,6 +309,7 @@
     img.style.display = 'block';
     img.style.margin = '10px auto';
     element.appendChild(img);
+    normalizeInlineImages(element);
     await saveText(element);
     setStatus('Đã thêm ảnh');
   }
@@ -385,6 +407,7 @@
   function pasteBox(element) {
     if (!boxClipboard) return;
     element.innerHTML = boxClipboard.html;
+    normalizeInlineImages(element);
     queueSave(element);
     setStatus('Đã paste box');
   }
@@ -487,6 +510,7 @@
         if (html) {
           event.preventDefault();
           document.execCommand('insertHTML', false, html);
+          normalizeInlineImages(element);
           queueSave(element);
           return;
         }

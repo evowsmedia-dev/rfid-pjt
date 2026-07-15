@@ -663,67 +663,6 @@ body.tabs-ready .node.lvl-2.tab-visible{margin-top:0;padding-top:0;border-top:0;
   });
 })();
 
-(() => {
-  const storagePrefix = 'tre-erp-docs-di-hoc-hoi-text:';
-  const root = document.querySelector('.main-content');
-  if(!root) return;
-
-  const editableSelector = [
-    '.mini-cover h1',
-    '.mini-cover p',
-    '.mini-cover b',
-    '.mini-cover span',
-    '.chapter-badge',
-    '.chapter-header h2',
-    '.node h3',
-    '.node h4',
-    '.node h5',
-    '.node p',
-    '.node li',
-    '.node th',
-    '.node td',
-    '.step-content',
-    '.flow-node',
-    '.flow-label',
-    '.flow-description',
-    '.col-card h5',
-    '.tab-empty-note'
-  ].join(',');
-
-  function editableElements(){
-    return Array.from(root.querySelectorAll(editableSelector)).filter((element) => (
-      !element.closest('.local-shot') &&
-      !element.closest('.sp-nav') &&
-      element.textContent.trim().length > 0
-    ));
-  }
-
-  function keyFor(element, index){
-    const owner = element.closest('[id]');
-    const ownerId = owner ? owner.id : 'root';
-    return `${storagePrefix}${ownerId}:${element.tagName.toLowerCase()}:${index}`;
-  }
-
-  editableElements().forEach((element, index) => {
-    const key = keyFor(element, index);
-    const saved = localStorage.getItem(key);
-    if(saved !== null) element.innerHTML = saved;
-
-    element.setAttribute('contenteditable', 'true');
-    element.setAttribute('spellcheck', 'false');
-    element.dataset.editKey = key;
-
-    element.addEventListener('input', () => {
-      localStorage.setItem(key, element.innerHTML);
-    });
-
-    element.addEventListener('paste', (event) => {
-      event.preventDefault();
-      const text = event.clipboardData ? event.clipboardData.getData('text/plain') : '';
-      document.execCommand('insertText', false, text);
-    });
-  });
-})();
 
 (function(){
   const main = document.querySelector('.main-content');
@@ -871,4 +810,5 @@ body.tabs-ready .node.lvl-2.tab-visible{margin-top:0;padding-top:0;border-top:0;
 })();
 </script>
 <script src="assets/erp-sidebar.js"></script>
+<script src="assets/docs-live-edit.js"></script>
 </body></html>

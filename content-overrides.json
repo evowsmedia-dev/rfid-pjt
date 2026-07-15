@@ -27,8 +27,9 @@
       "step3:td:10": "<span class=\"badge badge-green\">Tự động</span>",
       "step3:td:34": "Chọn chi nhánh mà CBQL đã đến học hỏi",
       "step3:td:39": "<br>",
-      "step3:td:40": "<br>"
+      "step3:td:40": "<br>",
+      "step3:td:38": "<span class=\"badge badge-blue\">Địa điểm &amp; Chi nhánh</span>"
     }
   },
-  "updatedAt": "2026-07-15T06:35:46.678Z"
+  "updatedAt": "2026-07-15T06:35:47.574Z"
 }

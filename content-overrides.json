@@ -58,8 +58,8 @@
       "step5:h5:2": "Quy tắc màu badge Giờ",
       "step6:p:1": "<em>(Dành cho CBQL có quyền)</em>",
       "step6:div:1": "Chọn chức năng <strong>Nhân sự → Đi học hỏi</strong>. Hệ thống kiểm tra quyền:<ul style=\"margin-top:8px;\"><li>Có quyền → vào màn hình bấm&nbsp;<strong>Lọc báo cáo</strong>.</li><li>Không có quyền → hiển thị thông báo <span class=\"badge badge-red\">\"Không có quyền truy cập báo cáo CBQL\"</span> và quay lại.</li></ul>",
-      "step6:td:16": "Tất cả CBQL ở <strong>mọi đơn vị</strong>"
+      "step6:td:16": "<br>"
     }
   },
-  "updatedAt": "2026-07-15T07:02:26.342Z"
+  "updatedAt": "2026-07-15T07:06:02.368Z"
 }

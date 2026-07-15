@@ -43,8 +43,9 @@
       "step2:p:2": "Dưới mỗi section tuần có 1 <strong>thẻ thống kê</strong> gồm 4 chỉ số:",
       "step5:h4:1": "5. Theo dõi danh sách và tìm kiếm",
       "step6:h4:1": "6. Lọc báo cáo CBQL",
-      "step7:h4:1": "7. Xem kết quả lọc"
+      "step7:h4:1": "7. Xem kết quả lọc",
+      "step8:h4:1": ": Xuất và chia sẻ file báo cáo"
     }
   },
-  "updatedAt": "2026-07-15T06:47:06.824Z"
+  "updatedAt": "2026-07-15T06:47:08.528Z"
 }

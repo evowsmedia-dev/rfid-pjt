@@ -52,11 +52,11 @@
       "step5:li:3": "<br>",
       "step5:li:2": "<br>",
       "step3:p:1": "<br>",
-      "step5:li:1": "Kết quả lọc sẽ hiện ở màn hình chính bên dưới t",
+      "step5:li:1": "Kết quả lọc sẽ hiện ở màn hình chính bên dưới và được chia theo&nbsp;",
       "step5:p:5": "Bấm vào icon kính lúp ở góc trên cùng bên phải. Lúc này sẽ hiện ra thanh bar trống để điền thông tin cần tìm và bấm Enter để tìm kiếm",
       "step5:h5:1": "Cấu trúc bảng danh sách",
       "step5:h5:2": "Quy tắc màu badge Giờ"
     }
   },
-  "updatedAt": "2026-07-15T06:55:45.259Z"
+  "updatedAt": "2026-07-15T06:55:51.539Z"
 }

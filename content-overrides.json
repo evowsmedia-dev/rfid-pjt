@@ -7,8 +7,9 @@
       "ch1-2:li:2": "Truy cập menu <code>Nhân sự → Đi học hỏi</code>.",
       "ch1-2:li:5": "Khi đã đầy đủ, CBQL nhấn <code>Xác nhận</code> để gửi lên hệ thống.",
       "ch1-2:li:8": "Quản lý truy cập TNG Office → <code>Nhân sự → Đi học hỏi</code> để theo dõi.",
-      "ch1-2:li:7": "Hệ thống tự tính <strong>Thời gian học&nbsp;</strong>dựa trên giờ bắt đầu/kết thúc."
+      "ch1-2:li:7": "Hệ thống tự tính <strong>Thời gian học&nbsp;</strong>dựa trên giờ bắt đầu/kết thúc.",
+      "step2:td:9": "4 cột: <code>CBQL</code> · <code>Mã CN</code> · <code>Giờ</code> · <code>Nội dung</code>"
     }
   },
-  "updatedAt": "2026-07-15T05:04:03.324Z"
+  "updatedAt": "2026-07-15T06:03:24.472Z"
 }

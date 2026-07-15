@@ -65,18 +65,6 @@ body{
 .main-content-inner{max-width:1180px; margin:0 auto; width:100%;}
 @media (min-width:1600px){ .main-content-inner{max-width:1360px;} }
 @media (min-width:2000px){ .main-content-inner{max-width:1560px;} }
-.mini-cover{
-  background:linear-gradient(135deg, var(--brand) 0%, var(--brand-d) 55%, #2d5c17 100%);
-  color:#fff; border-radius:14px; padding:22px 26px; margin-bottom:22px; box-shadow:var(--shadow);
-}
-.mini-cover h1{font-size:19px;font-weight:800;line-height:1.3;margin-bottom:6px;}
-.mini-sub{font-size:12px;color:rgba(255,255,255,.82);margin-bottom:12px;max-width:640px;}
-.mini-meta{display:flex;gap:8px;flex-wrap:wrap;}
-.mm-chip{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);
-  border-radius:8px;padding:5px 10px;}
-.mm-chip b{display:block;font-size:12px;font-weight:800;}
-.mm-chip span{font-size:8.5px;text-transform:uppercase;letter-spacing:.4px;color:rgba(255,255,255,.65);}
-
 .chapter-wrap{margin-bottom:26px;}
 .node{scroll-margin-top:14px;}
 .node.lvl-1{margin-bottom:6px;}
@@ -200,7 +188,7 @@ body.tabs-ready .node.lvl-2.tab-visible{margin-top:0;padding-top:0;border-top:0;
 }
 
 </style><link rel="stylesheet" href="assets/erp-sidebar.css">
-</head><body><div class="side-panel"><div class="sp-doc-title">HDSD App Đào tạo &amp; Học hỏi CBQL</div><div class="sp-nav-label">Mục lục</div><nav class="sp-nav" id="sidenav"><a class="sp-link lvl-1" data-target="ch1" href="#ch1">Chương 1. Quy trình phần mềm</a><a class="sp-link lvl-1" data-target="ch2" href="#ch2">Chương 2. Hướng dẫn sử dụng phần mềm</a><a class="sp-link lvl-2" data-target="ch2-1" href="#ch2-1">Vào Nhân sự/Học hỏi tại CN</a><a class="sp-link lvl-3" data-target="step1" href="#step1">Bước 1: Đăng nhập và truy cập</a><a class="sp-link lvl-3" data-target="step2" href="#step2">Bước 2: Xem danh sách tuần và thống kê</a><a class="sp-link lvl-3" data-target="step3" href="#step3">Bước 3: Nhập học hỏi mới</a><a class="sp-link lvl-3" data-target="step4" href="#step4">Bước 4: Chỉnh sửa dòng học hỏi</a><a class="sp-link lvl-3" data-target="step5" href="#step5">Bước 5: Theo dõi danh sách và tìm kiếm</a><a class="sp-link lvl-3" data-target="step6" href="#step6">Bước 6: Lọc báo cáo CBQL</a><a class="sp-link lvl-3" data-target="step7" href="#step7">Bước 7: Xem kết quả lọc</a><a class="sp-link lvl-3" data-target="step8" href="#step8">Bước 8: Xuất và chia sẻ file báo cáo</a></nav></div><div class="main-content"><div class="main-content-inner"><div class="mini-cover"><h1>Hệ thống Đào tạo &amp; Học hỏi<br/>Cán bộ Quản lý (CBQL)</h1><p class="mini-sub">Tài liệu hướng dẫn quy trình phần mềm và thao tác sử dụng dành cho CBQL trên hệ thống TNG Office</p><div class="mini-meta"><div class="mm-chip"><b>1.0</b><span>Phiên bản</span></div><div class="mm-chip"><b>13/07/2026</b><span>Ngày phát hành</span></div><div class="mm-chip"><b>CBQL</b><span>Đối tượng</span></div><div class="mm-chip"><b>TNG Office</b><span>Nền tảng</span></div></div></div><section class="chapter-wrap" id="ch1"><div class="node lvl-1" id="ch1"><div class="chapter-header">
+</head><body><div class="side-panel"><div class="sp-doc-title">HDSD App Đào tạo &amp; Học hỏi CBQL</div><div class="sp-nav-label">Mục lục</div><nav class="sp-nav" id="sidenav"><a class="sp-link lvl-1" data-target="ch1" href="#ch1">Chương 1. Quy trình phần mềm</a><a class="sp-link lvl-1" data-target="ch2" href="#ch2">Chương 2. Hướng dẫn sử dụng phần mềm</a><a class="sp-link lvl-2" data-target="ch2-1" href="#ch2-1">Vào Nhân sự/Học hỏi tại CN</a><a class="sp-link lvl-3" data-target="step1" href="#step1">Bước 1: Đăng nhập và truy cập</a><a class="sp-link lvl-3" data-target="step2" href="#step2">Bước 2: Xem danh sách tuần và thống kê</a><a class="sp-link lvl-3" data-target="step3" href="#step3">Bước 3: Nhập học hỏi mới</a><a class="sp-link lvl-3" data-target="step4" href="#step4">Bước 4: Chỉnh sửa dòng học hỏi</a><a class="sp-link lvl-3" data-target="step5" href="#step5">Bước 5: Theo dõi danh sách và tìm kiếm</a><a class="sp-link lvl-3" data-target="step6" href="#step6">Bước 6: Lọc báo cáo CBQL</a><a class="sp-link lvl-3" data-target="step7" href="#step7">Bước 7: Xem kết quả lọc</a><a class="sp-link lvl-3" data-target="step8" href="#step8">Bước 8: Xuất và chia sẻ file báo cáo</a></nav></div><div class="main-content"><div class="main-content-inner"><section class="chapter-wrap" id="ch1"><div class="node lvl-1" id="ch1"><div class="chapter-header">
 <div class="chapter-badge">CH1</div>
 <h2>Chương 1. Quy trình phần mềm</h2>
 </div><div class="full-text"><p class="chapter-intro">

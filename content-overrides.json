@@ -14,8 +14,9 @@
       "step1:h4:1": "1. Đăng nhập và truy cập chức năng",
       "step2:h4:1": "2. Xem danh sách tuần và thống kê",
       "step2:td:3": "Hiển thị dạng <code>Tuần (DD/MM/YYYY)</code> — ví dụ: <code>TUẦN 29 (13/07/2026)</code>",
-      "step2:td:6": "Bảng 4 chỉ số tóm tắt tình hình cán bộ trong tuần (xem chi tiết bên dưới)"
+      "step2:td:6": "Bảng 4 chỉ số tóm tắt tình hình cán bộ trong tuần (xem chi tiết bên dưới)",
+      "step2:th:7": "<br>"
     }
   },
-  "updatedAt": "2026-07-15T06:20:53.866Z"
+  "updatedAt": "2026-07-15T06:20:57.287Z"
 }

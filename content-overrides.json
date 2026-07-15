@@ -45,7 +45,7 @@
       "step6:h4:1": "6. Lọc báo cáo CBQL",
       "step7:h4:1": "7. Xem kết quả lọc",
       "step8:h4:1": "8. Xuất và chia sẻ file báo cáo",
-      "step5:h5:5": "Tìm kiếm thông tin học hỏi của 1 nhân viên, chi nhánh",
+      "step5:h5:5": "Tìm kiếm thông tin học hỏi của 1 nhân viên, chi nhánh bất kỳ",
       "step5:p:7": "<br>",
       "step5:h5:6": "<br>",
       "step5:p:6": "<br>",
@@ -58,5 +58,5 @@
       "step5:h5:2": "Quy tắc màu badge Giờ"
     }
   },
-  "updatedAt": "2026-07-15T06:53:59.508Z"
+  "updatedAt": "2026-07-15T06:54:02.782Z"
 }

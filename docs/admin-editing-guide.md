@@ -30,8 +30,12 @@ Cần cấu hình:
 3. Sau khi đăng nhập, mở page cần sửa.
 4. Bấm nút `Bật sửa` ở thanh công cụ góc dưới.
 5. Click trực tiếp vào nội dung text để sửa. Hệ thống tự lưu sau khi nhập hoặc blur khỏi vùng sửa.
-6. Với ảnh, bấm `Đổi ảnh` hoặc dùng nút upload ảnh sẵn có trên page HR. Ảnh được upload vào repo và override cho mọi người xem.
-7. Bấm `Thoát` để đăng xuất admin.
+6. Khi click vào một box text, toolbar nhỏ sẽ hiện gần box đó:
+   - `Copy box`: copy toàn bộ HTML trong box hiện tại.
+   - `Paste vào box`: dán nội dung box đã copy vào box đang chọn.
+   - `Thêm ảnh`: upload ảnh từ máy và chèn ảnh vào trong box đang chọn.
+7. Với ảnh minh họa có sẵn, bấm `Đổi ảnh` hoặc dùng nút upload ảnh sẵn có trên page HR. Ảnh được upload vào repo và override cho mọi người xem.
+8. Bấm `Thoát` để đăng xuất admin.
 
 Có thể mở trực tiếp link cũ dạng `?edit=1` hoặc `#step1?edit=1`; nếu chưa đăng nhập, hệ thống sẽ chuyển sang `/admin.html` rồi quay lại page đó.
 
@@ -74,4 +78,5 @@ Page trong `docs/`:
 - Thanh công cụ admin chỉ xuất hiện sau khi đăng nhập.
 - Các key text được sinh theo vùng gần nhất có `id` và thứ tự tag, ví dụ `ch1:p:1`.
 - Ảnh minh họa HR có key ổn định theo bước, ví dụ `step1:image`.
+- Ảnh chèn inline vào box text được upload vào `content-assets/` rồi lưu URL trong HTML override của box đó.
 - Ảnh tối đa 5MB, hỗ trợ PNG, JPG, WEBP và GIF.

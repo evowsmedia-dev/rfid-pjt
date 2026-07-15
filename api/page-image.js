@@ -55,6 +55,10 @@ module.exports = async function handler(req, res) {
 
     await githubPutContent(config, filePath, buffer, `Upload document image for ${page}`, existing.sha);
 
+    if (payload.inlineOnly === true) {
+      return json(res, 200, { ok: true, page, key, src: `/${filePath}` });
+    }
+
     const { sha, data } = await readContentStore(config);
     const next = ensurePageStore(data, page);
     next.pages[page][key] = {

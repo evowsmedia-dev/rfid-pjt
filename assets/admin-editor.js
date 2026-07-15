@@ -13,6 +13,9 @@
   var editing = false;
   var textElements = [];
   var imageElements = [];
+  var boxClipboard = null;
+  var activeTextElement = null;
+  var boxTools = null;
 
   function pagePath() {
     var path = window.location.pathname || '/index.html';
@@ -175,6 +178,13 @@
       'body.admin-editing .tre-image-tools{display:flex;}',
       '.tre-image-tools button{border:1px solid #d9e2dc;border-radius:8px;background:#fff;color:#1a2332;font-size:11px;font-weight:800;padding:6px 9px;cursor:pointer;}',
       '.tre-image-tools button:hover{border-color:#5eb332;color:#3f7d22;}',
+      '.tre-box-tools{position:fixed;z-index:99998;display:none;gap:6px;align-items:center;flex-wrap:wrap;padding:6px;background:#fff;border:1px solid #d9e2dc;border-radius:10px;box-shadow:0 10px 28px rgba(26,35,50,.14);}',
+      'body.admin-editing .tre-box-tools.visible{display:flex;}',
+      '.tre-box-tools button{border:1px solid #d9e2dc;border-radius:8px;background:#fff;color:#1a2332;font-size:11px;font-weight:800;padding:6px 9px;cursor:pointer;}',
+      '.tre-box-tools button:hover{border-color:#5eb332;color:#3f7d22;}',
+      '.tre-box-tools button[disabled]{opacity:.45;cursor:not-allowed;}',
+      '.tre-box-tools input{display:none;}',
+      'body.admin-editing [data-live-key] img{max-width:60%;height:auto;display:block;margin:10px auto;border-radius:8px;border:1px solid #d9e2dc;}',
       '@media(max-width:700px){.tre-admin-toolbar{left:10px;right:10px;bottom:10px;justify-content:center;flex-wrap:wrap;}.tre-admin-toolbar span{width:100%;text-align:center;}}'
     ].join('\n');
     document.head.appendChild(style);
@@ -247,6 +257,41 @@
     setStatus('Đã lưu ảnh');
   }
 
+  async function uploadInlineImage(element, file) {
+    if (!file || !file.type || file.type.indexOf('image/') !== 0) {
+      window.alert('Vui lòng chọn file ảnh.');
+      return;
+    }
+    setStatus('Đang tải ảnh...');
+    var dataUrl = await fileToDataUrl(file);
+    var response = await fetch(imageApi, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
+      body: JSON.stringify({
+        page: pagePath(),
+        key: element.dataset.liveKey + ':inline-image',
+        dataUrl: dataUrl,
+        inlineOnly: true,
+        alt: 'Ảnh minh họa'
+      })
+    });
+    var payload = await response.json().catch(function () { return {}; });
+    if (!response.ok) throw new Error(payload.error || 'Không tải được ảnh.');
+
+    var img = document.createElement('img');
+    img.src = payload.src;
+    img.alt = 'Ảnh minh họa';
+    img.loading = 'lazy';
+    img.style.maxWidth = '60%';
+    img.style.height = 'auto';
+    img.style.display = 'block';
+    img.style.margin = '10px auto';
+    element.appendChild(img);
+    await saveText(element);
+    setStatus('Đã thêm ảnh');
+  }
+
   async function deleteOverride(key, type) {
     setStatus('Đang xóa...');
     var response = await fetch(contentApi, {
@@ -296,6 +341,101 @@
     }
   }
 
+  function refreshPasteButtons() {
+    Array.prototype.forEach.call(document.querySelectorAll('.tre-box-tools [data-box-paste]'), function (button) {
+      button.disabled = !boxClipboard;
+    });
+  }
+
+  function positionBoxTools(element) {
+    if (!boxTools || !element || !editing) return;
+    var rect = element.getBoundingClientRect();
+    boxTools.classList.add('visible');
+    var top = rect.top - boxTools.offsetHeight - 10;
+    if (top < 8) top = Math.min(window.innerHeight - boxTools.offsetHeight - 8, rect.bottom + 8);
+    var left = Math.min(Math.max(8, rect.left), window.innerWidth - boxTools.offsetWidth - 8);
+    boxTools.style.top = top + 'px';
+    boxTools.style.left = left + 'px';
+  }
+
+  function hideBoxToolsSoon() {
+    window.setTimeout(function () {
+      if (!boxTools || !editing) return;
+      if (boxTools.matches(':hover')) return;
+      var active = document.activeElement;
+      if (active && active.dataset && active.dataset.liveKey) return;
+      boxTools.classList.remove('visible');
+    }, 160);
+  }
+
+  function copyBox(element) {
+    boxClipboard = {
+      html: element.innerHTML,
+      source: element.dataset.liveKey
+    };
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(element.innerHTML).catch(function () {});
+      }
+    } catch (error) {}
+    refreshPasteButtons();
+    setStatus('Đã copy box');
+  }
+
+  function pasteBox(element) {
+    if (!boxClipboard) return;
+    element.innerHTML = boxClipboard.html;
+    queueSave(element);
+    setStatus('Đã paste box');
+  }
+
+  function addBoxTools(element) {
+    if (!boxTools) {
+      boxTools = document.createElement('div');
+      boxTools.className = 'tre-box-tools';
+      boxTools.innerHTML = '<button type="button" data-box-copy>Copy box</button><button type="button" data-box-paste disabled>Paste vào box</button><button type="button" data-box-image>Thêm ảnh</button><input type="file" accept="image/*">';
+      document.body.appendChild(boxTools);
+      var input = boxTools.querySelector('input');
+      boxTools.querySelector('[data-box-copy]').addEventListener('click', function () {
+        if (activeTextElement) copyBox(activeTextElement);
+      });
+      boxTools.querySelector('[data-box-paste]').addEventListener('click', function () {
+        if (activeTextElement) pasteBox(activeTextElement);
+      });
+      boxTools.querySelector('[data-box-image]').addEventListener('click', function () {
+        input.click();
+      });
+      input.addEventListener('change', function () {
+        var file = input.files && input.files[0];
+        if (!file || !activeTextElement) return;
+        uploadInlineImage(activeTextElement, file).catch(function (error) {
+          setStatus('Lỗi ảnh');
+          window.alert(error.message);
+        }).finally(function () {
+          input.value = '';
+        });
+      });
+      window.addEventListener('scroll', function () {
+        if (activeTextElement && boxTools.classList.contains('visible')) positionBoxTools(activeTextElement);
+      }, true);
+      window.addEventListener('resize', function () {
+        if (activeTextElement && boxTools.classList.contains('visible')) positionBoxTools(activeTextElement);
+      });
+    }
+    if (element.dataset.boxToolsReady === '1') return;
+    element.dataset.boxToolsReady = '1';
+    element.addEventListener('focus', function () {
+      activeTextElement = element;
+      positionBoxTools(element);
+    });
+    element.addEventListener('click', function () {
+      activeTextElement = element;
+      positionBoxTools(element);
+    });
+    element.addEventListener('blur', hideBoxToolsSoon);
+    refreshPasteButtons();
+  }
+
   function bindHrUploadControls() {
     document.addEventListener('change', function (event) {
       if (!editing) return;
@@ -342,11 +482,22 @@
       element.addEventListener('input', function () { queueSave(element); });
       element.addEventListener('blur', function () { queueSave(element); });
       element.addEventListener('paste', function (event) {
-        event.preventDefault();
+        var html = event.clipboardData ? event.clipboardData.getData('text/html') : '';
         var text = event.clipboardData ? event.clipboardData.getData('text/plain') : '';
-        document.execCommand('insertText', false, text);
+        if (html) {
+          event.preventDefault();
+          document.execCommand('insertHTML', false, html);
+          queueSave(element);
+          return;
+        }
+        if (text) {
+          event.preventDefault();
+          document.execCommand('insertText', false, text);
+          queueSave(element);
+        }
       });
     });
+    textElements.forEach(addBoxTools);
     imageElements.forEach(addImageTools);
     setStatus('Đang sửa');
   }
@@ -354,6 +505,7 @@
   function disableEditing() {
     editing = false;
     document.body.classList.remove('admin-editing');
+    if (boxTools) boxTools.classList.remove('visible');
     textElements.forEach(function (element) {
       element.removeAttribute('contenteditable');
       element.removeAttribute('spellcheck');

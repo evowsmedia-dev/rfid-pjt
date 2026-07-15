@@ -267,7 +267,9 @@ Luồng admin:
 3. Mở page tài liệu cần sửa.
 4. Bấm `Bật sửa` ở thanh công cụ admin.
 5. Sửa text trực tiếp trên page hoặc upload/xóa ảnh minh họa.
-6. Nội dung được lưu vào GitHub để người khác xem cùng một bản, không phụ thuộc cache/localStorage.
+6. Copy toàn bộ nội dung một box và paste vào box text khác khi cần tái sử dụng cấu trúc nội dung.
+7. Chèn ảnh từ máy vào một box text bất kỳ hoặc thay ảnh minh họa sẵn có.
+8. Nội dung được lưu vào GitHub để người khác xem cùng một bản, không phụ thuộc cache/localStorage.
 
 Thành phần kỹ thuật:
 

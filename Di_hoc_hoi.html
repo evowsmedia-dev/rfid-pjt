@@ -657,14 +657,16 @@ body.tabs-ready .node.lvl-2.tab-visible{margin-top:0;padding-top:0;border-top:0;
   }
 
   function activate(target, options = {}){
-    const node = getNode(target);
+    const requestedTarget = target;
+    const displayTarget = target === 'ch2' ? 'ch2-1' : target;
+    const node = getNode(displayTarget);
     if(!node) return false;
     resetView();
 
     const chapter = node.closest('.chapter-wrap');
     if(chapter) chapter.classList.add('tab-chapter-visible');
 
-    let activeTabTarget = target;
+    let activeTabTarget = displayTarget;
     if(chapter && chapter.id === 'ch1'){
       showFullChapter(chapter);
       activeTabTarget = target;
@@ -688,18 +690,18 @@ body.tabs-ready .node.lvl-2.tab-visible{margin-top:0;padding-top:0;border-top:0;
       if(parentLevel1 && parentLevel1 !== activeTabLink) parentLevel1.classList.add('parent-active');
     }
 
-    const activeStepLink = stepLinks.find(link => link.dataset.target === target);
+    const activeStepLink = stepLinks.find(link => link.dataset.target === displayTarget);
     if(activeStepLink){
       activeStepLink.classList.add('active');
       activeStepLink.setAttribute('aria-current','location');
     }
 
     if(options.updateHash !== false){
-      history.replaceState(null,'','#' + target);
+      history.replaceState(null,'','#' + requestedTarget);
     }
 
     requestAnimationFrame(() => {
-      if(chapter && chapter.id === 'ch1' && target !== 'ch1' && options.scrollToTarget !== false){
+      if(chapter && chapter.id === 'ch1' && displayTarget !== 'ch1' && options.scrollToTarget !== false){
         node.scrollIntoView({behavior: options.instant ? 'auto' : 'smooth', block:'start'});
       }else if(node.classList.contains('lvl-3') && options.scrollToTarget !== false){
         node.scrollIntoView({behavior: options.instant ? 'auto' : 'smooth', block:'start'});

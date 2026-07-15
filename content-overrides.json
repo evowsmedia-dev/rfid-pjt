@@ -24,8 +24,8 @@
       "step3:div:1": "Nhấn icon <strong>(+)</strong> ở góc phải trên cùng màn hình để mở form <strong>Nhập học hỏi</strong>.",
       "step3:td:9": "Mặc định là tên CBQL đăng nhập",
       "step3:td:5": "<span class=\"badge badge-green\">Tự động</span>",
-      "step3:td:10": "<br>"
+      "step3:td:10": "<span class=\"badge badge-green\">Tự động</span>"
     }
   },
-  "updatedAt": "2026-07-15T06:27:52.993Z"
+  "updatedAt": "2026-07-15T06:27:53.889Z"
 }

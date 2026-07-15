@@ -74,8 +74,9 @@
       "step6:th:4": "<br>",
       "step6:th:3": "<br>",
       "step6:th:2": "<br>",
-      "step6:td:1": "<br>"
+      "step6:td:1": "<br>",
+      "step6:td:19": "Chọn qua lịch (DatePicker)"
     }
   },
-  "updatedAt": "2026-07-15T07:06:29.670Z"
+  "updatedAt": "2026-07-15T07:06:39.615Z"
 }

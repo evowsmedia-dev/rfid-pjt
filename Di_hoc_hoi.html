@@ -191,6 +191,9 @@ tr:last-child td{border-bottom:none;}
 .sp-link.parent-active{color:var(--brand-d);font-weight:700;}
 body.tabs-ready .chapter-wrap{display:none;}
 body.tabs-ready .chapter-wrap.tab-chapter-visible{display:block;}
+body.tabs-ready .chapter-wrap.chapter-full-view .node.lvl-2.tab-visible{
+  margin:18px 0 4px;padding-top:10px;border-top:1px solid var(--gray-bd);
+}
 body.tabs-ready .node.lvl-1,
 body.tabs-ready .node.lvl-2,
 body.tabs-ready .node.lvl-3{display:none;}
@@ -702,7 +705,7 @@ body.tabs-ready .node.lvl-2.tab-visible{margin-top:0;padding-top:0;border-top:0;
   }
 
   function resetView(){
-    chapters.forEach(chapter => chapter.classList.remove('tab-chapter-visible'));
+    chapters.forEach(chapter => chapter.classList.remove('tab-chapter-visible','chapter-full-view'));
     nodes.forEach(node => node.classList.remove('tab-visible'));
     navLinks.forEach(link => {
       link.classList.remove('active','parent-active');
@@ -726,6 +729,12 @@ body.tabs-ready .node.lvl-2.tab-visible{margin-top:0;padding-top:0;border-top:0;
     }
   }
 
+  function showFullChapter(chapter){
+    if(!chapter) return;
+    chapter.classList.add('tab-chapter-visible','chapter-full-view');
+    Array.from(chapter.querySelectorAll('.node')).forEach(node => node.classList.add('tab-visible'));
+  }
+
   function activate(target, options = {}){
     const node = getNode(target);
     if(!node) return false;
@@ -735,7 +744,10 @@ body.tabs-ready .node.lvl-2.tab-visible{margin-top:0;padding-top:0;border-top:0;
     if(chapter) chapter.classList.add('tab-chapter-visible');
 
     let activeTabTarget = target;
-    if(node.classList.contains('lvl-3')){
+    if(chapter && chapter.id === 'ch1'){
+      showFullChapter(chapter);
+      activeTabTarget = target;
+    }else if(node.classList.contains('lvl-3')){
       const parentLevel2 = getParentLevel2(node);
       showLevel2Group(parentLevel2);
       activeTabTarget = parentLevel2 ? parentLevel2.id : target;
@@ -766,7 +778,9 @@ body.tabs-ready .node.lvl-2.tab-visible{margin-top:0;padding-top:0;border-top:0;
     }
 
     requestAnimationFrame(() => {
-      if(node.classList.contains('lvl-3') && options.scrollToTarget !== false){
+      if(chapter && chapter.id === 'ch1' && target !== 'ch1' && options.scrollToTarget !== false){
+        node.scrollIntoView({behavior: options.instant ? 'auto' : 'smooth', block:'start'});
+      }else if(node.classList.contains('lvl-3') && options.scrollToTarget !== false){
         node.scrollIntoView({behavior: options.instant ? 'auto' : 'smooth', block:'start'});
       }else if(main){
         main.scrollTo({top:0, behavior: options.instant ? 'auto' : 'smooth'});

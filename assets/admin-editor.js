@@ -57,6 +57,7 @@
       '.content-area p', '.content-area li', '.content-area th', '.content-area td',
       '.proc-title', '.proc-subtitle', '.editable',
       '.flow-node', '.flow-label', '.flow-description',
+      '.step-content',
       '.card-title', '.card-desc', '.module-title', '.module-subtitle',
       '.mini-cover h1', '.mini-cover p', '.mini-cover b', '.mini-cover span',
       '.chapter-badge', '.tab-empty-note'
@@ -71,6 +72,7 @@
     if (!element || !element.textContent || !element.textContent.trim()) return false;
     if (isBlocked(element)) return false;
     if (element.matches('a, button, label, input, textarea, select')) return false;
+    if (element.closest('.step-content') && !element.matches('.step-content')) return false;
     return true;
   }
 

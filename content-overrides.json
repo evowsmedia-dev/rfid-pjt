@@ -10,8 +10,8 @@
       "ch1-2:li:7": "Hệ thống tự tính <strong>Thời gian học&nbsp;</strong>dựa trên giờ bắt đầu/kết thúc.",
       "step2:td:9": "4 cột: <code>CBQL</code> · <code>Mã CN</code> · <code>Giờ</code> · <code>Nội dung</code>",
       "step1:p:1": "Màn hình chính là nơi bạn quản lý tất cả các hoạt động học hỏi của CBQL theo tuần.",
-      "step1:div:2": "\n            Chọn chức năng <code>&nbsp;→ Đi học hỏi</code>. Màn hình hiển thị danh sách các tuần học hỏi.\n          "
+      "step1:div:2": "\n            Chọn chức năng <code>Nhân sự → Đi học hỏi</code>. Màn hình hiển thị danh sách các tuần học hỏi.\n          "
     }
   },
-  "updatedAt": "2026-07-15T06:17:44.788Z"
+  "updatedAt": "2026-07-15T06:17:46.977Z"
 }

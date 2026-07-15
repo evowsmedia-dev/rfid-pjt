@@ -57,8 +57,8 @@
       "step5:h5:1": "Cấu trúc bảng danh sách",
       "step5:h5:2": "Quy tắc màu badge Giờ",
       "step6:p:1": "<em>(Dành cho CBQL có quyền)</em>",
-      "step6:div:1": "Chọn chức năng <strong>Nhân sự → Đi học hỏi</strong>. Hệ thống kiểm tra quy ề<ul style=\"margin-top:8px;\"><li>Có quyền → vào màn hình <strong>Lọc báo cáo</strong>.</li><li>Không có quyền → hiển thị thông báo <span class=\"badge badge-red\">\"Không có quyền truy cập báo cáo CBQL\"</span> và quay lại.</li></ul>"
+      "step6:div:1": "Chọn chức năng <strong>Nhân sự → Đi học hỏi</strong>. Hệ thống kiểm tra quyề<ul style=\"margin-top:8px;\"><li>Có quyền → vào màn hình <strong>Lọc báo cáo</strong>.</li><li>Không có quyền → hiển thị thông báo <span class=\"badge badge-red\">\"Không có quyền truy cập báo cáo CBQL\"</span> và quay lại.</li></ul>"
     }
   },
-  "updatedAt": "2026-07-15T07:01:41.449Z"
+  "updatedAt": "2026-07-15T07:01:43.680Z"
 }

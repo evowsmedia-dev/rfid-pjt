@@ -11,11 +11,14 @@
   var adminSession = null;
   var toolbar = null;
   var editing = false;
+  var tableElements = [];
   var textElements = [];
   var imageElements = [];
   var boxClipboard = null;
   var activeTextElement = null;
   var boxTools = null;
+  var activeTableRow = null;
+  var tableTools = null;
 
   function pagePath() {
     var path = window.location.pathname || '/index.html';
@@ -109,6 +112,28 @@
     });
   }
 
+  function collectTableElements() {
+    var seen = new Set();
+    return Array.prototype.filter.call(document.querySelectorAll(
+      'main table, .main-content table, .content table, .content-area table'
+    ), function (table) {
+      if (!table || seen.has(table) || isBlocked(table)) return false;
+      seen.add(table);
+      return true;
+    });
+  }
+
+  function assignTableKeys(elements) {
+    var counters = {};
+    elements.forEach(function (table) {
+      if (table.dataset.liveTableKey) return;
+      var owner = ownerId(table);
+      var name = owner + ':table';
+      counters[name] = (counters[name] || 0) + 1;
+      table.dataset.liveTableKey = name + ':' + counters[name];
+    });
+  }
+
   function assignTextKeys(elements) {
     var counters = {};
     elements.forEach(function (element) {
@@ -164,6 +189,9 @@
   function applyEdits(edits) {
     currentEdits = edits || {};
     textElements.forEach(function (element) {
+      var table = element.closest('table');
+      var tableEdit = table && currentEdits[table.dataset.liveTableKey];
+      if (tableEdit && tableEdit.type === 'table') return;
       var edit = currentEdits[element.dataset.liveKey];
       if (typeof edit === 'string') element.innerHTML = edit;
       if (edit && typeof edit.html === 'string') element.innerHTML = edit.html;
@@ -208,6 +236,12 @@
       '.tre-box-tools button[disabled]{opacity:.45;cursor:not-allowed;}',
       '.tre-box-tools input{display:none;}',
       'body.admin-editing [data-live-key] img{max-width:60%;height:auto;display:block;margin:10px auto;border-radius:8px;border:1px solid #d9e2dc;}',
+      '.tre-table-tools{position:fixed;z-index:99998;display:none;gap:6px;align-items:center;padding:6px;background:#fff;border:1px solid #d9e2dc;border-radius:10px;box-shadow:0 10px 28px rgba(26,35,50,.14);}',
+      'body.admin-editing .tre-table-tools.visible{display:flex;}',
+      '.tre-table-tools button{border:1px solid #d9e2dc;border-radius:8px;background:#fff;color:#1a2332;font-size:11px;font-weight:800;padding:6px 9px;cursor:pointer;}',
+      '.tre-table-tools button:hover{border-color:#5eb332;color:#3f7d22;}',
+      '.tre-table-tools button.danger{color:#dc2626;}',
+      'body.admin-editing tr.admin-active-row>td,body.admin-editing tr.admin-active-row>th{box-shadow:inset 0 0 0 9999px rgba(94,179,50,.08);}',
       '@media(max-width:700px){.tre-admin-toolbar{left:10px;right:10px;bottom:10px;justify-content:center;flex-wrap:wrap;}.tre-admin-toolbar span{width:100%;text-align:center;}}'
     ].join('\n');
     document.head.appendChild(style);
@@ -242,6 +276,39 @@
     saveTimers.set(element, window.setTimeout(function () {
       saveText(element).catch(function (error) {
         setStatus('Lỗi lưu');
+        window.alert(error.message);
+      });
+    }, 900));
+  }
+
+  async function saveTable(table) {
+    if (!table || !table.dataset.liveTableKey) return;
+    setStatus('Đang lưu bảng...');
+    var response = await fetch(contentApi, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
+      body: JSON.stringify({
+        page: pagePath(),
+        key: table.dataset.liveTableKey,
+        value: {
+          type: 'table',
+          html: table.innerHTML
+        }
+      })
+    });
+    if (!response.ok) {
+      var payload = await response.json().catch(function () { return {}; });
+      throw new Error(payload.error || 'Không lưu được bảng.');
+    }
+    setStatus('Đã lưu bảng');
+  }
+
+  function queueSaveTable(table) {
+    window.clearTimeout(saveTimers.get(table));
+    saveTimers.set(table, window.setTimeout(function () {
+      saveTable(table).catch(function (error) {
+        setStatus('Lỗi lưu bảng');
         window.alert(error.message);
       });
     }, 900));
@@ -461,6 +528,160 @@
     refreshPasteButtons();
   }
 
+  function tableForRow(row) {
+    return row ? row.closest('table') : null;
+  }
+
+  function bodyRow(row) {
+    return row && row.closest('tbody') ? row : null;
+  }
+
+  function positionTableTools(row) {
+    if (!tableTools || !row || !editing) return;
+    var rect = row.getBoundingClientRect();
+    tableTools.classList.add('visible');
+    var top = rect.top - tableTools.offsetHeight - 8;
+    if (top < 8) top = Math.min(window.innerHeight - tableTools.offsetHeight - 8, rect.bottom + 8);
+    var left = Math.min(Math.max(8, rect.left), window.innerWidth - tableTools.offsetWidth - 8);
+    tableTools.style.top = top + 'px';
+    tableTools.style.left = left + 'px';
+  }
+
+  function setActiveTableRow(row) {
+    if (activeTableRow) activeTableRow.classList.remove('admin-active-row');
+    activeTableRow = bodyRow(row);
+    if (activeTableRow) {
+      activeTableRow.classList.add('admin-active-row');
+      positionTableTools(activeTableRow);
+    }
+  }
+
+  function hideTableToolsSoon() {
+    window.setTimeout(function () {
+      if (!tableTools || !editing) return;
+      if (tableTools.matches(':hover')) return;
+      tableTools.classList.remove('visible');
+      if (activeTableRow) activeTableRow.classList.remove('admin-active-row');
+      activeTableRow = null;
+    }, 180);
+  }
+
+  function clearEditorAttrs(root) {
+    Array.prototype.forEach.call(root.querySelectorAll('[data-live-key], [data-admin-bound], [contenteditable], [spellcheck]'), function (node) {
+      node.removeAttribute('data-live-key');
+      node.removeAttribute('data-admin-bound');
+      node.removeAttribute('contenteditable');
+      node.removeAttribute('spellcheck');
+    });
+  }
+
+  function blankRowFrom(row) {
+    var clone = row.cloneNode(true);
+    clone.classList.remove('admin-active-row');
+    clearEditorAttrs(clone);
+    Array.prototype.forEach.call(clone.children, function (cell) {
+      cell.innerHTML = '';
+      cell.setAttribute('contenteditable', 'true');
+      cell.setAttribute('spellcheck', 'false');
+    });
+    return clone;
+  }
+
+  function refreshEditableCollections() {
+    textElements = collectTextElements();
+    imageElements = collectImageElements();
+    assignTextKeys(textElements);
+    assignImageKeys(imageElements);
+    if (editing) {
+      textElements.forEach(bindEditableText);
+      textElements.forEach(addBoxTools);
+      tableElements.forEach(enableTableCells);
+      imageElements.forEach(addImageTools);
+    }
+  }
+
+  function addTableRow() {
+    var row = bodyRow(activeTableRow);
+    if (!row) return;
+    var table = tableForRow(row);
+    var next = blankRowFrom(row);
+    row.parentNode.insertBefore(next, row.nextSibling);
+    refreshEditableCollections();
+    setActiveTableRow(next);
+    saveTable(table).catch(function (error) {
+      setStatus('Lỗi lưu bảng');
+      window.alert(error.message);
+    });
+  }
+
+  function deleteTableRow() {
+    var row = bodyRow(activeTableRow);
+    if (!row) return;
+    var tbody = row.closest('tbody');
+    var table = tableForRow(row);
+    var rows = tbody ? Array.prototype.filter.call(tbody.rows, function (item) { return item.closest('tbody') === tbody; }) : [];
+    if (rows.length <= 1) {
+      window.alert('Bảng cần giữ ít nhất 1 dòng nội dung.');
+      return;
+    }
+    var next = row.nextElementSibling || row.previousElementSibling;
+    row.remove();
+    refreshEditableCollections();
+    if (next && next.closest('tbody')) setActiveTableRow(next);
+    saveTable(table).catch(function (error) {
+      setStatus('Lỗi lưu bảng');
+      window.alert(error.message);
+    });
+  }
+
+  function addTableTools(table) {
+    if (!tableTools) {
+      tableTools = document.createElement('div');
+      tableTools.className = 'tre-table-tools';
+      tableTools.innerHTML = '<button type="button" data-table-add>Thêm dòng</button><button type="button" class="danger" data-table-delete>Xóa dòng</button>';
+      document.body.appendChild(tableTools);
+      tableTools.querySelector('[data-table-add]').addEventListener('click', addTableRow);
+      tableTools.querySelector('[data-table-delete]').addEventListener('click', deleteTableRow);
+      window.addEventListener('scroll', function () {
+        if (activeTableRow && tableTools.classList.contains('visible')) positionTableTools(activeTableRow);
+      }, true);
+      window.addEventListener('resize', function () {
+        if (activeTableRow && tableTools.classList.contains('visible')) positionTableTools(activeTableRow);
+      });
+    }
+    if (table.dataset.tableToolsReady === '1') return;
+    table.dataset.tableToolsReady = '1';
+    table.addEventListener('click', function (event) {
+      var row = event.target.closest('tbody tr');
+      if (!row || !table.contains(row)) return;
+      setActiveTableRow(row);
+    });
+    table.addEventListener('focusin', function (event) {
+      var row = event.target.closest('tbody tr');
+      if (!row || !table.contains(row)) return;
+      setActiveTableRow(row);
+    });
+    table.addEventListener('mouseleave', hideTableToolsSoon);
+    table.addEventListener('input', function () { queueSaveTable(table); });
+    table.addEventListener('blur', function () { queueSaveTable(table); }, true);
+  }
+
+  function enableTableCells(table) {
+    Array.prototype.forEach.call(table.querySelectorAll('tbody td, tbody th'), function (cell) {
+      cell.setAttribute('contenteditable', 'true');
+      cell.setAttribute('spellcheck', 'false');
+    });
+  }
+
+  function disableTableCells(table) {
+    Array.prototype.forEach.call(table.querySelectorAll('tbody td, tbody th'), function (cell) {
+      if (!cell.dataset.liveKey) {
+        cell.removeAttribute('contenteditable');
+        cell.removeAttribute('spellcheck');
+      }
+    });
+  }
+
   function bindHrUploadControls() {
     document.addEventListener('change', function (event) {
       if (!editing) return;
@@ -496,34 +717,38 @@
     }, true);
   }
 
+  function bindEditableText(element) {
+    element.setAttribute('contenteditable', 'true');
+    element.setAttribute('spellcheck', 'false');
+    if (element.dataset.adminBound === '1') return;
+    element.dataset.adminBound = '1';
+    element.addEventListener('input', function () { queueSave(element); });
+    element.addEventListener('blur', function () { queueSave(element); });
+    element.addEventListener('paste', function (event) {
+      var html = event.clipboardData ? event.clipboardData.getData('text/html') : '';
+      var text = event.clipboardData ? event.clipboardData.getData('text/plain') : '';
+      if (html) {
+        event.preventDefault();
+        document.execCommand('insertHTML', false, html);
+        normalizeInlineImages(element);
+        queueSave(element);
+        return;
+      }
+      if (text) {
+        event.preventDefault();
+        document.execCommand('insertText', false, text);
+        queueSave(element);
+      }
+    });
+  }
+
   function enableEditing() {
     editing = true;
     document.body.classList.add('admin-editing');
-    textElements.forEach(function (element) {
-      element.setAttribute('contenteditable', 'true');
-      element.setAttribute('spellcheck', 'false');
-      if (element.dataset.adminBound === '1') return;
-      element.dataset.adminBound = '1';
-      element.addEventListener('input', function () { queueSave(element); });
-      element.addEventListener('blur', function () { queueSave(element); });
-      element.addEventListener('paste', function (event) {
-        var html = event.clipboardData ? event.clipboardData.getData('text/html') : '';
-        var text = event.clipboardData ? event.clipboardData.getData('text/plain') : '';
-        if (html) {
-          event.preventDefault();
-          document.execCommand('insertHTML', false, html);
-          normalizeInlineImages(element);
-          queueSave(element);
-          return;
-        }
-        if (text) {
-          event.preventDefault();
-          document.execCommand('insertText', false, text);
-          queueSave(element);
-        }
-      });
-    });
+    textElements.forEach(bindEditableText);
     textElements.forEach(addBoxTools);
+    tableElements.forEach(addTableTools);
+    tableElements.forEach(enableTableCells);
     imageElements.forEach(addImageTools);
     setStatus('Đang sửa');
   }
@@ -532,10 +757,14 @@
     editing = false;
     document.body.classList.remove('admin-editing');
     if (boxTools) boxTools.classList.remove('visible');
+    if (tableTools) tableTools.classList.remove('visible');
+    if (activeTableRow) activeTableRow.classList.remove('admin-active-row');
+    activeTableRow = null;
     textElements.forEach(function (element) {
       element.removeAttribute('contenteditable');
       element.removeAttribute('spellcheck');
     });
+    tableElements.forEach(disableTableCells);
     setStatus('Đã tắt sửa');
   }
 
@@ -580,11 +809,20 @@
   }
 
   async function init() {
+    var edits = await loadEdits();
+    tableElements = collectTableElements();
+    assignTableKeys(tableElements);
+    currentEdits = edits || {};
+    tableElements.forEach(function (table) {
+      var edit = currentEdits[table.dataset.liveTableKey];
+      if (edit && edit.type === 'table' && typeof edit.html === 'string') table.innerHTML = edit.html;
+    });
+
     textElements = collectTextElements();
     imageElements = collectImageElements();
     assignTextKeys(textElements);
     assignImageKeys(imageElements);
-    applyEdits(await loadEdits());
+    applyEdits(edits);
     adminSession = await loadSession();
     bindHrUploadControls();
 

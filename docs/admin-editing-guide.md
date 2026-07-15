@@ -34,8 +34,11 @@ Cần cấu hình:
    - `Copy box`: copy toàn bộ HTML trong box hiện tại.
    - `Paste vào box`: dán nội dung box đã copy vào box đang chọn.
    - `Thêm ảnh`: upload ảnh từ máy và chèn ảnh vào trong box đang chọn.
-7. Với ảnh minh họa có sẵn, bấm `Đổi ảnh` hoặc dùng nút upload ảnh sẵn có trên page HR. Ảnh được upload vào repo và override cho mọi người xem.
-8. Bấm `Thoát` để đăng xuất admin.
+7. Khi click vào một dòng trong bảng, toolbar nhỏ sẽ hiện gần dòng đó:
+   - `Thêm dòng`: thêm một dòng trống ngay sau dòng đang chọn.
+   - `Xóa dòng`: xóa dòng đang chọn, nhưng giữ tối thiểu 1 dòng nội dung trong `tbody`.
+8. Với ảnh minh họa có sẵn, bấm `Đổi ảnh` hoặc dùng nút upload ảnh sẵn có trên page HR. Ảnh được upload vào repo và override cho mọi người xem.
+9. Bấm `Thoát` để đăng xuất admin.
 
 Có thể mở trực tiếp link cũ dạng `?edit=1` hoặc `#step1?edit=1`; nếu chưa đăng nhập, hệ thống sẽ chuyển sang `/admin.html` rồi quay lại page đó.
 
@@ -78,6 +81,7 @@ Page trong `docs/`:
 - UI gốc của tài liệu không đổi với người xem thường.
 - Thanh công cụ admin chỉ xuất hiện sau khi đăng nhập.
 - Các key text được sinh theo vùng gần nhất có `id` và thứ tự tag, ví dụ `ch1:p:1`.
+- Khi thêm/xóa dòng bảng, hệ thống lưu override ở cấp `table` để cấu trúc bảng mới hiển thị cho mọi người xem.
 - Ảnh minh họa HR có key ổn định theo bước, ví dụ `step1:image`.
 - Ảnh chèn inline vào box text được upload vào `content-assets/` rồi lưu URL proxy `/api/content-asset?path=...` trong HTML override của box đó.
 - Ảnh tối đa 5MB, hỗ trợ PNG, JPG, WEBP và GIF.

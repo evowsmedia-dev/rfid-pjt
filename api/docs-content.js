@@ -51,7 +51,9 @@ module.exports = async function handler(req, res) {
     if (payload.value === null || payload.html === '') {
       delete next.pages[page][key];
     } else if (payload.value && typeof payload.value === 'object') {
-      next.pages[page][key] = payload.value;
+      const value = { ...payload.value };
+      if (typeof value.html === 'string') value.html = sanitizeHtml(value.html);
+      next.pages[page][key] = value;
     } else {
       next.pages[page][key] = sanitizeHtml(payload.html);
     }

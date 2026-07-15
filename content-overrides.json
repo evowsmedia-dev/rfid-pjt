@@ -37,7 +37,7 @@
       "step3:td:41": "8",
       "step3:td:46": "9",
       "step3:div:3": "Nhấn nút <code>[Xác nhận]</code> ở thanh dưới cùng để lưu. Hệ thống lưu thành công",
-      "step3:li:2": "<br>",
+      "step3:li:2": "Nếu thiếu sẽ hiển thị thông báo lỗi. Sau khi gửi thành công, hệ thống quay về danh sách tuần và tự động tải lại dữ liệu.",
       "step3:li:1": "<strong>Nội dung (Thu hoạch)</strong> không được rỗng.",
       "step4:h4:1": "4. Chỉnh sửa dòng học hỏi",
       "step2:p:2": "Dưới mỗi section tuần có 1 <strong>thẻ thống kê</strong> gồm 4 chỉ số:",
@@ -54,5 +54,5 @@
       "step3:p:1": "<br>"
     }
   },
-  "updatedAt": "2026-07-15T06:48:54.010Z"
+  "updatedAt": "2026-07-15T06:48:56.286Z"
 }

@@ -13,8 +13,8 @@
       "step1:div:2": "\n            Chọn chức năng <code>Nhân sự → Đi học hỏi</code>. Màn hình hiển thị danh sách các tuần học hỏi.\n          ",
       "step1:h4:1": "1. Đăng nhập và truy cập chức năng",
       "step2:h4:1": "2. Xem danh sách tuần và thống kê",
-      "step2:td:3": "Hiển thị dạng <code>Tuần {} (DD/MM/YYYY)</code> — ví dụ: <code>TUẦN 29 (13/07/2026)</code>"
+      "step2:td:3": "Hiển thị dạng <code>Tuần (DD/MM/YYYY)</code> — ví dụ: <code>TUẦN 29 (13/07/2026)</code>"
     }
   },
-  "updatedAt": "2026-07-15T06:20:25.803Z"
+  "updatedAt": "2026-07-15T06:20:30.314Z"
 }

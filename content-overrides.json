@@ -60,5 +60,5 @@
       "step6:div:1": "Chọn chức năng <strong>Nhân sự → Đi học hỏi</strong>. Hệ thống kiểm tra quyền:<ul style=\"margin-top:8px;\"><li>Có quyền → vào màn hình bấm&nbsp;<strong>Lọc báo cáo</strong>.</li><li>Không có quyền → hiển thị thông báo <span class=\"badge badge-red\">\"Không có quyền truy cập báo cáo CBQL\"</span> và quay lại.</li></ul>"
     }
   },
-  "updatedAt": "2026-07-15T07:02:22.486Z"
+  "updatedAt": "2026-07-15T07:02:24.897Z"
 }

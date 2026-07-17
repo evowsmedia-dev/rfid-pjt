@@ -54,14 +54,19 @@
     var isWarehouseDoc = warehouseLinks.some(function(item){ return item[1] === file; });
     if(!isWarehouseDoc || document.querySelector('.warehouse-doc-nav')) return;
     var target = document.querySelector('.sidebar') || document.querySelector('.side-panel');
-    if(!target) return;
     var nav = document.createElement('div');
     nav.className = 'warehouse-doc-nav';
     nav.innerHTML = '<div class="warehouse-doc-nav-title">Tài liệu Kho</div>' + warehouseLinks.map(function(item){
       var active = item[1] === file ? ' active' : '';
       return '<a class="'+active+'" href="'+item[1]+'">'+item[0]+'</a>';
     }).join('');
-    target.insertBefore(nav, target.firstChild);
+    if(target) {
+      target.insertBefore(nav, target.firstChild);
+    } else {
+      nav.className += ' warehouse-floating';
+      document.body.classList.add('has-warehouse-floating');
+      document.body.insertBefore(nav, document.body.firstChild.nextSibling);
+    }
   }
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', render);
   else render();

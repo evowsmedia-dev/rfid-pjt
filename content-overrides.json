@@ -100,8 +100,9 @@
       }
     },
     "/docs/BA_sua_ngay_xuat_hang.html": {
-      "s1:p:1": "<br>"
+      "s1:p:1": "<br>",
+      "s1:td:4": "\n            <div class=\"scope-grid\">\n              <div>\n                <div class=\"col-title\">Trong phạm vi</div>\n                <ul>\n                  <li data-live-key=\"s1:li:1\" contenteditable=\"true\" spellcheck=\"false\" data-admin-bound=\"1\" data-box-tools-ready=\"1\">Chức năng \"Sửa ngày xuất hàng\" tại Bảng theo dõi PAKD</li>\n                  <li data-live-key=\"s1:li:2\" contenteditable=\"true\" spellcheck=\"false\" data-admin-bound=\"1\" data-box-tools-ready=\"1\">Popup nhập ngày điều chỉnh + lý do</li>\n                  <li data-live-key=\"s1:li:3\" contenteditable=\"true\" spellcheck=\"false\" data-admin-bound=\"1\" data-box-tools-ready=\"1\">Loại phê duyệt mới trong <b>App Phê duyệt (ứng dụng di động)</b> dành cho TPKD Công ty → TGĐ</li>\n                  <li data-live-key=\"s1:li:4\" contenteditable=\"true\" spellcheck=\"false\" data-admin-bound=\"1\" data-box-tools-ready=\"1\">Chuông thông báo <b>trong App Phê duyệt di động</b>, báo cho TPKD Công ty / TGĐ khi có yêu cầu mới hoặc đến lượt mình duyệt</li>\n                  <li data-live-key=\"s1:li:5\" contenteditable=\"true\" spellcheck=\"false\" data-admin-bound=\"1\" data-box-tools-ready=\"1\">Cập nhật cột \"Ngày XH điều chỉnh\" (đang để trống) sau khi duyệt xong</li>\n                  <li data-live-key=\"s1:li:6\" contenteditable=\"true\" spellcheck=\"false\" data-admin-bound=\"1\" data-box-tools-ready=\"1\">Lưu lịch sử các lần điều chỉnh của mã hàng</li>\n                </ul>\n              </div>\n              <div>\n                <div class=\"col-title\">Ngoài phạm vi (đợt này)</div>\n                <ul><li data-live-key=\"s1:li:8\" contenteditable=\"true\" spellcheck=\"false\" data-admin-bound=\"1\" data-box-tools-ready=\"1\">Thay đổi cơ chế hủy/điều chỉnh PAKD hiện hữu</li>\n                  <li data-live-key=\"s1:li:9\" contenteditable=\"true\" spellcheck=\"false\" data-admin-bound=\"1\" data-box-tools-ready=\"1\">Thay đổi số lượng, đơn giá hay các nội dung khác của mã hàng</li>\n                </ul>\n              </div>\n            </div>\n          "
     }
   },
-  "updatedAt": "2026-07-17T08:44:42.881Z"
+  "updatedAt": "2026-07-17T08:44:48.099Z"
 }

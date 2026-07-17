@@ -1,4 +1,6 @@
 (function(){
+  if(new URLSearchParams(location.search).get('embed') === '1') return;
+
   var isDocsPath = location.pathname.indexOf('/docs/') !== -1;
   var prefix = isDocsPath ? '../' : '';
   var links = [

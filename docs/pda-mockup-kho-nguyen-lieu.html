@@ -347,6 +347,8 @@ body{
 .shortcut-card .sc-ico{width:38px;height:38px;border-radius:11px;background:rgba(255,255,255,.2);display:flex;
   align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
 .shortcut-card .asset-icon{width:30px;height:30px;}
+.fab .asset-icon,.bn-center .asset-icon,.pulse-core .asset-icon{width:28px;height:28px;}
+.pulse-core .asset-icon{filter:brightness(0) invert(1);}
 .shortcut-card b{display:block;font-size:12.5px;}
 .shortcut-card small{font-size:10px;opacity:.85;}
 .shortcut-card .chev{margin-left:auto;font-size:16px;opacity:.8;}
@@ -404,7 +406,7 @@ body{
     <button class="sp-btn" data-nav="list"><span class="ico"><img class="asset-icon" src="../assets/warehouse-icons/bien-ban-giam-dinh.svg" alt=""></span>Danh sách BBGĐ<span class="tag tag-fix">Fix #1,2</span></button>
     <button class="sp-btn" data-nav="detail"><span class="ico"><img class="asset-icon" src="../assets/warehouse-icons/bien-ban-giam-dinh.svg" alt=""></span>Chi tiết BBGĐ<span class="tag tag-fix">Fix #3,4,8</span></button>
     <button class="sp-btn" data-nav="roll"><span class="ico"><img class="asset-icon" src="../assets/warehouse-icons/nguyen-lieu.svg" alt=""></span>Chi tiết cuộn<span class="tag tag-new">RFID field</span></button>
-    <button class="sp-btn" data-nav="bulk"><span class="ico">📡</span>RFID Bulk Scan<span class="tag tag-new">Mới</span></button>
+    <button class="sp-btn" data-nav="bulk"><span class="ico"><img class="asset-icon" src="../assets/warehouse-icons/barcode-scanner.png" alt=""></span>RFID Bulk Scan<span class="tag tag-new">Mới</span></button>
     <button class="sp-btn" data-nav="position"><span class="ico"><img class="asset-icon" src="../assets/warehouse-icons/cap-nhat-vi-tri.svg" alt=""></span>Cập nhật vị trí<span class="tag tag-fix">Fix #2,7</span></button>
     <button class="sp-btn" data-nav="map"><span class="ico"><img class="asset-icon" src="../assets/warehouse-icons/truc-quan-kho.svg" alt=""></span>Trực quan kho<span class="tag tag-fix">Fix #9</span></button>
     <button class="sp-btn" data-nav="stock"><span class="ico"><img class="asset-icon" src="../assets/warehouse-icons/nguyen-lieu.svg" alt=""></span>Stock nguyên liệu</button>
@@ -453,7 +455,7 @@ body{
               </div>
             </div>
             <div class="shortcut-card" data-nav="bulk">
-              <div class="sc-ico"><img class="asset-icon" src="../assets/warehouse-icons/nguyen-lieu.svg" alt=""></div>
+              <div class="sc-ico"><img class="asset-icon" src="../assets/warehouse-icons/barcode-scanner.png" alt=""></div>
               <div><b>Scan RFID hàng loạt</b><small>Quét nhanh nhiều cuộn cùng lúc</small></div>
               <div class="chev">›</div>
             </div>
@@ -466,7 +468,7 @@ body{
             <div class="menu-row" data-nav="map"><div class="mr-ico"><img class="asset-icon" src="../assets/warehouse-icons/truc-quan-kho.svg" alt=""></div><div><b>Trực quan kho</b><small>Coverage RFID 92%</small></div><div class="chev">›</div></div>
             <div class="menu-row" data-nav="stock"><div class="mr-ico"><img class="asset-icon" src="../assets/warehouse-icons/nguyen-lieu.svg" alt=""></div><div><b>Stock nguyên liệu</b><small>184 mã tồn kho</small></div><div class="chev">›</div></div>
             <div class="menu-row" data-nav="alerts"><div class="mr-ico">🔔</div><div><b>Cảnh báo quản lý</b><small>4 exception cần xử lý</small></div><div class="chev">›</div></div>
-            <div class="menu-row" data-nav="bulk"><div class="mr-ico">🔍</div><div><b>Quét QR / RFID</b><small>Tự chuyển RFID khi có đầu đọc</small></div><div class="chev">›</div></div>
+            <div class="menu-row" data-nav="bulk"><div class="mr-ico"><img class="asset-icon" src="../assets/warehouse-icons/barcode-scanner.png" alt=""></div><div><b>Quét QR / RFID</b><small>Tự chuyển RFID khi có đầu đọc</small></div><div class="chev">›</div></div>
           </div>
         </section>
 
@@ -523,7 +525,7 @@ body{
               </div>
             </div>
           </div>
-          <button class="fab" data-nav="bulk">📡</button>
+          <button class="fab" data-nav="bulk"><img class="asset-icon" src="../assets/warehouse-icons/barcode-scanner.png" alt=""></button>
         </section>
 
         <!-- ═══ DETAIL (Chi tiet BBGD) ═══ -->
@@ -660,7 +662,7 @@ body{
               <div class="pulse-ring" style="width:150px;height:150px;top:0;left:0;"></div>
               <div class="pulse-ring" style="width:150px;height:150px;top:0;left:0;"></div>
               <div class="pulse-ring" style="width:150px;height:150px;top:0;left:0;"></div>
-              <div class="pulse-core calm" id="bulkCore">📡</div>
+              <div class="pulse-core calm" id="bulkCore"><img class="asset-icon" src="../assets/warehouse-icons/barcode-scanner.png" alt=""></div>
             </div>
             <div style="text-align:center;">
               <button class="cta-btn" style="width:auto;padding:0 22px;" id="bulkToggle" onclick="toggleBulk()">▶ Bắt đầu quét</button>
@@ -839,7 +841,7 @@ body{
       <div class="app-bottomnav">
         <div class="bn-item active" data-nav="home" data-bn><span class="bn-ico">🏠</span>Trang chủ</div>
         <div class="bn-item" data-nav="map" data-bn><span class="bn-ico">🗺️</span>Kho</div>
-        <div class="bn-item bn-center" data-nav="bulk" data-bn><span class="bn-ico">📡</span></div>
+        <div class="bn-item bn-center" data-nav="bulk" data-bn><span class="bn-ico"><img class="asset-icon" src="../assets/warehouse-icons/barcode-scanner.png" alt=""></span></div>
         <div class="bn-item" data-nav="stock" data-bn><span class="bn-ico">📊</span>Tồn kho</div>
         <div class="bn-item" data-nav="alerts" data-bn><span class="bn-ico">🔔</span>Cảnh báo</div>
       </div>

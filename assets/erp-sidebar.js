@@ -11,12 +11,14 @@
     ['KHSX', 'index.html#dm-khsx', 'erp-lvl-1'],
     ['Công nghệ', 'index.html#dm-congnghe', 'erp-lvl-1'],
     ['QLCL', 'index.html#dm-qlcl', 'erp-lvl-1'],
-    ['Kho', 'index.html#dm-kho', 'erp-lvl-1'],
-    ['Quy trình RFID', 'docs/02-process-flow.html', 'erp-lvl-2'],
-    ['RFID kho nguyên liệu', 'docs/05-kho-nguyen-lieu-analysis.html', 'erp-lvl-2'],
-    ['RFID kho phụ liệu', 'docs/04-sitemap-analysis.html', 'erp-lvl-2'],
-    ['Mô phỏng PDA - Kho NL', 'docs/pda-mockup-kho-nguyen-lieu.html', 'erp-lvl-2'],
-    ['Mô phỏng PDA - Kho PL', 'docs/pda-mockup-kho-PL.html', 'erp-lvl-2']
+    ['Kho', 'docs/02-process-flow.html', 'erp-lvl-1']
+  ];
+  var warehouseLinks = [
+    ['Quy trình RFID', '02-process-flow.html'],
+    ['RFID kho nguyên liệu', '05-kho-nguyen-lieu-analysis.html'],
+    ['RFID kho phụ liệu', '04-sitemap-analysis.html'],
+    ['Mô phỏng PDA - Kho NL', 'pda-mockup-kho-nguyen-lieu.html'],
+    ['Mô phỏng PDA - Kho PL', 'pda-mockup-kho-PL.html']
   ];
   function hrefFor(href){
     return href.indexOf('docs/') === 0 || href.indexOf('Di_hoc_hoi') === 0 || href.indexOf('index') === 0 ? prefix + href : href;
@@ -45,6 +47,21 @@
       this.textContent = document.body.classList.contains('erp-sidebar-collapsed') ? '›' : '‹';
     });
     el.querySelector('.erp-global-toggle').textContent = document.body.classList.contains('erp-sidebar-collapsed') ? '›' : '‹';
+    renderWarehouseNav();
+  }
+  function renderWarehouseNav(){
+    var file = location.pathname.split('/').pop();
+    var isWarehouseDoc = warehouseLinks.some(function(item){ return item[1] === file; });
+    if(!isWarehouseDoc || document.querySelector('.warehouse-doc-nav')) return;
+    var target = document.querySelector('.sidebar') || document.querySelector('.side-panel');
+    if(!target) return;
+    var nav = document.createElement('div');
+    nav.className = 'warehouse-doc-nav';
+    nav.innerHTML = '<div class="warehouse-doc-nav-title">Tài liệu Kho</div>' + warehouseLinks.map(function(item){
+      var active = item[1] === file ? ' active' : '';
+      return '<a class="'+active+'" href="'+item[1]+'">'+item[0]+'</a>';
+    }).join('');
+    target.insertBefore(nav, target.firstChild);
   }
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', render);
   else render();

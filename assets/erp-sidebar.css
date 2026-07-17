@@ -47,6 +47,18 @@
 .erp-global-nav a.erp-lvl-2{padding-left:16px;color:#1A2332;font-size:11.3px;font-weight:700;}
 .erp-global-nav a.erp-lvl-3{padding-left:24px;color:#6B7280;font-size:10.8px;}
 .erp-global-foot{margin-top:auto;padding-top:14px;border-top:1px solid #E4E7EC;color:#9AA3AF;font:500 9.5px/1.5 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;}
+.warehouse-doc-nav{
+  margin:0 10px 14px;padding:10px;border:1px solid #DDE8D6;border-radius:10px;background:#F8FBF6;
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+.warehouse-doc-nav-title{
+  color:#3f7d22;font-size:10px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;margin-bottom:8px;
+}
+.warehouse-doc-nav a{
+  display:block;text-decoration:none;color:#1A2332;background:#fff;border:1px solid #E4E7EC;border-radius:8px;
+  padding:7px 9px;margin-top:5px;font-size:11.3px;font-weight:700;line-height:1.3;
+}
+.warehouse-doc-nav a:hover,.warehouse-doc-nav a.active{background:#EAF6E1;border-color:#5EB332;color:#3f7d22;}
 body.has-erp-global{padding-left:var(--erp-sidebar-w);}
 body.erp-sidebar-collapsed{padding-left:var(--erp-sidebar-collapsed-w);}
 body.erp-sidebar-collapsed .erp-global-sidebar{width:var(--erp-sidebar-collapsed-w);padding-left:10px;padding-right:10px;}

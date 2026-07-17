@@ -146,7 +146,7 @@ body{
 
 /* date group */
 .dgroup{position:sticky;top:78px;z-index:4;background:var(--dark);color:#fff;font-size:10.5px;font-weight:700;
-  padding:5px 10px;border-radius:6px;margin:10px 0 8px;letter-spacing:.3px;}
+  padding:5px 10px;border-radius:6px;margin:10px 0 8px;letter-spacing:.3px;display:inline-flex;align-items:center;gap:5px;}
 
 /* generic card */
 .card{background:#fff;border:1px solid var(--gray-bd);border-radius:12px;padding:12px;margin-bottom:10px;
@@ -160,6 +160,9 @@ body{
 .lrow-code{font-size:13px;font-weight:800;color:var(--dark);}
 .lrow-sub{font-size:10.5px;color:var(--gray-t);margin-top:1px;}
 .badge{display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:800;padding:3px 7px;border-radius:5px;white-space:nowrap;}
+.badge .asset-icon,.dgroup .asset-icon,.search-input .asset-icon,.tag-qr .asset-icon,.tag-rfid .asset-icon{width:12px;height:12px;object-fit:contain;}
+.si-ico .asset-icon{width:16px;height:16px;object-fit:contain;}
+.ci .asset-icon{width:34px;height:34px;object-fit:contain;}
 .b-rfid{background:var(--rfid-l);color:var(--rfid-d);}
 .b-warn{background:var(--warn-l);color:#92400E;}
 .b-brand{background:var(--brand-l);color:var(--brand-d);}
@@ -292,6 +295,7 @@ body{
 /* EPC field */
 .epc-box{background:var(--rfid-l);border:1.5px solid var(--rfid);border-radius:11px;padding:12px;margin:10px 0;}
 .epc-box .epc-label{font-size:9.5px;font-weight:800;color:var(--rfid-d);text-transform:uppercase;letter-spacing:.5px;display:flex;justify-content:space-between;align-items:center;}
+.epc-box .epc-label > span{display:inline-flex;align-items:center;gap:4px;}
 .epc-box .epc-code{font-size:13px;font-weight:700;color:var(--dark);margin-top:4px;letter-spacing:.3px;}
 .epc-box.empty{background:#F1F3F6;border-color:var(--gray-bd);}
 .epc-box.empty .epc-label{color:var(--gray-t);}
@@ -332,7 +336,8 @@ body{
 .alertcard.sev-high{border-left-color:var(--danger);}
 .alertcard.sev-mid{border-left-color:var(--warn);}
 .alertcard-top{display:flex;justify-content:space-between;align-items:flex-start;gap:6px;}
-.alertcard-title{font-size:12px;font-weight:800;color:var(--dark);}
+.alertcard-title{font-size:12px;font-weight:800;color:var(--dark);display:flex;align-items:center;gap:5px;}
+.alertcard-title .asset-icon{width:16px;height:16px;}
 .alertcard-desc{font-size:10.5px;color:var(--gray-t);margin-top:3px;line-height:1.5;}
 .alertcard-meta{font-size:9.5px;color:var(--gray-2);margin-top:6px;font-weight:700;}
 
@@ -511,7 +516,7 @@ body{
           <div class="scr-body">
             <div class="stickybar">
               <div class="searchrow">
-                <div class="search-input">🔍 Tìm số BBGĐ, khách hàng…</div>
+                <div class="search-input"><img class="asset-icon" src="../assets/warehouse-icons/search.png" alt="">Tìm số BBGĐ, khách hàng…</div>
                 <div class="pill">Kho A ▾</div>
               </div>
               <div class="tabs2">
@@ -520,11 +525,11 @@ body{
               </div>
             </div>
 
-            <div class="dgroup">📅 12/07/2026</div>
+            <div class="dgroup"><img class="asset-icon" src="../assets/warehouse-icons/calendar.png" alt="">12/07/2026</div>
             <div class="lrow" data-nav="detail">
               <div class="lrow-top">
                 <div><div class="lrow-code">BBGĐ-2607-0312</div><div class="lrow-sub">Khách hàng Decathlon · Lot DL-4482</div></div>
-                <span class="badge b-rfid">📡 18/22 tag</span>
+                <span class="badge b-rfid"><img class="asset-icon" src="../assets/warehouse-icons/barcode-scanner.png" alt="">18/22 tag</span>
               </div>
               <div class="progress-wrap">
                 <div class="progress-track"><div class="progress-fill" style="width:82%"></div></div>
@@ -534,7 +539,7 @@ body{
             <div class="lrow" data-nav="detail">
               <div class="lrow-top">
                 <div><div class="lrow-code">BBGĐ-2607-0313</div><div class="lrow-sub">Khách hàng Nike · Lot NK-1190</div></div>
-                <span class="badge b-warn">🟠 Thiếu tag</span>
+                <span class="badge b-warn"><img class="asset-icon" src="../assets/warehouse-icons/warning.png" alt="">Thiếu tag</span>
               </div>
               <div class="progress-wrap">
                 <div class="progress-track"><div class="progress-fill" style="width:34%;background:linear-gradient(90deg,#c98b1f,var(--warn));"></div></div>
@@ -542,11 +547,11 @@ body{
               </div>
             </div>
 
-            <div class="dgroup">📅 11/07/2026</div>
+            <div class="dgroup"><img class="asset-icon" src="../assets/warehouse-icons/calendar.png" alt="">11/07/2026</div>
             <div class="lrow" data-nav="detail">
               <div class="lrow-top">
                 <div><div class="lrow-code">BBGĐ-2607-0298</div><div class="lrow-sub">Khách hàng Uniqlo · Lot UQ-7701</div></div>
-                <span class="badge b-brand">✅ Đủ tag</span>
+                <span class="badge b-brand"><img class="asset-icon" src="../assets/warehouse-icons/check-mark.png" alt="">Đủ tag</span>
               </div>
               <div class="progress-wrap">
                 <div class="progress-track"><div class="progress-fill" style="width:100%"></div></div>
@@ -568,7 +573,7 @@ body{
             <div class="sumcard">
               <div class="sumcard-top"><span>Tiến độ nhập kho</span><span>82%</span></div>
               <div class="progress-track" style="height:9px;"><div class="progress-fill" style="width:82%"></div></div>
-              <div class="sumcard-foot"><span>18/22 cuộn đã ghi thẻ kho</span><span class="badge" style="background:rgba(255,255,255,.22);color:#fff;">📡 18/22 tag</span></div>
+              <div class="sumcard-foot"><span>18/22 cuộn đã ghi thẻ kho</span><span class="badge" style="background:rgba(255,255,255,.22);color:#fff;"><img class="asset-icon" src="../assets/warehouse-icons/barcode-scanner.png" alt="">18/22 tag</span></div>
             </div>
 
             <div class="actionbar">
@@ -584,7 +589,7 @@ body{
                 <div class="rollrow-top">
                   <div><div class="rollrow-name">Chính TC-65/35</div><div class="rollrow-meta">Xanh Navy · Khổ 1.5m</div></div>
                 </div>
-                <div class="rollrow-tags"><span class="tag-qr">🏷️ QR</span><span class="tag-rfid">📡 RFID</span></div>
+                <div class="rollrow-tags"><span class="tag-qr"><img class="asset-icon" src="../assets/warehouse-icons/qr-code.png" alt="">QR</span><span class="tag-rfid"><img class="asset-icon" src="../assets/warehouse-icons/barcode-scanner.png" alt="">RFID</span></div>
               </div>
               <div class="postag">4C-K3</div>
               <button class="rollrow-del" onclick="event.stopPropagation();confirmDelete()">✕</button>
@@ -596,7 +601,7 @@ body{
                 <div class="rollrow-top">
                   <div><div class="rollrow-name">Chính TC-65/35</div><div class="rollrow-meta">Xanh Navy · Khổ 1.5m</div></div>
                 </div>
-                <div class="rollrow-tags"><span class="tag-qr">🏷️ QR</span><span class="tag-rfid">📡 RFID</span></div>
+                <div class="rollrow-tags"><span class="tag-qr"><img class="asset-icon" src="../assets/warehouse-icons/qr-code.png" alt="">QR</span><span class="tag-rfid"><img class="asset-icon" src="../assets/warehouse-icons/barcode-scanner.png" alt="">RFID</span></div>
               </div>
               <div class="postag">4C-K3</div>
               <button class="rollrow-del" onclick="event.stopPropagation();confirmDelete()">✕</button>
@@ -608,7 +613,7 @@ body{
                 <div class="rollrow-top">
                   <div><div class="rollrow-name">Lót TC-80/20</div><div class="rollrow-meta">Trắng ngà · Khổ 1.4m</div></div>
                 </div>
-                <div class="rollrow-tags"><span class="tag-qr">🏷️ QR</span><span class="tag-none">Chưa gắn RFID</span></div>
+                <div class="rollrow-tags"><span class="tag-qr"><img class="asset-icon" src="../assets/warehouse-icons/qr-code.png" alt="">QR</span><span class="tag-none">Chưa gắn RFID</span></div>
               </div>
               <div class="postag">4C-K5</div>
               <button class="rollrow-del" onclick="event.stopPropagation();confirmDelete()">✕</button>
@@ -620,7 +625,7 @@ body{
                 <div class="rollrow-top">
                   <div><div class="rollrow-name">Phối lưới 3D</div><div class="rollrow-meta">Đen · Khổ 1.2m</div></div>
                 </div>
-                <div class="rollrow-tags"><span class="tag-qr">🏷️ QR</span><span class="tag-rfid">📡 RFID</span></div>
+                <div class="rollrow-tags"><span class="tag-qr"><img class="asset-icon" src="../assets/warehouse-icons/qr-code.png" alt="">QR</span><span class="tag-rfid"><img class="asset-icon" src="../assets/warehouse-icons/barcode-scanner.png" alt="">RFID</span></div>
               </div>
               <div class="postag">4C-K8</div>
               <button class="rollrow-del" onclick="event.stopPropagation();confirmDelete()">✕</button>
@@ -629,7 +634,7 @@ body{
 
           <div class="confirm-overlay" id="confirmOverlay">
             <div class="confirm-box">
-              <div class="ci">⚠️</div>
+              <div class="ci"><img class="asset-icon" src="../assets/warehouse-icons/warning.png" alt=""></div>
               <h4>Xoá cuộn khỏi phiếu?</h4>
               <p>Cuộn sẽ được gỡ khỏi Biên bản giám định BBGĐ-2607-0312. Hành động này không thể hoàn tác.</p>
               <div class="confirm-actions">
@@ -653,7 +658,7 @@ body{
             </div>
 
             <div class="epc-box" id="epcBox">
-              <div class="epc-label"><span>📡 RFID EPC Tag</span><span class="badge b-brand" id="epcStatus">✅ Đã gắn</span></div>
+              <div class="epc-label"><span><img class="asset-icon" src="../assets/warehouse-icons/barcode-scanner.png" alt="">RFID EPC Tag</span><span class="badge b-brand" id="epcStatus"><img class="asset-icon" src="../assets/warehouse-icons/check-mark.png" alt="">Đã gắn</span></div>
               <div class="epc-code mono">E280 11A0 4F3A 0921 0006</div>
             </div>
 
@@ -673,8 +678,8 @@ body{
             </div>
 
             <div class="actionbar">
-              <button class="abtn abtn-outline" onclick="toast('📷 Đổi QRCode thành công','ok')">🔁 Đổi mã QR</button>
-              <button class="abtn abtn-rfid" onclick="reattachRfid()">🔁 Đổi RFID</button>
+              <button class="abtn abtn-outline" onclick="toast('📷 Đổi QRCode thành công','ok')"><img class="asset-icon" src="../assets/warehouse-icons/exchange.png" alt="">Đổi mã QR</button>
+              <button class="abtn abtn-rfid" onclick="reattachRfid()"><img class="asset-icon" src="../assets/warehouse-icons/exchange.png" alt="">Đổi RFID</button>
             </div>
           </div>
         </section>
@@ -705,11 +710,11 @@ body{
             </div>
 
             <div class="scanfeed" id="scanFeed">
-              <div class="scanitem"><div class="si-ico">✅</div><div class="si-body"><div class="si-code">Cuộn #TNG-VL-08842</div><div class="si-epc mono">EPC E280 11A0 4F3A</div></div><div class="si-w">55.9 kg</div></div>
-              <div class="scanitem"><div class="si-ico">✅</div><div class="si-body"><div class="si-code">Cuộn #TNG-VL-08841</div><div class="si-epc mono">EPC E280 11A0 4F39</div></div><div class="si-w">60.2 kg</div></div>
+              <div class="scanitem"><div class="si-ico"><img class="asset-icon" src="../assets/warehouse-icons/check-mark.png" alt=""></div><div class="si-body"><div class="si-code">Cuộn #TNG-VL-08842</div><div class="si-epc mono">EPC E280 11A0 4F3A</div></div><div class="si-w">55.9 kg</div></div>
+              <div class="scanitem"><div class="si-ico"><img class="asset-icon" src="../assets/warehouse-icons/check-mark.png" alt=""></div><div class="si-body"><div class="si-code">Cuộn #TNG-VL-08841</div><div class="si-epc mono">EPC E280 11A0 4F39</div></div><div class="si-w">60.2 kg</div></div>
             </div>
           </div>
-          <div class="sticky-cta"><button class="cta-btn" onclick="toast('✅ Đã lưu kết quả scan RFID','ok')">✅ Xác nhận &amp; Lưu</button></div>
+          <div class="sticky-cta"><button class="cta-btn" onclick="toast('✅ Đã lưu kết quả scan RFID','ok')"><img class="asset-icon" src="../assets/warehouse-icons/check-mark.png" alt="">Xác nhận &amp; Lưu</button></div>
         </section>
 
         <!-- ═══ POSITION UPDATE (Cap nhat vi tri) ═══ -->
@@ -793,11 +798,11 @@ body{
           <div class="scr-body">
             <div class="stickybar">
               <div class="searchrow">
-                <div class="search-input">🔍 Tìm mã, khách hàng…</div>
+                <div class="search-input"><img class="asset-icon" src="../assets/warehouse-icons/search.png" alt="">Tìm mã, khách hàng…</div>
               </div>
               <div class="searchrow" style="margin-bottom:0;">
                 <div class="pill">Tất cả kho ▾</div>
-                <div class="pill" style="color:var(--rfid-d);border-color:var(--rfid);">📡 RFID: Thiếu tag ▾</div>
+                <div class="pill" style="color:var(--rfid-d);border-color:var(--rfid);"><img class="asset-icon" src="../assets/warehouse-icons/barcode-scanner.png" alt="">RFID: Thiếu tag ▾</div>
               </div>
             </div>
 
@@ -841,22 +846,22 @@ body{
             </div>
 
             <div class="alertcard sev-high">
-              <div class="alertcard-top"><div class="alertcard-title">⚠️ Khoang 4C-K7 lệch tồn 3 cuộn</div><span class="badge b-danger">Cao</span></div>
+              <div class="alertcard-top"><div class="alertcard-title"><img class="asset-icon" src="../assets/warehouse-icons/warning.png" alt="">Khoang 4C-K7 lệch tồn 3 cuộn</div><span class="badge b-danger">Cao</span></div>
               <div class="alertcard-desc">RFID đếm được 18 cuộn nhưng hệ thống ghi nhận 21 cuộn — chênh lệch 3 cuộn cần đối chiếu thủ công.</div>
               <div class="alertcard-meta">Phát hiện 2 giờ trước · Kho A</div>
             </div>
             <div class="alertcard sev-high">
-              <div class="alertcard-top"><div class="alertcard-title">⚠️ 2 cuộn tồn kho &gt;30 ngày chưa gắn tag</div><span class="badge b-danger">Cao</span></div>
+              <div class="alertcard-top"><div class="alertcard-title"><img class="asset-icon" src="../assets/warehouse-icons/warning.png" alt="">2 cuộn tồn kho &gt;30 ngày chưa gắn tag</div><span class="badge b-danger">Cao</span></div>
               <div class="alertcard-desc">Cuộn #TNG-VL-07621, #TNG-VL-07622 nhập kho từ 08/06/2026, chưa gắn RFID và chưa xuất.</div>
               <div class="alertcard-meta">Phát hiện hôm nay · Kho B</div>
             </div>
             <div class="alertcard sev-mid">
-              <div class="alertcard-top"><div class="alertcard-title">🟠 BBGĐ-2607-0313 thiếu tag quá hạn</div><span class="badge b-warn">Trung bình</span></div>
+              <div class="alertcard-top"><div class="alertcard-title"><img class="asset-icon" src="../assets/warehouse-icons/warning.png" alt="">BBGĐ-2607-0313 thiếu tag quá hạn</div><span class="badge b-warn">Trung bình</span></div>
               <div class="alertcard-desc">Chỉ 11/32 cuộn được gắn RFID sau 2 ngày kể từ khi giám định — vượt SLA gắn tag nội bộ.</div>
               <div class="alertcard-meta">Phát hiện 6 giờ trước · Kho A</div>
             </div>
             <div class="alertcard sev-mid">
-              <div class="alertcard-top"><div class="alertcard-title">🟠 Khoang 5A-K1 coverage thấp (33%)</div><span class="badge b-warn">Trung bình</span></div>
+              <div class="alertcard-top"><div class="alertcard-title"><img class="asset-icon" src="../assets/warehouse-icons/warning.png" alt="">Khoang 5A-K1 coverage thấp (33%)</div><span class="badge b-warn">Trung bình</span></div>
               <div class="alertcard-desc">Chỉ 4/12 cuộn tại khoang này có RFID tag hợp lệ, cần rà soát gắn bổ sung.</div>
               <div class="alertcard-meta">Phát hiện hôm qua · Kho A</div>
             </div>
@@ -997,15 +1002,15 @@ function addScan(){
   const r = rolls[bulkCount++];
   const feed = document.getElementById('scanFeed');
   const roll = Math.random();
-  let ico='✅', cls='', epc='E280 11A0 4F' + (50+bulkCount);
-  if(roll>0.8){ ico='⚠'; cls='warn'; document.getElementById('stLech').textContent = +document.getElementById('stLech').textContent+1; }
+  let iconSrc='../assets/warehouse-icons/check-mark.png', cls='', epc='E280 11A0 4F' + (50+bulkCount);
+  if(roll>0.8){ iconSrc='../assets/warehouse-icons/warning.png'; cls='warn'; document.getElementById('stLech').textContent = +document.getElementById('stLech').textContent+1; }
   else { document.getElementById('stKhop').textContent = +document.getElementById('stKhop').textContent+1;
          document.getElementById('stThieu').textContent = Math.max(0, +document.getElementById('stThieu').textContent-1); }
   const item = document.createElement('div');
   item.className = 'scanitem ' + cls;
-  item.innerHTML = `<div class="si-ico">${ico}</div><div class="si-body"><div class="si-code">Cuộn #${r.code}</div><div class="si-epc mono">EPC ${epc}</div></div><div class="si-w">${r.w}</div>`;
+  item.innerHTML = `<div class="si-ico"><img class="asset-icon" src="${iconSrc}" alt=""></div><div class="si-body"><div class="si-code">Cuộn #${r.code}</div><div class="si-epc mono">EPC ${epc}</div></div><div class="si-w">${r.w}</div>`;
   feed.appendChild(item);
-  toast('🔔 Đã đọc cuộn #' + r.code, ico==='✅' ? 'ok':'warn');
+  toast('🔔 Đã đọc cuộn #' + r.code, cls ? 'warn':'ok');
 }
 
 /* ── Roll reattach RFID ── */
@@ -1013,7 +1018,7 @@ function reattachRfid(){
   const status = document.getElementById('epcStatus');
   status.textContent = '⏳ Đang quét…';
   toast('📡 Đưa đầu đọc lại gần thẻ RFID…','ok');
-  setTimeout(()=>{ status.textContent = '✅ Đã gắn'; toast('✅ Đổi RFID thành công','ok'); }, 1200);
+  setTimeout(()=>{ status.innerHTML = '<img class="asset-icon" src="../assets/warehouse-icons/check-mark.png" alt="">Đã gắn'; toast('✅ Đổi RFID thành công','ok'); }, 1200);
 }
 
 /* ── Physical scan trigger button ── */

@@ -114,8 +114,9 @@
       "s3:td:2": "<b>Mặc định để trống</b> (không hiển thị giá trị nào, kể cả khi trùng \"Ngày xuất hàng dự kiến\"). Ô này <b>chỉ được điền giá trị khi yêu cầu điều chỉnh được duyệt đủ 2 cấp</b> (TPKD Công ty → TGĐ trên App Phê duyệt di động).&nbsp;",
       "s3:td:4": "Các cột&nbsp;",
       "s3:td:3": "Các cột thông tin hiện có",
-      "s3:td:6": "Giữ nguyên các bộ lọc hiện có; không phát sinh bộ lọc mới cho riêng chức năng này"
+      "s3:td:6": "Giữ nguyên các bộ lọc hiện có; không phát sinh bộ lọc mới cho riêng chức năng này",
+      "s3:td:10": "Chỉ hiện mục menu \"Sửa ngày xuất hàng\" khi mã hàng thuộc quyền phụ trách của người dùng đang đăng nhập "
     }
   },
-  "updatedAt": "2026-07-17T08:55:33.002Z"
+  "updatedAt": "2026-07-17T08:55:36.766Z"
 }

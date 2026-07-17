@@ -116,7 +116,7 @@
       "s3:td:3": "Các cột thông tin hiện có",
       "s3:td:6": "Giữ nguyên các bộ lọc hiện có; không phát sinh bộ lọc mới cho riêng chức năng này",
       "s3:td:10": "Chỉ hiện mục menu \"Sửa ngày xuất hàng\" khi mã hàng thuộc quyền phụ trách của người dùng đang đăng nhập ",
-      "s3:td:12": "Màn hình 3.1 và popup 3.2 là màn hình <b>WinForm trên máy tính.&nbsp;</b>Màn hình 3.1&nbsp;<b>App Phê duyệt mobile</b>, xem mục 3.3",
+      "s3:td:12": "Màn hình 3.1 và popup 3.2 là màn hình <b>WinForm trên máy tính.&nbsp;</b>Màn hình 3.3&nbsp;<b>App Phê duyệt mobile.</b>",
       "s3:td:42": "Đây là <b>ứng dụng di động</b> (mobile) dành cho lãnh đạo duyệt mọi lúc mọi nơi — khác với màn hình 3.1/3.2 vốn là WinForm trên máy tính. Màn hình chính hiển thị <b>danh sách dạng bảng</b> để xem được nhiều yêu cầu trên một màn hình; chạm một dòng để mở màn hình chi tiết phê duyệt",
       "s3:table:3": {
         "type": "table",
@@ -131,5 +131,5 @@
       }
     }
   },
-  "updatedAt": "2026-07-17T09:16:33.966Z"
+  "updatedAt": "2026-07-17T09:16:35.588Z"
 }

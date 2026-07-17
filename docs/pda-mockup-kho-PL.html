@@ -57,7 +57,9 @@ body{
 }
 .sp-btn:hover{background:var(--brand-l);border-color:var(--brand);}
 .sp-btn.active{background:var(--brand);border-color:var(--brand);color:#fff;}
-.sp-btn .ico{font-size:15px;width:20px;text-align:center;flex-shrink:0;}
+.sp-btn .ico{font-size:15px;width:20px;text-align:center;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.asset-icon{width:22px;height:22px;object-fit:contain;display:block;}
+.sp-btn .asset-icon{width:20px;height:20px;}
 .sp-btn .tag{margin-left:auto;font-size:8.5px;font-weight:800;padding:2px 6px;border-radius:4px;text-transform:uppercase;letter-spacing:.3px;}
 .tag-new{background:var(--rfid-l);color:var(--rfid-d);}
 .tag-fix{background:#FFF4E5;color:#92400E;}
@@ -289,6 +291,7 @@ body{
   display:flex;align-items:center;gap:10px;color:#fff;margin-bottom:14px;cursor:pointer;}
 .shortcut-card .sc-ico{width:38px;height:38px;border-radius:11px;background:rgba(255,255,255,.2);display:flex;
   align-items:center;justify-content:center;font-size:19px;flex-shrink:0;}
+.shortcut-card .asset-icon{width:30px;height:30px;}
 .shortcut-card b{font-size:12.5px;display:block;} .shortcut-card small{font-size:10px;opacity:.85;}
 
 .menu-group-title{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--gray-t);
@@ -298,6 +301,7 @@ body{
 .menu-row:active{background:var(--brand-l);}
 .menu-row .mr-ico{width:32px;height:32px;border-radius:9px;background:var(--brand-l);color:var(--brand-d);
   display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.menu-row .mr-ico .asset-icon{width:27px;height:27px;}
 .menu-row b{font-size:12px;color:var(--dark);display:block;}
 .menu-row small{font-size:9.5px;color:var(--gray-t);}
 .menu-row .chev{margin-left:auto;color:var(--gray-2);}
@@ -364,14 +368,14 @@ body{
 
   <div class="sp-nav-label">Điều hướng nhanh</div>
   <div class="sp-nav" id="sidenav">
-    <button class="sp-btn active" data-nav="home"><span class="ico">🏠</span>Trang chủ<span class="tag tag-new">RFID widget</span></button>
-    <button class="sp-btn" data-nav="list"><span class="ico">📄</span>Danh sách lệnh cấp<span class="tag tag-fix">Fix #3,12</span></button>
-    <button class="sp-btn" data-nav="detail"><span class="ico">📋</span>Chi tiết lệnh<span class="tag tag-fix">Fix #1,11</span></button>
+    <button class="sp-btn active" data-nav="home"><span class="ico"><img class="asset-icon" src="../assets/warehouse-icons/phu-lieu.jpg" alt=""></span>Trang chủ<span class="tag tag-new">RFID widget</span></button>
+    <button class="sp-btn" data-nav="list"><span class="ico"><img class="asset-icon" src="../assets/warehouse-icons/xuat-chuyen-noi-bo.svg" alt=""></span>Danh sách lệnh cấp<span class="tag tag-fix">Fix #3,12</span></button>
+    <button class="sp-btn" data-nav="detail"><span class="ico"><img class="asset-icon" src="../assets/warehouse-icons/giam-dinh-thung.svg" alt=""></span>Chi tiết lệnh<span class="tag tag-fix">Fix #1,11</span></button>
     <button class="sp-btn" data-nav="bulk"><span class="ico">📡</span>RFID Bulk Scan<span class="tag tag-new">Mới</span></button>
-    <button class="sp-btn" data-nav="carton"><span class="ico">📦</span>Chi tiết carton<span class="tag tag-new">EPC field</span></button>
-    <button class="sp-btn" data-nav="map"><span class="ico">🗺️</span>Trực quan kho<span class="tag tag-fix">Fix #5</span></button>
-    <button class="sp-btn" data-nav="stock"><span class="ico">📊</span>Stock kho PL<span class="tag tag-fix">Fix #4</span></button>
-    <button class="sp-btn" data-nav="geiger"><span class="ico">🎯</span>Tìm thùng Geiger<span class="tag tag-new">Mới</span></button>
+    <button class="sp-btn" data-nav="carton"><span class="ico"><img class="asset-icon" src="../assets/warehouse-icons/giam-dinh-thung.svg" alt=""></span>Chi tiết carton<span class="tag tag-new">EPC field</span></button>
+    <button class="sp-btn" data-nav="map"><span class="ico"><img class="asset-icon" src="../assets/warehouse-icons/truc-quan-kho-phu-lieu.svg" alt=""></span>Trực quan kho<span class="tag tag-fix">Fix #5</span></button>
+    <button class="sp-btn" data-nav="stock"><span class="ico"><img class="asset-icon" src="../assets/warehouse-icons/phu-lieu.jpg" alt=""></span>Stock kho PL<span class="tag tag-fix">Fix #4</span></button>
+    <button class="sp-btn" data-nav="geiger"><span class="ico"><img class="asset-icon" src="../assets/warehouse-icons/cap-nhat-vi-tri-thung.svg" alt=""></span>Tìm thùng Geiger<span class="tag tag-new">Mới</span></button>
     <button class="sp-btn" data-nav="empty"><span class="ico">🗂️</span>Empty state<span class="tag tag-fix">Fix #7</span></button>
   </div>
 
@@ -420,18 +424,18 @@ body{
               </div>
             </div>
             <div class="shortcut-card" data-nav="bulk">
-              <div class="sc-ico">📡</div>
+              <div class="sc-ico"><img class="asset-icon" src="../assets/warehouse-icons/giam-dinh-thung.svg" alt=""></div>
               <div><b>Scan RFID hàng loạt</b><small>Quét nhanh nhiều thùng cùng lúc</small></div>
               <div class="chev">›</div>
             </div>
 
-            <div class="menu-row" data-nav="list"><div class="mr-ico">🚛</div><div><b>Xuất lên chuyền may</b><small>18 lệnh đang chờ</small></div><div class="chev">›</div></div>
-            <div class="menu-row" data-nav="list"><div class="mr-ico">🔄</div><div><b>Xuất chuyển mã hàng</b><small>4 phiếu hôm nay</small></div><div class="chev">›</div></div>
-            <div class="menu-row" data-nav="empty"><div class="mr-ico">📥</div><div><b>Nhập chuyển nội bộ</b><small>Chưa có phiếu mới</small></div><div class="chev">›</div></div>
+            <div class="menu-row" data-nav="list"><div class="mr-ico"><img class="asset-icon" src="../assets/warehouse-icons/xuat-chuyen-noi-bo.svg" alt=""></div><div><b>Xuất lên chuyền may</b><small>18 lệnh đang chờ</small></div><div class="chev">›</div></div>
+            <div class="menu-row" data-nav="list"><div class="mr-ico"><img class="asset-icon" src="../assets/warehouse-icons/xuat-chuyen-ma-hang.svg" alt=""></div><div><b>Xuất chuyển mã hàng</b><small>4 phiếu hôm nay</small></div><div class="chev">›</div></div>
+            <div class="menu-row" data-nav="empty"><div class="mr-ico"><img class="asset-icon" src="../assets/warehouse-icons/nhap-lai-sau-san-xuat.svg" alt=""></div><div><b>Nhập chuyển nội bộ</b><small>Chưa có phiếu mới</small></div><div class="chev">›</div></div>
 
-            <div class="menu-row" data-nav="map"><div class="mr-ico">🗺️</div><div><b>Trực quan kho PL</b><small>Coverage RFID 92%</small></div><div class="chev">›</div></div>
-            <div class="menu-row" data-nav="stock"><div class="mr-ico">📊</div><div><b>Stock kho phụ liệu</b><small>326 chủng loại</small></div><div class="chev">›</div></div>
-            <div class="menu-row" data-nav="geiger"><div class="mr-ico">🎯</div><div><b>Tìm thùng (Geiger)</b><small>Định vị bằng cường độ RFID</small></div><div class="chev">›</div></div>
+            <div class="menu-row" data-nav="map"><div class="mr-ico"><img class="asset-icon" src="../assets/warehouse-icons/truc-quan-kho-phu-lieu.svg" alt=""></div><div><b>Trực quan kho PL</b><small>Coverage RFID 92%</small></div><div class="chev">›</div></div>
+            <div class="menu-row" data-nav="stock"><div class="mr-ico"><img class="asset-icon" src="../assets/warehouse-icons/phu-lieu.jpg" alt=""></div><div><b>Stock kho phụ liệu</b><small>326 chủng loại</small></div><div class="chev">›</div></div>
+            <div class="menu-row" data-nav="geiger"><div class="mr-ico"><img class="asset-icon" src="../assets/warehouse-icons/cap-nhat-vi-tri-thung.svg" alt=""></div><div><b>Tìm thùng (Geiger)</b><small>Định vị bằng cường độ RFID</small></div><div class="chev">›</div></div>
 
             <div class="menu-row" data-nav="bulk"><div class="mr-ico">🔍</div><div><b>Quét QR / RFID</b><small>Tự chuyển RFID khi có đầu đọc</small></div><div class="chev">›</div></div>
           </div>

@@ -176,6 +176,7 @@ body{
 .actionbar{display:flex;gap:8px;margin-bottom:12px;}
 .abtn{flex:1;min-height:42px;border-radius:10px;font-size:11.5px;font-weight:800;display:flex;align-items:center;
   justify-content:center;gap:6px;cursor:pointer;border:none;}
+.abtn .asset-icon{width:17px;height:17px;}
 .abtn-outline{background:#fff;border:1.5px solid var(--gray-bd);color:var(--dark);}
 .abtn-rfid{background:linear-gradient(120deg,var(--rfid-d),var(--rfid));color:#fff;}
 
@@ -280,7 +281,9 @@ body{
 
 .sticky-cta{position:absolute;left:0;right:0;bottom:60px;padding:10px 12px;background:linear-gradient(0deg,#fff 70%,rgba(255,255,255,0));z-index:6;}
 .cta-btn{width:100%;min-height:46px;border-radius:11px;background:linear-gradient(120deg,var(--brand-d),var(--brand));
-  color:#fff;font-size:13px;font-weight:800;border:none;cursor:pointer;box-shadow:0 6px 16px rgba(94,179,50,.4);}
+  color:#fff;font-size:13px;font-weight:800;border:none;cursor:pointer;box-shadow:0 6px 16px rgba(94,179,50,.4);
+  display:flex;align-items:center;justify-content:center;gap:7px;}
+.cta-btn .asset-icon{width:18px;height:18px;}
 
 /* EPC field */
 .epc-box{background:var(--rfid-l);border:1.5px solid var(--rfid);border-radius:11px;padding:12px;margin:10px 0;}
@@ -546,8 +549,8 @@ body{
             </div>
 
             <div class="actionbar">
-              <button class="abtn abtn-outline" onclick="toast('📷 Đang mở camera quét QR…','ok')">📷 Quét QR</button>
-              <button class="abtn abtn-rfid" data-nav="bulk">📡 RFID Scan tất cả</button>
+              <button class="abtn abtn-outline" onclick="toast('📷 Đang mở camera quét QR…','ok')"><img class="asset-icon" src="../assets/warehouse-icons/barcode-scanner.png" alt="">Quét QR</button>
+              <button class="abtn abtn-rfid" data-nav="bulk"><img class="asset-icon" src="../assets/warehouse-icons/barcode-scanner.png" alt="">RFID Scan tất cả</button>
             </div>
 
             <div class="formgroup-title">Danh sách cuộn (22)</div>
@@ -668,7 +671,7 @@ body{
               <div class="pulse-core calm" id="bulkCore"><img class="asset-icon" src="../assets/warehouse-icons/barcode-scanner.png" alt=""></div>
             </div>
             <div style="text-align:center;">
-              <button class="cta-btn" style="width:auto;padding:0 22px;" id="bulkToggle" onclick="toggleBulk()">▶ Bắt đầu quét</button>
+              <button class="cta-btn" style="width:auto;padding:0 22px;" id="bulkToggle" onclick="toggleBulk()"><img class="asset-icon" src="../assets/warehouse-icons/barcode-scanner.png" alt="">Bắt đầu quét</button>
             </div>
 
             <div class="statrow">
@@ -698,8 +701,8 @@ body{
               <div class="searchrow"><div class="pill">Kho A ▾</div><div class="pill">Vị trí 4C ▾</div></div>
             </div>
             <div class="actionbar" style="margin-top:4px;">
-              <button class="abtn abtn-outline" onclick="toast('📷 Đang mở camera quét QR…','ok')">📷 Quét QRCode</button>
-              <button class="abtn abtn-rfid" onclick="toast('📡 Đưa đầu đọc RFID lại gần cuộn…','ok')">📡 Quét RFID hàng loạt</button>
+              <button class="abtn abtn-outline" onclick="toast('📷 Đang mở camera quét QR…','ok')"><img class="asset-icon" src="../assets/warehouse-icons/barcode-scanner.png" alt="">Quét QRCode</button>
+              <button class="abtn abtn-rfid" onclick="toast('📡 Đưa đầu đọc RFID lại gần cuộn…','ok')"><img class="asset-icon" src="../assets/warehouse-icons/barcode-scanner.png" alt="">Quét RFID hàng loạt</button>
             </div>
 
             <div class="empty-wrap">
@@ -707,8 +710,8 @@ body{
               <div class="empty-title">Chưa có cuộn nào được quét</div>
               <div class="empty-desc">Quét mã QR từng cuộn hoặc dùng RFID hàng loạt để cập nhật vị trí nhanh cho nhiều cuộn cùng lúc tại khu vực 4C.</div>
               <div class="empty-actions">
-                <button class="cta-btn" onclick="toast('📡 Bắt đầu quét RFID hàng loạt…','ok');go('bulk')">📡 Quét RFID hàng loạt</button>
-                <button class="abtn abtn-outline" style="width:100%;" onclick="toast('📷 Đang mở camera quét QR…','ok')">📷 Quét QRCode từng cuộn</button>
+                <button class="cta-btn" onclick="toast('📡 Bắt đầu quét RFID hàng loạt…','ok');go('bulk')"><img class="asset-icon" src="../assets/warehouse-icons/barcode-scanner.png" alt="">Quét RFID hàng loạt</button>
+                <button class="abtn abtn-outline" style="width:100%;" onclick="toast('📷 Đang mở camera quét QR…','ok')"><img class="asset-icon" src="../assets/warehouse-icons/barcode-scanner.png" alt="">Quét QRCode từng cuộn</button>
               </div>
             </div>
           </div>
@@ -920,12 +923,12 @@ function toggleBulk(){
   const core = document.getElementById('bulkCore');
   const pulse = document.getElementById('bulkPulse');
   if(bulkRunning){
-    btn.textContent = '⏸ Dừng quét';
+    btn.innerHTML = '<img class="asset-icon" src="../assets/warehouse-icons/barcode-scanner.png" alt="">Dừng quét';
     core.classList.remove('calm');
     pulse.querySelectorAll('.pulse-ring').forEach(r=>r.style.animationPlayState='running');
     bulkTimer = setInterval(addScan, 900);
   } else {
-    btn.textContent = '▶ Bắt đầu quét';
+    btn.innerHTML = '<img class="asset-icon" src="../assets/warehouse-icons/barcode-scanner.png" alt="">Bắt đầu quét';
     core.classList.add('calm');
     clearInterval(bulkTimer);
   }

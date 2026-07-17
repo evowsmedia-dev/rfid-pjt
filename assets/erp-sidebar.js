@@ -5,20 +5,13 @@
   var prefix = isDocsPath ? '../' : '';
   var links = [
     ['Nhân sự', 'index.html#dm-nhansu', 'erp-lvl-1'],
-    ['App đi học', 'Di_hoc_hoi.html', 'erp-lvl-3'],
+    ['App đi học', 'Di_hoc_hoi.html', 'erp-lvl-2'],
     ['Đơn hàng', 'index.html#dm-donhang', 'erp-lvl-1'],
-    ['App sửa ngày xuất hàng', 'index.html#dm-donhang', 'erp-lvl-2'],
-    ['BA · Sửa ngày xuất hàng', 'docs/BA_sua_ngay_xuat_hang.html', 'erp-lvl-3'],
-    ['Mockup · Sửa ngày xuất hàng', 'docs/mockup_sua_ngay_xuat_hang_v2.html', 'erp-lvl-3'],
+    ['App sửa ngày xuất hàng', 'docs/BA_sua_ngay_xuat_hang.html', 'erp-lvl-2'],
     ['KHSX', 'index.html#dm-khsx', 'erp-lvl-1'],
     ['Công nghệ', 'index.html#dm-congnghe', 'erp-lvl-1'],
     ['QLCL', 'index.html#dm-qlcl', 'erp-lvl-1'],
-    ['Kho', 'index.html#dm-kho', 'erp-lvl-1'],
-    ['Quy trình RFID', 'docs/02-process-flow.html', 'erp-lvl-3'],
-    ['RFID kho nguyên liệu', 'docs/05-kho-nguyen-lieu-analysis.html', 'erp-lvl-3'],
-    ['RFID kho phụ liệu', 'docs/04-sitemap-analysis.html', 'erp-lvl-3'],
-    ['Mô phỏng PDA - Kho NL', 'docs/pda-mockup-kho-nguyen-lieu.html', 'erp-lvl-3'],
-    ['Mô phỏng PDA - Kho PL', 'docs/pda-mockup-kho-PL.html', 'erp-lvl-3']
+    ['Kho', 'index.html#dm-kho', 'erp-lvl-1']
   ];
   function hrefFor(href){
     return href.indexOf('docs/') === 0 || href.indexOf('Di_hoc_hoi') === 0 || href.indexOf('index') === 0 ? prefix + href : href;

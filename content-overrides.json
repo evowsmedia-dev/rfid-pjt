@@ -109,5 +109,5 @@
       "s1:td:6": "\n            <div class=\"actor-row\"><b>Nhân viên kinh doanh</b><span>Khởi tạo yêu cầu sửa ngày xuất hàng cho mã hàng phụ trách — thao tác trên <b>WinForm</b> (Đơn hàng/PAKD)</span></div>\n            <div class=\"actor-row\"><b>TPKD Công ty</b><span>Phê duyệt cấp 1 — thao tác trên <b>App Phê duyệt</b></span></div>\n            <div class=\"actor-row\"><b>Tổng Giám đốc (TGĐ)</b><span>Phê duyệt cấp 2 (cấp cuối) — thao tác trên <b>App Phê duyệt</b></span></div>\n            <div class=\"actor-row\"><b>Kế toán (Bravo)</b><span>Bên nhận dữ liệu ngày xuất hàng đã điều chỉnh — chờ xác nhận phương án tích hợp với anh Hải</span></div>\n          "
     }
   },
-  "updatedAt": "2026-07-17T08:45:59.658Z"
+  "updatedAt": "2026-07-17T08:46:03.145Z"
 }

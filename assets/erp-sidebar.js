@@ -11,7 +11,12 @@
     ['KHSX', 'index.html#dm-khsx', 'erp-lvl-1'],
     ['Công nghệ', 'index.html#dm-congnghe', 'erp-lvl-1'],
     ['QLCL', 'index.html#dm-qlcl', 'erp-lvl-1'],
-    ['Kho', 'index.html#dm-kho', 'erp-lvl-1']
+    ['Kho', 'index.html#dm-kho', 'erp-lvl-1'],
+    ['Quy trình RFID', 'docs/02-process-flow.html', 'erp-lvl-2'],
+    ['RFID kho nguyên liệu', 'docs/05-kho-nguyen-lieu-analysis.html', 'erp-lvl-2'],
+    ['RFID kho phụ liệu', 'docs/04-sitemap-analysis.html', 'erp-lvl-2'],
+    ['Mô phỏng PDA - Kho NL', 'docs/pda-mockup-kho-nguyen-lieu.html', 'erp-lvl-2'],
+    ['Mô phỏng PDA - Kho PL', 'docs/pda-mockup-kho-PL.html', 'erp-lvl-2']
   ];
   function hrefFor(href){
     return href.indexOf('docs/') === 0 || href.indexOf('Di_hoc_hoi') === 0 || href.indexOf('index') === 0 ? prefix + href : href;

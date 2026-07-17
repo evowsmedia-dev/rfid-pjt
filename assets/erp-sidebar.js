@@ -5,7 +5,7 @@
   var prefix = isDocsPath ? '../' : '';
   var links = [
     ['Nhân sự', 'index.html#dm-nhansu', 'erp-lvl-1'],
-    ['Đào tạo & Học hỏi CBQL', 'Di_hoc_hoi.html', 'erp-lvl-3'],
+    ['App đi học', 'Di_hoc_hoi.html', 'erp-lvl-3'],
     ['Đơn hàng', 'index.html#dm-donhang', 'erp-lvl-1'],
     ['App sửa ngày xuất hàng', 'index.html#dm-donhang', 'erp-lvl-2'],
     ['BA · Sửa ngày xuất hàng', 'docs/BA_sua_ngay_xuat_hang.html', 'erp-lvl-3'],

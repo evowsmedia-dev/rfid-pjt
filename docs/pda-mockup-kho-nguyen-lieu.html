@@ -123,6 +123,10 @@ body{
 .htitle{flex:1;font-size:14px;font-weight:800;line-height:1.2;}
 .htitle small{display:block;font-size:9.5px;font-weight:600;opacity:.85;}
 .hicons{display:flex;gap:6px;}
+.hchip{display:flex;align-items:center;gap:3px;height:30px;padding:0 9px;border-radius:8px;
+  background:rgba(255,255,255,.18);color:#fff;font-size:10.5px;font-weight:800;cursor:pointer;
+  white-space:nowrap;flex-shrink:0;}
+.hchip:active{background:rgba(255,255,255,.32);}
 
 .scr-body{flex:1;overflow-y:auto;padding:12px 12px 78px;}
 .scr-body::-webkit-scrollbar{width:0;}
@@ -377,6 +381,22 @@ body{
 @keyframes toastin{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
 @keyframes toastout{to{opacity:0;transform:translateY(-6px);}}
 
+/* branch selector */
+.branch-sheet-overlay{position:absolute;inset:0;background:rgba(10,14,20,.52);z-index:30;
+  display:flex;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity .18s;}
+.branch-sheet-overlay.show{opacity:1;pointer-events:auto;}
+.branch-sheet{width:100%;background:#fff;border-radius:18px 18px 0 0;padding:14px 12px 18px;
+  transform:translateY(100%);transition:transform .22s ease;box-shadow:0 -8px 24px rgba(0,0,0,.2);}
+.branch-sheet-overlay.show .branch-sheet{transform:translateY(0);}
+.branch-sheet-handle{width:36px;height:4px;border-radius:3px;background:var(--gray-bd);margin:0 auto 12px;}
+.branch-sheet-title{font-size:13px;font-weight:800;color:var(--dark);margin-bottom:2px;}
+.branch-sheet-sub{font-size:10.5px;color:var(--gray-t);margin-bottom:10px;}
+.branch-item{display:flex;justify-content:space-between;align-items:center;padding:11px 10px;
+  border-radius:10px;font-size:12.5px;font-weight:700;color:var(--dark);cursor:pointer;}
+.branch-item:active{background:var(--brand-l);}
+.branch-item.active{background:var(--brand-l);color:var(--brand-d);}
+.branch-check{color:var(--brand-d);font-weight:900;font-size:14px;}
+
 /* device hw controls */
 .pda-hw-side{position:absolute;right:-3px;top:150px;width:6px;height:60px;background:linear-gradient(90deg,#3a3e46,#1a1c20);border-radius:0 4px 4px 0;}
 .pda-scan-trigger{
@@ -449,8 +469,11 @@ body{
         <!-- ═══ HOME ═══ -->
         <section class="scr active" data-screen="home">
           <div class="scr-header">
-            <div class="htitle">TNG · Kho nguyên liệu<small>Chi nhánh: SC3 ⌄ · Nhân viên: Thu Hằng</small></div>
-            <div class="hicons"><button class="hbtn"><img class="asset-icon" src="../assets/warehouse-icons/bao-cao.svg" alt=""></button></div>
+            <div class="htitle">TNG · Kho nguyên liệu<small>Chi nhánh <span class="branch-name">SC3</span> · NV: Thu Hằng</small></div>
+            <div class="hicons">
+              <div class="hchip" onclick="openBranchSheet()"> <span class="branch-name">SC3</span> ▾</div>
+              <button class="hbtn"><img class="asset-icon" src="../assets/warehouse-icons/bao-cao.svg" alt=""></button>
+            </div>
           </div>
           <div class="scr-body">
             <div class="rfid-widget">
@@ -844,6 +867,22 @@ body{
 
       <div class="toastbox" id="toastBox"></div>
 
+      <div class="branch-sheet-overlay" id="branchSheetOverlay" onclick="closeBranchSheet(event)">
+        <div class="branch-sheet" onclick="event.stopPropagation()">
+          <div class="branch-sheet-handle"></div>
+          <div class="branch-sheet-title">Chọn chi nhánh</div>
+          <div class="branch-sheet-sub">Dữ liệu kho, biên bản, vị trí và tồn kho sẽ hiển thị theo chi nhánh đã chọn</div>
+          <div id="branchList">
+            <div class="branch-item" data-branch="SC1" onclick="selectBranch('SC1')"><span>SC1</span><span class="branch-check"></span></div>
+            <div class="branch-item" data-branch="SC2" onclick="selectBranch('SC2')"><span>SC2</span><span class="branch-check"></span></div>
+            <div class="branch-item active" data-branch="SC3" onclick="selectBranch('SC3')"><span>SC3</span><span class="branch-check">✓</span></div>
+            <div class="branch-item" data-branch="SC4" onclick="selectBranch('SC4')"><span>SC4</span><span class="branch-check"></span></div>
+            <div class="branch-item" data-branch="ĐT" onclick="selectBranch('ĐT')"><span>ĐT</span><span class="branch-check"></span></div>
+            <div class="branch-item" data-branch="ĐH" onclick="selectBranch('ĐH')"><span>ĐH</span><span class="branch-check"></span></div>
+          </div>
+        </div>
+      </div>
+
       <div class="app-bottomnav">
         <div class="bn-item active" data-nav="home" data-bn><span class="bn-ico"><img class="asset-icon" src="../assets/warehouse-icons/back-home.png" alt=""></span>Trang chủ</div>
         <div class="bn-item" data-nav="map" data-bn><span class="bn-ico"><img class="asset-icon" src="../assets/warehouse-icons/quan-ly-kho.svg" alt=""></span>Kho</div>
@@ -893,6 +932,26 @@ document.addEventListener('click', e => {
   if(e.target.closest('[data-back]')){ goBack(); return; }
   if(e.target.closest('[data-home]')){ goHome(); return; }
 });
+
+/* ── Chi nhánh selector ── */
+let currentBranch = 'SC3';
+function openBranchSheet(){
+  document.getElementById('branchSheetOverlay').classList.add('show');
+}
+function closeBranchSheet(e){
+  document.getElementById('branchSheetOverlay').classList.remove('show');
+}
+function selectBranch(code){
+  currentBranch = code;
+  document.querySelectorAll('.branch-name').forEach(el => el.textContent = code);
+  document.querySelectorAll('.branch-item').forEach(el=>{
+    const active = el.dataset.branch === code;
+    el.classList.toggle('active', active);
+    el.querySelector('.branch-check').textContent = active ? '✓' : '';
+  });
+  document.getElementById('branchSheetOverlay').classList.remove('show');
+  toast('Đã chọn chi nhánh ' + code, 'ok');
+}
 
 function toast(msg, type){
   const box = document.getElementById('toastBox');

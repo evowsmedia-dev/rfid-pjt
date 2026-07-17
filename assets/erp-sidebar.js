@@ -20,6 +20,12 @@
     ['Mô phỏng PDA - Kho NL', 'pda-mockup-kho-nguyen-lieu.html'],
     ['Mô phỏng PDA - Kho PL', 'pda-mockup-kho-PL.html']
   ];
+  var floatingWarehouseFiles = [
+    '05-kho-nguyen-lieu-analysis.html',
+    '04-sitemap-analysis.html',
+    'pda-mockup-kho-nguyen-lieu.html',
+    'pda-mockup-kho-PL.html'
+  ];
   function hrefFor(href){
     return href.indexOf('docs/') === 0 || href.indexOf('Di_hoc_hoi') === 0 || href.indexOf('index') === 0 ? prefix + href : href;
   }
@@ -53,6 +59,7 @@
     var file = location.pathname.split('/').pop();
     var isWarehouseDoc = warehouseLinks.some(function(item){ return item[1] === file; });
     if(!isWarehouseDoc || document.querySelector('.warehouse-doc-nav')) return;
+    var forceFloating = floatingWarehouseFiles.indexOf(file) !== -1;
     var target = document.querySelector('.sidebar') || document.querySelector('.side-panel');
     var nav = document.createElement('div');
     nav.className = 'warehouse-doc-nav';
@@ -60,7 +67,7 @@
       var active = item[1] === file ? ' active' : '';
       return '<a class="'+active+'" href="'+item[1]+'">'+item[0]+'</a>';
     }).join('');
-    if(target) {
+    if(target && !forceFloating) {
       target.insertBefore(nav, target.firstChild);
     } else {
       nav.className += ' warehouse-floating';

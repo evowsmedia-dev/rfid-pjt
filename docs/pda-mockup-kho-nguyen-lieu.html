@@ -119,6 +119,7 @@ body{
 .hbtn{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;
   background:rgba(255,255,255,.16);font-size:14px;cursor:pointer;border:none;color:#fff;flex-shrink:0;}
 .hbtn:active{background:rgba(255,255,255,.32);}
+.hbtn .asset-icon{width:20px;height:20px;}
 .htitle{flex:1;font-size:14px;font-weight:800;line-height:1.2;}
 .htitle small{display:block;font-size:9.5px;font-weight:600;opacity:.85;}
 .hicons{display:flex;gap:6px;}
@@ -237,6 +238,7 @@ body{
   font-weight:700;color:var(--gray-2);cursor:pointer;padding-top:4px;}
 .bn-item.active{color:var(--brand-d);}
 .bn-ico{font-size:16px;}
+.bn-ico .asset-icon{width:22px;height:22px;}
 .bn-center{position:relative;top:-16px;}
 .bn-center .bn-ico{
   width:46px;height:46px;border-radius:50%;background:linear-gradient(145deg,var(--rfid),var(--rfid-d));
@@ -331,6 +333,7 @@ body{
 .empty-wrap{display:flex;flex-direction:column;align-items:center;text-align:center;padding:44px 20px 20px;}
 .empty-ico{width:80px;height:80px;border-radius:22px;background:var(--brand-l);display:flex;align-items:center;
   justify-content:center;font-size:34px;margin-bottom:16px;}
+.empty-ico .asset-icon{width:48px;height:48px;}
 .empty-title{font-size:14px;font-weight:800;color:var(--dark);margin-bottom:6px;}
 .empty-desc{font-size:11.5px;color:var(--gray-t);line-height:1.6;margin-bottom:18px;max-width:230px;}
 .empty-actions{display:flex;flex-direction:column;gap:8px;width:100%;max-width:220px;}
@@ -409,8 +412,8 @@ body{
     <button class="sp-btn" data-nav="bulk"><span class="ico"><img class="asset-icon" src="../assets/warehouse-icons/barcode-scanner.png" alt=""></span>RFID Bulk Scan<span class="tag tag-new">Mới</span></button>
     <button class="sp-btn" data-nav="position"><span class="ico"><img class="asset-icon" src="../assets/warehouse-icons/cap-nhat-vi-tri.svg" alt=""></span>Cập nhật vị trí<span class="tag tag-fix">Fix #2,7</span></button>
     <button class="sp-btn" data-nav="map"><span class="ico"><img class="asset-icon" src="../assets/warehouse-icons/truc-quan-kho.svg" alt=""></span>Trực quan kho<span class="tag tag-fix">Fix #9</span></button>
-    <button class="sp-btn" data-nav="stock"><span class="ico"><img class="asset-icon" src="../assets/warehouse-icons/nguyen-lieu.svg" alt=""></span>Stock nguyên liệu</button>
-    <button class="sp-btn" data-nav="alerts"><span class="ico">🔔</span>Cảnh báo quản lý<span class="tag tag-new">Phase 3</span></button>
+    <button class="sp-btn" data-nav="stock"><span class="ico"><img class="asset-icon" src="../assets/warehouse-icons/inventory.png" alt=""></span>Stock nguyên liệu</button>
+    <button class="sp-btn" data-nav="alerts"><span class="ico"><img class="asset-icon" src="../assets/warehouse-icons/bao-cao.svg" alt=""></span>Cảnh báo quản lý<span class="tag tag-new">Phase 3</span></button>
   </div>
 
   <div class="sp-legend">
@@ -444,7 +447,7 @@ body{
         <section class="scr active" data-screen="home">
           <div class="scr-header">
             <div class="htitle">TNG · Kho nguyên liệu<small>Chi nhánh: SC3 ⌄ · Nhân viên: Thu Hằng</small></div>
-            <div class="hicons"><button class="hbtn">🔔</button></div>
+            <div class="hicons"><button class="hbtn"><img class="asset-icon" src="../assets/warehouse-icons/bao-cao.svg" alt=""></button></div>
           </div>
           <div class="scr-body">
             <div class="rfid-widget">
@@ -466,8 +469,8 @@ body{
             <div class="menu-row" data-nav="position"><div class="mr-ico"><img class="asset-icon" src="../assets/warehouse-icons/cap-nhat-vi-tri.svg" alt=""></div><div><b>Cập nhật vị trí</b><small>Quét QR / RFID hàng loạt</small></div><div class="chev">›</div></div>
 
             <div class="menu-row" data-nav="map"><div class="mr-ico"><img class="asset-icon" src="../assets/warehouse-icons/truc-quan-kho.svg" alt=""></div><div><b>Trực quan kho</b><small>Coverage RFID 92%</small></div><div class="chev">›</div></div>
-            <div class="menu-row" data-nav="stock"><div class="mr-ico"><img class="asset-icon" src="../assets/warehouse-icons/nguyen-lieu.svg" alt=""></div><div><b>Stock nguyên liệu</b><small>184 mã tồn kho</small></div><div class="chev">›</div></div>
-            <div class="menu-row" data-nav="alerts"><div class="mr-ico">🔔</div><div><b>Cảnh báo quản lý</b><small>4 exception cần xử lý</small></div><div class="chev">›</div></div>
+            <div class="menu-row" data-nav="stock"><div class="mr-ico"><img class="asset-icon" src="../assets/warehouse-icons/inventory.png" alt=""></div><div><b>Stock nguyên liệu</b><small>184 mã tồn kho</small></div><div class="chev">›</div></div>
+            <div class="menu-row" data-nav="alerts"><div class="mr-ico"><img class="asset-icon" src="../assets/warehouse-icons/bao-cao.svg" alt=""></div><div><b>Cảnh báo quản lý</b><small>4 exception cần xử lý</small></div><div class="chev">›</div></div>
             <div class="menu-row" data-nav="bulk"><div class="mr-ico"><img class="asset-icon" src="../assets/warehouse-icons/barcode-scanner.png" alt=""></div><div><b>Quét QR / RFID</b><small>Tự chuyển RFID khi có đầu đọc</small></div><div class="chev">›</div></div>
           </div>
         </section>
@@ -839,11 +842,11 @@ body{
       <div class="toastbox" id="toastBox"></div>
 
       <div class="app-bottomnav">
-        <div class="bn-item active" data-nav="home" data-bn><span class="bn-ico">🏠</span>Trang chủ</div>
-        <div class="bn-item" data-nav="map" data-bn><span class="bn-ico">🗺️</span>Kho</div>
+        <div class="bn-item active" data-nav="home" data-bn><span class="bn-ico"><img class="asset-icon" src="../assets/warehouse-icons/back-home.png" alt=""></span>Trang chủ</div>
+        <div class="bn-item" data-nav="map" data-bn><span class="bn-ico"><img class="asset-icon" src="../assets/warehouse-icons/quan-ly-kho.svg" alt=""></span>Kho</div>
         <div class="bn-item bn-center" data-nav="bulk" data-bn><span class="bn-ico"><img class="asset-icon" src="../assets/warehouse-icons/barcode-scanner.png" alt=""></span></div>
-        <div class="bn-item" data-nav="stock" data-bn><span class="bn-ico">📊</span>Tồn kho</div>
-        <div class="bn-item" data-nav="alerts" data-bn><span class="bn-ico">🔔</span>Cảnh báo</div>
+        <div class="bn-item" data-nav="stock" data-bn><span class="bn-ico"><img class="asset-icon" src="../assets/warehouse-icons/inventory.png" alt=""></span>Tồn kho</div>
+        <div class="bn-item" data-nav="alerts" data-bn><span class="bn-ico"><img class="asset-icon" src="../assets/warehouse-icons/bao-cao.svg" alt=""></span>Cảnh báo</div>
       </div>
     </div><!-- /pda-lcd -->
   </div><!-- /pda-screen-frame -->

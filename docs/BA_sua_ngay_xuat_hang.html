@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Tài liệu phân tích yêu cầu - Sửa ngày xuất hàng mã hàng</title>
+<style>
+  :root{
+    --ink:#1f2a37;
+    --sub:#5b6b7c;
+    --accent:#5EB332;
+    --accent-dark:#3F7D22;
+    --line:#C7DDB5;
+    --bg-soft:#F3F9EF;
+    --ok:#3f9142;
+    --warn:#d98a2b;
+    --danger:#c0392b;
+    --sidebar-w:250px;
+    --serif:"Georgia","Times New Roman",serif;
+    --sans:"Segoe UI",Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{ height:100%; }
+  body{
+    margin:0;
+    font-family:var(--sans);
+    color:var(--ink);
+    background:#EFF5EA;
+    line-height:1.55;
+    font-size:14.5px;
+  }
+
+  .layout{ display:flex; min-height:100vh; }
+
+  /* ---------- SIDEBAR ---------- */
+  .sidebar{
+    width:var(--sidebar-w);
+    flex:0 0 var(--sidebar-w);
+    background:linear-gradient(180deg,var(--accent-dark) 0%,#2E5C18 100%);
+    color:#fff;
+    position:sticky;
+    top:0;
+    height:100vh;
+    overflow-y:auto;
+    padding:22px 0 24px;
+  }
+  .sidebar::-webkit-scrollbar{ width:8px; }
+  .sidebar::-webkit-scrollbar-thumb{ background:rgba(255,255,255,.2); border-radius:4px; }
+
+  .sb-brand{
+    padding:0 22px 18px;
+    border-bottom:1px solid rgba(255,255,255,.18);
+    margin-bottom:14px;
+  }
+  .sb-brand .eyebrow{
+    text-transform:uppercase; letter-spacing:1.5px; font-size:10px; opacity:.75; font-weight:700;
+  }
+  .sb-brand h1{
+    font-family:var(--serif);
+    font-size:18px;
+    margin:8px 0 4px;
+    line-height:1.3;
+    font-weight:700;
+  }
+  .sb-brand .doc-code{ font-size:11px; opacity:.7; }
+
+  .sb-nav{ padding:10px 12px 6px; }
+  .sb-item{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:9px 10px;
+    border-radius:6px;
+    cursor:pointer;
+    font-size:13px;
+    color:rgba(255,255,255,.88);
+    margin-bottom:2px;
+    transition:background .12s ease;
+  }
+  .sb-item .n{
+    flex:0 0 22px; height:22px;
+    background:rgba(255,255,255,.14);
+    border-radius:5px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:11px; font-weight:700;
+  }
+  .sb-item:hover{ background:rgba(255,255,255,.1); }
+  .sb-item.active{ background:#fff; color:var(--accent-dark); font-weight:700; }
+  .sb-item.active .n{ background:var(--accent); color:#fff; }
+
+  .sb-foot{
+    margin-top:18px;
+    padding:12px 22px 0;
+    border-top:1px solid rgba(255,255,255,.18);
+    font-size:11px;
+    opacity:.65;
+  }
+
+  /* ---------- CONTENT ---------- */
+  .content{
+    flex:1;
+    min-width:0;
+    padding:40px 48px 70px;
+    max-width:1500px;
+  }
+
+  .tab-content{ display:none; }
+  .tab-content.active{ display:block; animation:fadein .18s ease; }
+  @keyframes fadein{ from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);} }
+
+  h2{
+    font-family:var(--serif);
+    font-size:22px;
+    color:var(--accent-dark);
+    border-bottom:2px solid var(--accent);
+    padding-bottom:9px;
+    margin:0 0 18px;
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+  }
+  h2 .num{
+    font-family:var(--sans);
+    font-size:13px;
+    background:var(--accent);
+    color:#fff;
+    padding:2px 9px;
+    border-radius:3px;
+    font-weight:700;
+  }
+  h3{ font-size:15.5px; color:var(--ink); margin:22px 0 8px; font-weight:700; }
+  .screen-link-row{ display:flex; justify-content:flex-end; margin:-2px 0 8px; }
+  .mockup-link{
+    display:inline-flex; align-items:center; gap:6px;
+    padding:6px 11px; border-radius:5px; text-decoration:none;
+    background:var(--accent); color:#fff; font-size:11.5px; font-weight:700;
+    box-shadow:0 1px 3px rgba(30,80,20,.16);
+  }
+  .mockup-link:hover{ background:var(--accent-dark); }
+  p{ margin:0 0 12px; color:#33404d;}
+  ul, ol.plain{ margin:0 0 12px; padding-left:22px; color:#33404d;}
+  li{ margin-bottom:5px; }
+
+  table.spec{
+    width:100%;
+    border-collapse:collapse;
+    margin:10px 0 18px;
+    font-size:13px;
+  }
+  table.spec th{
+    background:var(--accent);
+    color:#fff;
+    text-align:left;
+    padding:8px 10px;
+    font-weight:600;
+  }
+  table.spec td{
+    padding:8px 10px;
+    border:1px solid var(--line);
+    vertical-align:top;
+  }
+  table.spec tr:nth-child(even) td{ background:var(--bg-soft); }
+  table.spec td.center{ text-align:center; }
+
+  /* merged overview table */
+  table.merge{
+    width:100%;
+    border-collapse:collapse;
+    margin:6px 0 8px;
+    font-size:13px;
+    table-layout:fixed;
+  }
+  table.merge th{
+    background:var(--accent);
+    color:#fff;
+    text-align:left;
+    padding:9px 12px;
+    font-weight:600;
+  }
+  table.merge th.col-aspect{ width:150px; }
+  table.merge td{
+    padding:12px 14px;
+    border:1px solid var(--line);
+    vertical-align:top;
+  }
+  table.merge tr.row-asis td{ background:#fdf2f0; }
+  table.merge tr.row-tobe td{ background:#eef7ee; }
+  table.merge tr.row-context td, table.merge tr.row-scope td, table.merge tr.row-actors td{ background:#fff; }
+  table.merge .aspect-label{
+    font-weight:700; color:var(--accent-dark); font-size:12.5px;
+  }
+  table.merge .aspect-tag{
+    display:inline-block; font-size:9.5px; text-transform:uppercase; letter-spacing:.5px;
+    padding:2px 7px; border-radius:8px; margin-top:6px; color:#fff; font-weight:700;
+  }
+  table.merge tr.row-asis .aspect-tag{ background:var(--danger); }
+  table.merge tr.row-tobe .aspect-tag{ background:var(--ok); }
+
+  .scope-grid{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .scope-grid .col-title{ font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:.4px; color:var(--sub); margin-bottom:6px; }
+  .scope-grid ul{ margin:0; padding-left:18px; }
+
+  .actor-row{ display:flex; gap:10px; margin-bottom:8px; align-items:baseline; }
+  .actor-row:last-child{ margin-bottom:0; }
+  .actor-row b{ flex:0 0 190px; color:var(--ink); }
+  .actor-row span{ color:#33404d; }
+
+  .callout{
+    border-left:4px solid var(--accent);
+    background:var(--bg-soft);
+    padding:12px 16px;
+    border-radius:0 4px 4px 0;
+    font-size:13.5px;
+    margin:14px 0;
+  }
+  .callout.warn{ border-color:var(--warn); background:#fff8ec; }
+  .callout.risk{ border-color:var(--danger); background:#fdf2f0; }
+  .callout b.tag{
+    display:inline-block; font-size:10.5px; text-transform:uppercase; letter-spacing:.5px;
+    background:var(--accent); color:#fff; padding:1px 7px; border-radius:8px; margin-right:8px;
+  }
+  .callout.warn b.tag{ background:var(--warn); }
+  .callout.risk b.tag{ background:var(--danger); }
+
+  .badge{ display:inline-block; padding:2px 9px; border-radius:10px; font-size:11.5px; font-weight:700; color:#fff;}
+  .badge.wait{ background:var(--warn); }
+  .badge.ok{ background:var(--ok); }
+  .badge.no{ background:var(--danger); }
+
+  /* flow diagram */
+  .flow{
+    display:flex;
+    align-items:stretch;
+    gap:0;
+    margin:6px 0 4px;
+    overflow-x:auto;
+    padding-bottom:6px;
+  }
+  .flow .step{
+    flex:0 0 145px;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:10px 9px;
+    font-size:11.5px;
+    text-align:center;
+    position:relative;
+  }
+  .flow .step .role{
+    font-size:9.5px; text-transform:uppercase; letter-spacing:.5px; color:var(--sub); font-weight:700; margin-bottom:5px;
+  }
+  .flow .step.approve{ background:#e3f3e0; border-color:#bfe0bf; }
+  .flow .step.reject{ background:#f8dfdc; border-color:#eac0bc; }
+  .flow .arrow{
+    flex:0 0 26px;
+    display:flex; align-items:center; justify-content:center;
+    color:var(--sub); font-size:16px;
+  }
+
+  .role-matrix td.yes{ color:var(--ok); font-weight:700; text-align:center; }
+  .role-matrix td.no{ color:#b6bfc8; text-align:center; }
+
+  /* embedded mockup */
+  .mockup-frame-wrap{
+    border:1px solid var(--line);
+    border-radius:8px;
+    overflow:hidden;
+    box-shadow:0 4px 16px rgba(20,40,60,.10);
+    margin:14px 0 8px;
+  }
+  .mockup-frame-wrap .bar{
+    background:var(--bg-soft);
+    padding:8px 14px;
+    font-size:11.5px;
+    color:var(--sub);
+    border-bottom:1px solid var(--line);
+    display:flex; justify-content:space-between; align-items:center;
+  }
+  .mockup-frame-wrap iframe{
+    width:100%;
+    height:900px;
+    border:none;
+    display:block;
+    background:#E9F3E2;
+  }
+
+  .doc-history{ font-size:12.5px; }
+  .doc-history td{ padding:6px 10px; }
+
+  footer.pagefoot{
+    text-align:center; color:var(--sub); font-size:11.5px; padding:30px 0 0;
+  }
+
+  @media (max-width: 900px){
+    .layout{ flex-direction:column; }
+    .sidebar{ width:100%; flex:none; position:relative; height:auto; }
+    .content{ padding:26px 20px 50px; }
+    .scope-grid{ grid-template-columns:1fr; }
+    .actor-row{ flex-direction:column; gap:2px; }
+    .actor-row b{ flex:none; }
+  }
+
+  @media print{
+    .sidebar{ display:none; }
+    .tab-content{ display:block !important; }
+  }
+</style>
+<link rel="stylesheet" href="../assets/erp-sidebar.css">
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar">
+    <div class="sb-brand">
+      <div class="eyebrow">Tài liệu phân tích yêu cầu</div>
+      <h1>Sửa ngày xuất hàng mã hàng</h1>
+      <div class="doc-code">BA-PAKD-SNXH-01 · v1.5</div>
+    </div>
+
+    <nav class="sb-nav" id="sbNav">
+      <div class="sb-item active" data-target="s1"><span class="n">1</span>Bối cảnh, phạm vi &amp; giải pháp</div>
+      <div class="sb-item" data-target="s2"><span class="n">2</span>Quy tắc nghiệp vụ</div>
+      <div class="sb-item" data-target="s3"><span class="n">3</span>Đặc tả màn hình</div>
+      <div class="sb-item" data-target="s4"><span class="n">4</span>Phân quyền</div>
+      <div class="sb-item" data-target="s5"><span class="n">5</span>Vòng đời trạng thái</div>
+      <div class="sb-item" data-target="s6"><span class="n">6</span>Vấn đề mở &amp; rủi ro</div>
+      <div class="sb-item" data-target="s7"><span class="n">7</span>Mockup tương tác</div>
+      <div class="sb-item" data-target="s8"><span class="n">8</span>Lịch sử tài liệu</div>
+    </nav>
+
+    <div class="sb-foot">Cập nhật 15/07/2026 · Business Analyst</div>
+  </aside>
+
+  <!-- ============ CONTENT ============ -->
+  <main class="content">
+
+    <!-- TAB 1: merged context/scope/actors/asis/tobe -->
+    <section class="tab-content active" id="s1">
+      <h2><span class="num">1</span>Bối cảnh, phạm vi &amp; giải pháp</h2>
+      <p style="color:var(--sub);font-size:12.5px;margin-top:-8px;">Gộp 5 nội dung liên quan vào một bảng để dễ đối chiếu logic từ bối cảnh → hiện trạng → giải pháp đề xuất.</p>
+
+      <table class="merge">
+        <tr><th class="col-aspect">Khía cạnh</th><th>Nội dung</th></tr>
+
+        <tr class="row-context">
+          <td><span class="aspect-label">Bối cảnh &amp; mục tiêu</span></td>
+          <td>
+            <p style="margin-bottom:8px;">Khi mã hàng trong Phương án kinh doanh (PAKD) đã được lập và phê duyệt, nếu ngày xuất hàng thực tế thay đổi (khách dời lịch, nhà máy trễ tiến độ, thay đổi vận chuyển...), người dùng hiện không có công cụ để chỉnh sửa trực tiếp ngày xuất hàng của mã hàng đó.</p>
+            <p style="margin-bottom:0;"><b>Mục tiêu:</b> cho phép nhân viên kinh doanh điều chỉnh ngày xuất hàng của một mã hàng cụ thể <b>mà không cần hủy PAKD</b>, có kiểm soát qua quy trình phê duyệt 2 cấp trước khi thay đổi có hiệu lực.</p>
+          </td>
+        </tr>
+
+        <tr class="row-scope">
+          <td><span class="aspect-label">Phạm vi</span></td>
+          <td>
+            <div class="scope-grid">
+              <div>
+                <div class="col-title">Trong phạm vi</div>
+                <ul>
+                  <li>Chức năng "Sửa ngày xuất hàng" tại Bảng theo dõi PAKD</li>
+                  <li>Popup nhập ngày điều chỉnh + lý do</li>
+                  <li>Loại phê duyệt mới trong <b>App Phê duyệt (ứng dụng di động)</b> dành cho TPKD Công ty → TGĐ</li>
+                  <li>Chuông thông báo <b>trong App Phê duyệt di động</b>, báo cho TPKD Công ty / TGĐ khi có yêu cầu mới hoặc đến lượt mình duyệt</li>
+                  <li>Cập nhật cột "Ngày XH điều chỉnh" (đang để trống) sau khi duyệt xong</li>
+                  <li>Lưu lịch sử các lần điều chỉnh của mã hàng</li>
+                </ul>
+              </div>
+              <div>
+                <div class="col-title">Ngoài phạm vi (đợt này)</div>
+                <ul>
+                  <li>Đồng bộ dữ liệu ngày xuất hàng điều chỉnh sang Bravo — xem mục 6</li>
+                  <li>Thay đổi cơ chế hủy/điều chỉnh PAKD hiện hữu</li>
+                  <li>Thay đổi số lượng, đơn giá hay các nội dung khác của mã hàng</li>
+                </ul>
+              </div>
+            </div>
+          </td>
+        </tr>
+
+        <tr class="row-actors">
+          <td><span class="aspect-label">Đối tượng liên quan</span></td>
+          <td>
+            <div class="actor-row"><b>Nhân viên kinh doanh</b><span>Khởi tạo yêu cầu sửa ngày xuất hàng cho mã hàng phụ trách — thao tác trên <b>WinForm</b> (Bảng theo dõi PAKD)</span></div>
+            <div class="actor-row"><b>TPKD Công ty</b><span>Phê duyệt cấp 1 — thao tác trên <b>App Phê duyệt (di động)</b></span></div>
+            <div class="actor-row"><b>Tổng Giám đốc (TGĐ)</b><span>Phê duyệt cấp 2 (cấp cuối) — thao tác trên <b>App Phê duyệt (di động)</b></span></div>
+            <div class="actor-row"><b>Kế toán (Bravo)</b><span>Bên nhận dữ liệu ngày xuất hàng đã điều chỉnh — chờ xác nhận phương án tích hợp với anh Hải</span></div>
+          </td>
+        </tr>
+
+        <tr class="row-asis">
+          <td><span class="aspect-label">Hiện trạng</span><br><span class="aspect-tag">AS-IS</span></td>
+          <td>
+            <div class="flow">
+              <div class="step"><div class="role">Bước 1</div>Phát sinh thay đổi ngày xuất hàng thực tế</div>
+              <div class="arrow">→</div>
+              <div class="step"><div class="role">Bước 2</div>NV kinh doanh phải hủy PAKD đã lập</div>
+              <div class="arrow">→</div>
+              <div class="step reject"><div class="role">Hệ quả</div>Ảnh hưởng tồn kho, kế hoạch sản xuất, các link liên quan</div>
+              <div class="arrow">→</div>
+              <div class="step"><div class="role">Bước 3</div>Lập lại PAKD mới với ngày xuất hàng đúng</div>
+            </div>
+            <div class="callout risk" style="margin-bottom:0;"><b class="tag">Hạn chế</b>Không có lịch sử điều chỉnh, không tách bạch được "thay đổi kế hoạch" và "hủy do sai sót", tốn thời gian lập lại toàn bộ PAKD chỉ vì một trường dữ liệu.</div>
+          </td>
+        </tr>
+
+        <tr class="row-tobe">
+          <td><span class="aspect-label">Giải pháp đề xuất</span><br><span class="aspect-tag">TO-BE</span></td>
+          <td>
+            <div class="flow">
+              <div class="step"><div class="role">NV kinh doanh</div>Right-click mã hàng → "Sửa ngày xuất hàng"</div>
+              <div class="arrow">→</div>
+              <div class="step"><div class="role">NV kinh doanh</div>Nhập ngày điều chỉnh + lý do → Trình duyệt</div>
+              <div class="arrow">→</div>
+              <div class="step approve"><div class="role">TPKD Công ty</div>Duyệt cấp 1</div>
+              <div class="arrow">→</div>
+              <div class="step approve"><div class="role">TGĐ</div>Duyệt cấp 2</div>
+              <div class="arrow">→</div>
+              <div class="step"><div class="role">Hệ thống</div>Tự cập nhật "Ngày XH điều chỉnh"</div>
+            </div>
+            <p style="margin-bottom:0;"><b>PAKD không bị hủy</b>, mã hàng vẫn giữ nguyên trạng thái, chỉ ngày xuất hàng được cập nhật sau khi có đủ 2 chữ ký duyệt. Mọi lần điều chỉnh đều được lưu vết.</p>
+          </td>
+        </tr>
+      </table>
+    </section>
+
+    <!-- TAB 2 -->
+    <section class="tab-content" id="s2">
+      <h2><span class="num">2</span>Quy tắc nghiệp vụ</h2>
+      <table class="spec">
+        <tr><th style="width:8%">STT</th><th style="width:28%">Quy tắc</th><th>Mô tả</th></tr>
+        <tr><td class="center">BR-01</td><td>Không trùng yêu cầu đang chờ</td><td>Không cho tạo yêu cầu mới cho mã hàng đang có yêu cầu ở trạng thái "Chờ duyệt"</td></tr>
+        <tr><td class="center">BR-02</td><td>Ngày điều chỉnh phải khác ngày hiện tại</td><td>Hệ thống chặn khi người dùng chọn trùng ngày đang hiển thị</td></tr>
+        <tr><td class="center">BR-03</td><td>Bắt buộc lý do</td><td>Trường "Lý do" là bắt buộc, tối thiểu áp dụng validate không để trống</td></tr>
+        <tr><td class="center">BR-04</td><td>Phê duyệt tuần tự 2 cấp</td><td>TPKD Công ty duyệt trước, sau đó mới chuyển cho TGĐ; không duyệt song song</td></tr>
+        <tr><td class="center">BR-05</td><td>Từ chối kết thúc luồng</td><td>Nếu TPKD hoặc TGĐ từ chối ở bất kỳ cấp nào, yêu cầu chuyển trạng thái "Từ chối" và trả về người trình, không tiếp tục lên cấp sau</td></tr>
+        <tr><td class="center">BR-06</td><td>Chỉ hiển thị khi duyệt đủ 2 cấp</td><td>Cột "Ngày XH điều chỉnh" trên Bảng theo dõi PAKD mặc định <b>để trống</b>; chỉ được điền giá trị sau khi TGĐ duyệt xong. Trong lúc chờ duyệt, ô vẫn để trống (không hiển thị ngày đề xuất)</td></tr>
+        <tr><td class="center">BR-07</td><td>Lưu lịch sử</td><td>Mỗi mã hàng lưu toàn bộ lịch sử các lần điều chỉnh đã duyệt (ngày gốc ban đầu, người trình, người duyệt, thời gian)</td></tr>
+        <tr><td class="center">BR-08</td><td>Giữ nguyên PAKD</td><td>Thao tác này không làm thay đổi trạng thái phê duyệt hiện có của PAKD (Trạng thái PAKD, Trạng thái P2)</td></tr>
+      </table>
+    </section>
+
+    <!-- TAB 3 -->
+    <section class="tab-content" id="s3">
+      <h2><span class="num">3</span>Đặc tả màn hình</h2>
+
+      <h3>3.1. Bảng theo dõi PAKD — bổ sung <span style="font-size:11px;font-weight:400;color:var(--sub);">(WinForm — máy tính)</span></h3>
+      <div class="screen-link-row"><a class="mockup-link" href="mockup_sua_ngay_xuat_hang_v2.html#screen1" target="_blank">↗ Xem mockup màn hình 3.1</a></div>
+      <table class="spec">
+        <tr><th style="width:26%">Thành phần</th><th>Mô tả</th></tr>
+        <tr><td>Cột mới: "Ngày XH điều chỉnh"</td><td><b>Mặc định để trống</b> (không hiển thị giá trị nào, kể cả khi trùng "Ngày xuất hàng dự kiến"). Ô này <b>chỉ được điền giá trị khi yêu cầu điều chỉnh được duyệt đủ 2 cấp</b> (TPKD Công ty → TGĐ trên App Phê duyệt di động). Trong lúc yêu cầu còn chờ duyệt, ô vẫn để trống, chỉ kèm biểu tượng nhỏ ⏳ để nhận biết đang có đề xuất chờ xử lý. <b>Không bổ sung cột "Trạng thái điều chỉnh" riêng</b> vì thông tin trạng thái từng cấp duyệt đã có đầy đủ tại App Phê duyệt (mục 3.3).</td></tr>
+        <tr><td>Các cột hiện có — giữ nguyên đầy đủ</td><td>Doanh thu, Đã làm ĐH CO, Costing file, Biên bản, Ngày đồng bộ, Ngày XH dự kiến, Ngày lập, Trạng thái, Ngày xác nhận, % Lợi nhuận P2, Ngày phê duyệt P2, Người phê duyệt P2, Trạng thái P2, Sử dụng AI (theo đúng bảng hiện hữu khách cung cấp) — cột "Ngày XH điều chỉnh" mới được chèn ngay sau cột "Ngày XH dự kiến"</td></tr>
+        <tr><td>Bộ lọc — bổ sung</td><td>Giữ nguyên các bộ lọc hiện có (Ngày XH dự kiến, Khách hàng, Mã hàng, Chi nhánh, Brand name, Nhân viên lập, Trạng thái PAKD, Trạng thái P2); không phát sinh bộ lọc mới cho riêng chức năng này</td></tr>
+        <tr><td>Menu chuột phải</td><td>Bổ sung mục <b>"Sửa ngày xuất hàng"</b> vào cuối danh sách menu hiện có (Chèn cột, Bỏ chọn cột, Ẩn cột, Danh sách cột ẩn, Xuất Excel, Hiển thị Excel, Tạo/Danh sách yêu cầu duyệt mẫu)</td></tr>
+        <tr><td>Điều kiện hiển thị</td><td>Chỉ hiện mục menu "Sửa ngày xuất hàng" khi mã hàng thuộc quyền phụ trách của người dùng đang đăng nhập <i>(cần xác nhận với khách)</i></td></tr>
+        <tr><td>Ghi chú nền tảng</td><td>Màn hình 3.1 và popup 3.2 là màn hình <b>WinForm trên máy tính</b> (không có chuông thông báo ở đây) — chuông thông báo chỉ đặt trên <b>App Phê duyệt di động</b> dành cho lãnh đạo, xem mục 3.3</td></tr>
+      </table>
+
+      <h3>3.2. Popup "Sửa ngày xuất hàng"</h3>
+      <div class="screen-link-row"><a class="mockup-link" href="mockup_sua_ngay_xuat_hang_v2.html#screen2" target="_blank">↗ Xem mockup màn hình 3.2</a></div>
+      <table class="spec">
+        <tr><th style="width:18%">Trường</th><th style="width:14%">Loại</th><th style="width:10%">Bắt buộc</th><th>Mô tả / validate</th></tr>
+        <tr><td>Chi nhánh</td><td>Text, chỉ đọc</td><td class="center">—</td><td>Lấy tự động từ mã hàng đang chọn</td></tr>
+        <tr><td>Mã hàng</td><td>Text, chỉ đọc</td><td class="center">—</td><td>Lấy tự động từ dòng đang chọn</td></tr>
+        <tr><td>Ngày xuất hàng gốc</td><td>Date, chỉ đọc</td><td class="center">—</td><td>Ngày hiện tại trên PAKD (không cho sửa trực tiếp ô này)</td></tr>
+        <tr><td>Ngày điều chỉnh</td><td>Date picker</td><td class="center">Có</td><td>Khác ngày gốc (BR-02)</td></tr>
+        <tr><td>Lý do</td><td>Textarea</td><td class="center">Có</td><td>Không để trống (BR-03)</td></tr>
+        <tr><td>Nút "Trình duyệt"</td><td>Button</td><td class="center">—</td><td>Tạo yêu cầu, đẩy sang App Phê duyệt, đóng popup, không hủy PAKD</td></tr>
+        <tr><td>Nút "Hủy"</td><td>Button</td><td class="center">—</td><td>Đóng popup, không lưu gì</td></tr>
+      </table>
+
+      <h3>3.3. App Phê duyệt — chức năng mới "Phê duyệt điều chỉnh ngày kết thúc mã hàng" <span style="font-size:11px;font-weight:400;color:var(--sub);">(ứng dụng di động)</span></h3>
+      <div class="screen-link-row"><a class="mockup-link" href="mockup_sua_ngay_xuat_hang_v2.html#screen3" target="_blank">↗ Xem mockup màn hình 3.3</a></div>
+      <table class="spec">
+        <tr><th style="width:26%">Thành phần</th><th>Mô tả</th></tr>
+        <tr><td>Nền tảng</td><td>Đây là <b>ứng dụng di động</b> (điện thoại) dành cho lãnh đạo duyệt mọi lúc mọi nơi — khác với màn hình 3.1/3.2 vốn là WinForm trên máy tính. Màn hình chính hiển thị <b>danh sách dạng bảng</b> để xem được nhiều yêu cầu trên một màn hình; chạm một dòng để mở màn hình chi tiết phê duyệt</td></tr>
+        <tr><td>Chuông thông báo 🔔</td><td>Đặt tại thanh tiêu đề trong app di động. Khi có yêu cầu điều chỉnh mới hoặc đến lượt mình duyệt, số đếm trên chuông tăng lên; bấm vào chuông mở danh sách rút gọn các yêu cầu đang chờ, bấm vào 1 mục sẽ <b>mở trực tiếp màn hình chi tiết phê duyệt của đúng người trình/yêu cầu đó</b>. Chuông chỉ hiển thị số lượng liên quan đến người dùng đang đăng nhập (TPKD Công ty chỉ thấy các yêu cầu đến lượt TPKD; TGĐ chỉ thấy các yêu cầu đến lượt TGĐ)</td></tr>
+        <tr><td>Danh sách yêu cầu (dạng bảng)</td><td>Mỗi dòng hiển thị tối thiểu: Người trình, Mã hàng, Chi nhánh, Ngày điều chỉnh, trạng thái hiện tại và nút/mũi tên mở chi tiết. Danh sách cần hiển thị được nhiều ví dụ cùng lúc và hỗ trợ cuộn dọc/ngang trên màn hình nhỏ.</td></tr>
+        <tr><td>Màn hình chi tiết phê duyệt</td><td>Hiển thị đầy đủ: Người trình, Chi nhánh, Mã hàng, Ngày xuất hàng gốc → Ngày điều chỉnh, Lý do, trạng thái TPKD/TGĐ và nút Duyệt/Từ chối theo quyền của user đăng nhập. Màn hình này được mở khi chọn một dòng trong bảng hoặc chọn một thông báo trên chuông.</td></tr>
+        <tr><td>Bộ lọc dạng chip</td><td>Chờ duyệt / Đã duyệt / Từ chối / Chi nhánh — vuốt ngang để chọn, phù hợp thao tác cảm ứng trên điện thoại</td></tr>
+        <tr><td>Nút Duyệt / Từ chối</td><td>Hiển thị tại màn hình chi tiết, chỉ hiện theo đúng người dùng đăng nhập đang ở cấp duyệt tương ứng (TPKD chỉ thấy nút khi đang ở bước TPKD, tương tự với TGĐ). Yêu cầu đã xử lý xong chỉ cho phép xem, không còn nút thao tác</td></tr>
+        <tr><td>Lý do từ chối</td><td><i>Đề xuất bổ sung:</i> khi bấm "Từ chối", bắt nhập lý do từ chối, gửi lại cho người trình</td></tr>
+        <tr><td>Liên kết với Bảng theo dõi PAKD</td><td>Mỗi dòng/yêu cầu tương ứng 1-1 với 1 mã hàng trên Bảng theo dõi PAKD (WinForm, mục 3.1). Sau khi <b>TGĐ duyệt xong</b>, hệ thống mới điền giá trị vào ô "Ngày XH điều chỉnh" (đang để trống) trên WinForm và gỡ thông báo khỏi chuông</td></tr>
+      </table>
+    </section>
+
+    <!-- TAB 4 -->
+    <section class="tab-content" id="s4">
+      <h2><span class="num">4</span>Phân quyền</h2>
+      <table class="spec role-matrix">
+        <tr><th style="width:34%">Chức năng</th><th>NV kinh doanh</th><th>TPKD Công ty</th><th>TGĐ</th></tr>
+        <tr><td>Xem "Sửa ngày xuất hàng" tại Bảng theo dõi PAKD</td><td class="yes">✓</td><td class="no">—</td><td class="no">—</td></tr>
+        <tr><td>Tạo yêu cầu trình duyệt</td><td class="yes">✓</td><td class="no">—</td><td class="no">—</td></tr>
+        <tr><td>Duyệt cấp 1 (TPKD Công ty)</td><td class="no">—</td><td class="yes">✓</td><td class="no">—</td></tr>
+        <tr><td>Duyệt cấp 2 (TGĐ)</td><td class="no">—</td><td class="no">—</td><td class="yes">✓</td></tr>
+        <tr><td>Xem lịch sử điều chỉnh của mã hàng</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+      </table>
+    </section>
+
+    <!-- TAB 5 -->
+    <section class="tab-content" id="s5">
+      <h2><span class="num">5</span>Vòng đời trạng thái yêu cầu</h2>
+      <p style="color:var(--sub);font-size:12.5px;margin-top:-8px;">Các badge dưới đây thể hiện trạng thái của <b>yêu cầu điều chỉnh</b> trên App Phê duyệt (di động); Bảng theo dõi PAKD (WinForm) không hiển thị badge này — cột "Ngày XH điều chỉnh" chỉ để trống hoặc có giá trị (mục 3.1).</p>
+      <div class="flow" style="margin:18px 0 22px;">
+        <div class="step"><div class="role">Khởi tạo</div><span class="badge no">Chưa có yêu cầu</span></div>
+        <div class="arrow">→</div>
+        <div class="step"><div class="role">Trình duyệt</div><span class="badge wait">Chờ TPKD duyệt</span></div>
+        <div class="arrow">→</div>
+        <div class="step"><div class="role">TPKD duyệt</div><span class="badge wait">Chờ TGĐ duyệt</span></div>
+        <div class="arrow">→</div>
+        <div class="step approve"><div class="role">TGĐ duyệt</div><span class="badge ok">Đã duyệt</span></div>
+      </div>
+      <p>Ở bất kỳ bước duyệt nào, nếu bị từ chối → chuyển thẳng sang <span class="badge no">Từ chối</span>, kết thúc luồng, không đi tiếp.</p>
+    </section>
+
+    <!-- TAB 6 -->
+    <section class="tab-content" id="s6">
+      <h2><span class="num">6</span>Vấn đề mở &amp; rủi ro</h2>
+      <div class="callout warn"><b class="tag">Cần xác nhận</b>Đồng bộ ngày xuất hàng điều chỉnh sang Bravo: đề xuất chỉ đẩy sang Bravo sau khi TGĐ duyệt xong, tránh đồng bộ dữ liệu chưa chốt. Cần trao đổi kỹ với anh Hải về cơ chế (đẩy tự động hay theo lô, field nào bên Bravo nhận, có ảnh hưởng chứng từ kế toán đã lập hay không).</div>
+      <div class="callout warn"><b class="tag">Cần xác nhận</b>Phạm vi hiển thị nút "Sửa ngày xuất hàng" theo phân quyền chi nhánh/mã hàng phụ trách — hiện file khách chưa nêu rõ.</div>
+      <div class="callout warn"><b class="tag">Cần xác nhận</b>Có cho phép điều chỉnh nhiều lần liên tiếp trên cùng một mã hàng hay giới hạn số lần? Ngày gốc hiển thị ở lần điều chỉnh thứ 2 là ngày gốc ban đầu hay ngày đã điều chỉnh lần 1?</div>
+      <div class="callout risk"><b class="tag">Rủi ro</b>Nếu không chặn tạo yêu cầu trùng (BR-01), có thể phát sinh nhiều yêu cầu chờ duyệt cho cùng một mã hàng, gây nhầm lẫn khi TPKD/TGĐ duyệt.</div>
+    </section>
+
+    <!-- TAB 7 -->
+    <section class="tab-content" id="s7">
+      <h2><span class="num">7</span>Mockup tương tác</h2>
+      <p>Bản mockup dưới đây cho phép thao tác trực tiếp: chọn tab để chuyển màn hình, right-click vào một dòng ở "Bảng theo dõi PAKD", xem danh sách phê duyệt dạng bảng và bấm chuông để mở đúng chi tiết yêu cầu tương ứng.</p>
+      <div class="mockup-frame-wrap">
+        <div class="bar">
+          <span>mockup_sua_ngay_xuat_hang_v2.html — xem trực tiếp trong khung bên dưới</span>
+          <span>3 màn hình: Bảng theo dõi · Popup · App Phê duyệt</span>
+        </div>
+        <iframe src="mockup_sua_ngay_xuat_hang_v2.html" title="Mockup tương tác"></iframe>
+      </div>
+      <p style="font-size:12px;color:var(--sub);">Nếu khung không hiển thị do trình xem file không hỗ trợ iframe cục bộ, mở trực tiếp file <code>mockup_sua_ngay_xuat_hang_v2.html</code> (đính kèm cùng thư mục) bằng trình duyệt.</p>
+    </section>
+
+    <!-- TAB 8 -->
+    <section class="tab-content" id="s8">
+      <h2><span class="num">8</span>Lịch sử thay đổi tài liệu</h2>
+      <table class="spec doc-history">
+        <tr><th style="width:12%">Phiên bản</th><th style="width:16%">Ngày</th><th style="width:20%">Người thực hiện</th><th>Nội dung thay đổi</th></tr>
+        <tr><td>1.0</td><td>15/07/2026</td><td>Business Analyst</td><td>Khởi tạo tài liệu dựa trên yêu cầu khách + bổ sung đề xuất business rules, đặc tả màn hình, phân quyền, mockup tương tác</td></tr>
+        <tr><td>1.1</td><td>15/07/2026</td><td>Business Analyst</td><td>Đổi bảng màu theo brand công ty (#5EB332); chuyển mục lục sang sidebar điều hướng, mỗi mục hiển thị dạng tab riêng</td></tr>
+        <tr><td>1.2</td><td>15/07/2026</td><td>Business Analyst</td><td>Bỏ tab Tổng quan; gộp Bối cảnh, Phạm vi, Đối tượng liên quan, Hiện trạng (AS-IS), Giải pháp (TO-BE) thành 1 bảng duy nhất, 1 mục trong sidebar để dễ đối chiếu logic</td></tr>
+        <tr><td>1.3</td><td>15/07/2026</td><td>Business Analyst</td><td>Theo phản hồi khách: (1) bỏ cột "Trạng thái điều chỉnh" riêng — cột "Ngày XH điều chỉnh" chỉ cập nhật khi duyệt đủ 2 cấp; (2) bổ sung chuông thông báo trên app cho lãnh đạo phê duyệt, song song với màn hình danh sách đề xuất; (3) bổ sung đầy đủ các cột của Bảng theo dõi PAKD theo ảnh chụp màn hình thực tế khách cung cấp; (4) mở rộng chiều rộng nội dung tài liệu và mockup để hiển thị đủ bảng, hạn chế cuộn ngang</td></tr>
+        <tr><td>1.4</td><td>15/07/2026</td><td>Business Analyst</td><td>Theo phản hồi khách: (1) bỏ chuông thông báo khỏi màn hình WinForm (Bảng theo dõi PAKD, popup) vì đây là ứng dụng máy tính; chuông chỉ còn trên App Phê duyệt di động dành cho lãnh đạo; (2) chuyển màn hình 3 (App Phê duyệt) sang dạng mô phỏng thiết bị di động (khung điện thoại, status bar, danh sách thẻ, chuông trong app); (3) cột "Ngày XH điều chỉnh" mặc định để trống, chỉ hiển thị giá trị khi có ngày điều chỉnh đã được phê duyệt đủ 2 cấp</td></tr>
+        <tr><td>1.5</td><td>15/07/2026</td><td>Business Analyst</td><td>Theo phản hồi khách: (1) chuyển màn hình App Phê duyệt từ danh sách thẻ sang bảng nhiều dòng để xem được nhiều ví dụ; (2) bổ sung màn hình chi tiết phê duyệt và chỉnh chuông thông báo mở trực tiếp đúng yêu cầu của người trình tương ứng; (3) tại mục 3 Đặc tả màn hình, bổ sung nút liên kết tới từng mockup 3.1, 3.2 và 3.3.</td></tr>
+      </table>
+    </section>
+
+    <footer class="pagefoot">Tài liệu nội bộ — dùng cho mục đích phân tích &amp; xác nhận yêu cầu trước khi triển khai.</footer>
+  </main>
+</div>
+
+<script>
+  function activateTab(id){
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.sb-item').forEach(el => el.classList.remove('active'));
+    const target = document.getElementById(id);
+    if(target) target.classList.add('active');
+    const navItem = document.querySelector('.sb-item[data-target="'+id+'"]');
+    if(navItem) navItem.classList.add('active');
+    document.querySelector('.content').scrollTop = 0;
+    window.scrollTo({top:0, behavior:'instant'});
+  }
+
+  document.querySelectorAll('.sb-item').forEach(item=>{
+    item.addEventListener('click', ()=>{
+      activateTab(item.dataset.target);
+      history.replaceState(null, '', '#'+item.dataset.target);
+    });
+  });
+
+  const initialSection = window.location.hash.replace('#','');
+  if(/^s[1-8]$/.test(initialSection)) activateTab(initialSection);
+</script>
+<script src="../assets/erp-sidebar.js"></script>
+<script src="../assets/admin-editor.js"></script>
+
+</body>
+</html>

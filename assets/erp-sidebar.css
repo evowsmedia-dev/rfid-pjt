@@ -44,6 +44,7 @@
 }
 .erp-global-nav a:hover,.erp-global-nav a.active{background:#EAF6E1;color:#3f7d22;border-left-color:#3f7d22;}
 .erp-global-nav a.erp-lvl-1{font-size:12.5px;font-weight:800;margin-top:6px;}
+.erp-global-nav a.erp-lvl-2{padding-left:16px;color:#1A2332;font-size:11.3px;font-weight:700;}
 .erp-global-nav a.erp-lvl-3{padding-left:24px;color:#6B7280;font-size:10.8px;}
 .erp-global-foot{margin-top:auto;padding-top:14px;border-top:1px solid #E4E7EC;color:#9AA3AF;font:500 9.5px/1.5 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;}
 body.has-erp-global{padding-left:var(--erp-sidebar-w);}

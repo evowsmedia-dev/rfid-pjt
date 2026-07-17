@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Mockup - Sửa ngày xuất hàng</title>
+<style>
+  :root{
+    --title-blue:#5EB332;
+    --title-blue-dark:#3F7D22;
+    --header-blue:#4C9A29;
+    --header-blue2:#6EC93F;
+    --row-alt:#EEF8E7;
+    --row-hover:#DCF0CD;
+    --border:#C7DDB5;
+    --btn-blue:#5EB332;
+    --btn-blue-dark:#3F7D22;
+    --ok-green:#3f9142;
+    --warn-orange:#d98a2b;
+    --danger-red:#c0392b;
+    --text:#243141;
+    --bg:#E9F3E2;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:"Segoe UI","Tahoma",Arial,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    font-size:13px;
+  }
+  .app{
+    width:98vw;
+    max-width:1920px;
+    margin:16px auto;
+    background:#fff;
+    border:1px solid var(--border);
+    box-shadow:0 2px 10px rgba(0,0,0,.15);
+  }
+  .app-title{
+    background:linear-gradient(180deg,var(--title-blue) 0%, var(--title-blue-dark) 100%);
+    color:#fff;
+    padding:8px 14px;
+    font-size:14px;
+    font-weight:600;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    letter-spacing:.2px;
+  }
+  .app-title .platform-tag{
+    font-size:10px; font-weight:700; letter-spacing:.5px;
+    background:rgba(255,255,255,.2); padding:2px 8px; border-radius:10px; margin-left:10px;
+  }
+  .app-title .win-controls span{
+    display:inline-block;width:14px;height:14px;margin-left:6px;
+    background:rgba(255,255,255,.25);border-radius:2px;text-align:center;line-height:14px;font-size:10px;
+  }
+
+  .tabs{
+    display:flex;
+    background:#EAF5E2;
+    border-bottom:1px solid var(--border);
+  }
+  .tab{
+    padding:9px 18px;
+    cursor:pointer;
+    font-weight:600;
+    color:#4a5b6c;
+    border-right:1px solid var(--border);
+    user-select:none;
+  }
+  .tab .plat{ font-size:9.5px; font-weight:700; color:#8a9aa8; margin-left:5px; }
+  .tab.active{
+    background:#fff;
+    color:var(--title-blue-dark);
+    border-bottom:2px solid var(--btn-blue);
+  }
+  .screen{ display:none; padding:14px; }
+  .screen.active{ display:block; }
+
+  /* filter bar */
+  .filter-bar{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+    align-items:center;
+    background:#F3F9EF;
+    border:1px solid var(--border);
+    padding:8px 12px;
+    margin-bottom:10px;
+    font-size:12px;
+  }
+  .filter-bar label{ color:#5a6b7c; margin-right:4px;}
+  .filter-bar select, .filter-bar input[type=date], .filter-bar input[type=text]{
+    padding:3px 6px; border:1px solid var(--border); border-radius:2px; background:#fff;
+  }
+
+  .grid-scroll{ width:100%; overflow-x:auto; }
+  table.grid{
+    border-collapse:collapse;
+    width:100%;
+    font-size:11.3px;
+  }
+  table.grid thead th{
+    background:linear-gradient(180deg,var(--header-blue2),var(--header-blue));
+    color:#fff;
+    padding:6px 6px;
+    text-align:left;
+    border:1px solid #3F7D22;
+    white-space:nowrap;
+    font-weight:600;
+  }
+  table.grid tbody td{
+    padding:5px 6px;
+    border:1px solid var(--border);
+    white-space:nowrap;
+  }
+  table.grid tbody td.wrap{ white-space:normal; max-width:150px; }
+  table.grid tbody td.num{ text-align:right; }
+  table.grid tbody td.center{ text-align:center; }
+  table.grid tbody tr:nth-child(even){ background:var(--row-alt); }
+  table.grid tbody tr:hover{ background:var(--row-hover); cursor:default; }
+  table.grid tbody tr.ctx-open{ outline:2px solid var(--btn-blue); }
+  .link-cell{ color:#2F6B18; text-decoration:underline; cursor:pointer; }
+  .adj-empty{ color:#b9c4ce; }
+  .adj-pending{ color:var(--warn-orange); font-size:10px; margin-left:3px; }
+  .adj-changed{ font-weight:700; color:var(--ok-green); }
+  .badge{
+    display:inline-block; padding:2px 8px; border-radius:10px; font-size:11px; font-weight:600; color:#fff;
+  }
+  .badge.wait{ background:var(--warn-orange); }
+  .badge.approved{ background:var(--ok-green); }
+  .badge.reject{ background:var(--danger-red); }
+  .badge.none{ background:#9aa7b4; }
+
+  .hint-note{
+    margin-top:10px;
+    font-size:12px;
+    color:#5a6b7c;
+    background:#fff8e6;
+    border:1px solid #eddca0;
+    padding:8px 10px;
+    border-radius:3px;
+  }
+  .hint-note b{ color:#3a4b5c; }
+
+  /* context menu */
+  .ctxmenu{
+    position:absolute;
+    display:none;
+    background:#fff;
+    border:1px solid var(--border);
+    box-shadow:0 3px 12px rgba(0,0,0,.25);
+    min-width:220px;
+    z-index:50;
+    font-size:12.5px;
+    padding:4px 0;
+  }
+  .ctxmenu .item{
+    padding:7px 14px;
+    cursor:pointer;
+    color:#2c3a48;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .ctxmenu .item:hover{ background:var(--row-hover); }
+  .ctxmenu .sep{ height:1px; background:var(--border); margin:4px 0; }
+  .ctxmenu .item.new{ font-weight:700; color:var(--title-blue-dark); position:relative; }
+  .ctxmenu .item.new::after{
+    content:"MỚI"; font-size:9px; background:var(--danger-red); color:#fff;
+    padding:1px 5px; border-radius:8px; margin-left:auto;
+  }
+  .ctxmenu .icon{ width:14px; text-align:center; color:#6b7d8f; }
+
+  /* modal */
+  .overlay{
+    display:none;
+    position:fixed; inset:0; background:rgba(20,30,40,.45);
+    align-items:center; justify-content:center; z-index:100;
+  }
+  .modal{
+    background:#fff; width:440px; border:1px solid var(--border);
+    box-shadow:0 8px 30px rgba(0,0,0,.3);
+  }
+  .modal-title{
+    background:linear-gradient(180deg,var(--title-blue),var(--title-blue-dark));
+    color:#fff; padding:8px 12px; font-weight:600; font-size:13px;
+    display:flex; justify-content:space-between; align-items:center;
+  }
+  .modal-title .x{ cursor:pointer; opacity:.8; }
+  .modal-body{ padding:16px; }
+  .form-row{ margin-bottom:12px; display:flex; flex-direction:column; gap:4px; }
+  .form-row label{ font-size:12px; color:#48586a; font-weight:600; }
+  .form-row .readonly{
+    background:#EEF5EA; border:1px solid var(--border); padding:6px 8px; border-radius:2px; color:#57697b;
+  }
+  .form-row input[type=date], .form-row textarea, .form-row input[type=text]{
+    border:1px solid var(--border); padding:6px 8px; border-radius:2px; font-family:inherit; font-size:12.5px;
+  }
+  .form-row textarea{ resize:vertical; min-height:56px; }
+  .modal-footer{
+    padding:10px 16px; background:#F3F9EF; border-top:1px solid var(--border);
+    display:flex; justify-content:flex-end; gap:8px;
+  }
+  button{
+    font-family:inherit; font-size:12.5px; padding:7px 16px; border-radius:3px; border:1px solid transparent; cursor:pointer; font-weight:600;
+  }
+  .btn-primary{ background:linear-gradient(180deg,var(--btn-blue),var(--btn-blue-dark)); color:#fff; }
+  .btn-primary:hover{ filter:brightness(1.05); }
+  .btn-secondary{ background:#EAF5E2; color:#3a4b5c; border:1px solid var(--border); }
+  .btn-approve{ background:linear-gradient(180deg,#57ab5b,var(--ok-green)); color:#fff; }
+  .btn-reject{ background:linear-gradient(180deg,#d9584a,var(--danger-red)); color:#fff; }
+
+  .toast{
+    position:fixed; top:18px; left:50%; transform:translateX(-50%);
+    background:#3F7D22; color:#fff; padding:10px 18px; border-radius:4px; font-size:12.5px;
+    box-shadow:0 4px 14px rgba(0,0,0,.3); z-index:200; display:none;
+  }
+
+  .flow-note{
+    display:flex; align-items:center; gap:6px; font-size:11.5px; color:#7a8a99; margin-top:4px;
+  }
+
+  /* =========================================================
+     SCREEN 3 — MOBILE APP DEVICE SIMULATION
+  ========================================================== */
+  .phone-stage{
+    display:flex; justify-content:center; padding:26px 10px 10px;
+    background:repeating-linear-gradient(135deg,#dfeada,#dfeada 10px,#e6f0e1 10px,#e6f0e1 20px);
+    border-radius:6px;
+  }
+  .device{
+    width:440px;
+    height:772px;
+    background:#151b22;
+    border-radius:46px;
+    padding:12px;
+    box-shadow:0 24px 50px rgba(15,30,20,.35), 0 0 0 2px #05070a inset;
+    position:relative;
+    flex:0 0 auto;
+  }
+  .device .notch{
+    position:absolute; top:12px; left:50%; transform:translateX(-50%);
+    width:130px; height:24px; background:#151b22; border-radius:0 0 18px 18px; z-index:6;
+  }
+  .device .home-bar{
+    position:absolute; bottom:9px; left:50%; transform:translateX(-50%);
+    width:120px; height:4px; background:#1c2530; border-radius:3px; z-index:6; opacity:.85;
+  }
+  .device-screen{
+    background:#F3F9EF;
+    width:100%; height:100%;
+    border-radius:34px;
+    overflow:hidden;
+    display:flex; flex-direction:column;
+    position:relative;
+  }
+  .status-bar{
+    height:32px; flex:0 0 32px;
+    background:#fff;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0 24px;
+    font-size:11.5px; font-weight:700; color:#111;
+  }
+  .status-bar .sb-icons{ display:flex; gap:4px; align-items:center; font-size:11px; }
+
+  .mobile-appbar{
+    flex:0 0 auto;
+    background:linear-gradient(180deg,var(--title-blue),var(--title-blue-dark));
+    color:#fff;
+    padding:10px 12px;
+    display:flex; align-items:center; justify-content:space-between;
+    position:relative;
+  }
+  .mobile-appbar .ma-title{ font-size:13.5px; font-weight:700; }
+  .mobile-appbar .ma-sub{ font-size:9.5px; opacity:.85; font-weight:400; }
+
+  .mbell-wrap{ position:relative; }
+  .mbell-btn{
+    position:relative; width:30px; height:30px; border-radius:50%;
+    background:rgba(255,255,255,.16); border:none; color:#fff; font-size:15px;
+    display:flex; align-items:center; justify-content:center; cursor:pointer;
+  }
+  .mbell-badge{
+    position:absolute; top:-3px; right:-3px;
+    background:var(--danger-red); color:#fff; font-size:9px; font-weight:700;
+    min-width:15px; height:15px; border-radius:8px;
+    display:flex; align-items:center; justify-content:center; padding:0 3px;
+    border:1px solid #fff;
+  }
+  .mbell-panel{
+    display:none;
+    position:absolute; top:38px; right:0;
+    width:300px;
+    background:#fff; color:var(--text);
+    border:1px solid var(--border); border-radius:8px;
+    box-shadow:0 10px 26px rgba(0,0,0,.3);
+    z-index:40; overflow:hidden;
+  }
+  .mbell-panel.open{ display:block; }
+  .mbell-panel .mbp-head{
+    background:#F3F9EF; padding:8px 10px; font-weight:700; font-size:11.5px;
+    color:var(--title-blue-dark); border-bottom:1px solid var(--border);
+  }
+  .mbell-item{ padding:8px 10px; border-bottom:1px solid #eef3ea; font-size:11px; cursor:pointer; }
+  .mbell-item:last-child{ border-bottom:none; }
+  .mbell-item:hover{ background:var(--row-hover); }
+  .mbell-item .mi-t{ font-weight:700; color:#2c3a48; margin-bottom:2px; }
+  .mbell-item .mi-s{ color:#7a8a99; font-size:10px; }
+  .mbell-empty{ padding:16px 10px; text-align:center; color:#9aa7b4; font-size:11px; }
+
+  .mobile-chips{
+    flex:0 0 auto;
+    display:flex; gap:6px; overflow-x:auto;
+    padding:9px 10px 7px;
+    background:#fff;
+    border-bottom:1px solid var(--border);
+  }
+  .chip{
+    background:#F3F9EF; border:1px solid var(--border); border-radius:14px;
+    padding:5px 11px; font-size:10.5px; white-space:nowrap; color:#3a4b5c; flex:0 0 auto;
+  }
+  .chip.active{ background:var(--btn-blue); color:#fff; border-color:var(--btn-blue-dark); font-weight:700; }
+
+  .mobile-body{ flex:1; min-height:0; background:#fff; position:relative; overflow:hidden; }
+  .mobile-list-view{ height:100%; display:flex; flex-direction:column; }
+  .mobile-list-view.hidden{ display:none; }
+  .list-summary{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:7px 10px; background:#F8FBF6; border-bottom:1px solid var(--border);
+    font-size:10px; color:#6b7d8f;
+  }
+  .list-summary b{ color:var(--title-blue-dark); }
+  .approval-table-wrap{ flex:1; min-height:0; overflow:auto; }
+  .approval-table-wrap::-webkit-scrollbar{ width:5px; height:5px; }
+  .approval-table-wrap::-webkit-scrollbar-thumb{ background:#cddcc0; border-radius:3px; }
+  table.approval-table{
+    border-collapse:collapse; width:100%; min-width:560px; font-size:9.6px;
+  }
+  table.approval-table thead th{
+    position:sticky; top:0; z-index:3;
+    background:#EAF5E2; color:#3F5F2F; font-weight:700;
+    text-align:left; padding:7px 6px; border-bottom:1px solid var(--border);
+    white-space:nowrap;
+  }
+  table.approval-table tbody td{
+    padding:7px 6px; border-bottom:1px solid #e8f0e3; vertical-align:middle;
+  }
+  table.approval-table tbody tr{ background:#fff; cursor:pointer; }
+  table.approval-table tbody tr:nth-child(even){ background:#F8FBF6; }
+  table.approval-table tbody tr:hover,
+  table.approval-table tbody tr.row-highlight{ background:var(--row-hover); }
+  .user-cell{ min-width:92px; }
+  .user-cell strong{ display:block; font-size:10.2px; color:#243141; }
+  .user-cell span{ color:#8a97a4; font-size:8.8px; }
+  .code-cell{ min-width:128px; max-width:150px; }
+  .code-cell strong{ display:block; color:#2c3a48; font-size:9.8px; }
+  .code-cell span{ color:#3F7D22; font-weight:700; font-size:8.6px; }
+  .date-cell{ white-space:nowrap; color:#33404d; }
+  .plan-date-cell{ white-space:nowrap; color:#7a8a99; }
+  .adjust-date-cell{ white-space:nowrap; color:var(--ok-green); font-weight:700; }
+  .status-pill{
+    display:inline-block; padding:3px 6px; border-radius:9px;
+    font-size:8.7px; font-weight:700; white-space:nowrap;
+  }
+  .status-pill.wait{ background:#fdecd6; color:#9a5d08; }
+  .status-pill.approved{ background:#dff0dc; color:#2e7d32; }
+  .status-pill.reject{ background:#f8dcd8; color:#a13327; }
+  .open-arrow{ color:var(--title-blue-dark); font-size:14px; font-weight:700; text-align:center; }
+
+  .approval-detail-view{
+    display:none; height:100%; overflow-y:auto; padding:10px;
+    background:#F3F9EF;
+  }
+  .approval-detail-view.active{ display:block; }
+  .detail-topbar{ display:flex; align-items:center; gap:8px; margin-bottom:9px; }
+  .detail-back{
+    width:30px; height:30px; padding:0; border-radius:50%;
+    background:#fff; border:1px solid var(--border); color:var(--title-blue-dark);
+  }
+  .detail-topbar .dt-title{ font-weight:700; font-size:12px; color:#243141; }
+  .detail-topbar .dt-sub{ font-size:9.5px; color:#7a8a99; }
+  .detail-card{
+    background:#fff; border:1px solid var(--border); border-radius:10px;
+    padding:11px; box-shadow:0 1px 5px rgba(20,40,20,.06);
+  }
+  .detail-user{
+    display:flex; justify-content:space-between; gap:8px; align-items:flex-start;
+    padding-bottom:9px; margin-bottom:9px; border-bottom:1px solid #e8f0e3;
+  }
+  .detail-user strong{ display:block; font-size:13px; }
+  .detail-user span{ font-size:9.5px; color:#7a8a99; }
+  .detail-branch{ font-size:9px; color:#3F7D22; background:#EAF5E2; padding:3px 7px; border-radius:9px; font-weight:700; }
+  .detail-grid{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:9px; }
+  .detail-field{ background:#F8FBF6; border:1px solid #e3eddc; border-radius:6px; padding:7px; }
+  .detail-field.full{ grid-column:1 / -1; }
+  .detail-field label{ display:block; font-size:8.8px; color:#7a8a99; margin-bottom:2px; }
+  .detail-field div{ font-size:10.5px; font-weight:600; color:#2c3a48; line-height:1.35; }
+  .detail-date-change{ display:flex; align-items:center; gap:5px; }
+  .detail-date-change .old{ color:#8a97a4; text-decoration:line-through; }
+  .detail-date-change .new{ color:var(--ok-green); }
+  .detail-steps{ display:flex; gap:6px; margin:10px 0; }
+  .detail-step{ flex:1; text-align:center; padding:6px 3px; border-radius:6px; background:#f1f4f7; color:#6b7d8f; font-size:9px; font-weight:700; }
+  .detail-step.wait{ background:#fdecd6; color:#a5670f; }
+  .detail-step.approved{ background:#dff0dc; color:#2e7d32; }
+  .detail-step.reject{ background:#f8dcd8; color:#a13327; }
+  .detail-actions{ display:flex; gap:8px; margin-top:10px; }
+  .detail-actions button{ flex:1; padding:8px 0; border-radius:16px; font-size:10.5px; }
+  .detail-processed{ display:none; text-align:center; font-size:10px; color:#7a8a99; padding:8px 0 2px; }
+
+  .mobile-caption{
+    text-align:center; color:#5a6b7c; font-size:11.5px; margin-top:10px;
+  }
+</style>
+<link rel="stylesheet" href="../assets/erp-sidebar.css">
+<style>
+  body.has-erp-global .app{width:calc(100vw - var(--erp-sidebar-w) - 32px);}
+  body.erp-sidebar-collapsed .app{width:calc(100vw - var(--erp-sidebar-collapsed-w) - 32px);}
+  @media(max-width:900px){
+    body.has-erp-global .app,body.erp-sidebar-collapsed .app{width:98vw;}
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="app-title">
+    <span>ERP - Phương án kinh doanh &nbsp;|&nbsp; Bảng theo dõi PAKD <span class="platform-tag">🖥️ WinForm</span></span>
+    <span class="win-controls"><span>–</span><span>▢</span><span>✕</span></span>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" data-tab="screen1">1. Bảng theo dõi PAKD <span class="plat">(WinForm)</span></div>
+    <div class="tab" data-tab="screen2">2. Popup Sửa ngày xuất hàng <span class="plat">(WinForm)</span></div>
+    <div class="tab" data-tab="screen3">3. App Phê duyệt <span class="plat">(Mobile)</span></div>
+  </div>
+
+  <!-- SCREEN 1 -->
+  <div class="screen active" id="screen1">
+    <div class="filter-bar">
+      <div><label>Ngày XH dự kiến</label><input type="date" value="2026-01-01"> → <input type="date" value="2026-12-31"></div>
+      <div><label>Khách hàng</label><select><option>Tất cả</option><option>ACE LAB</option><option>ASICS</option><option>Asmara</option></select></div>
+      <div><label>Mã hàng</label><input type="text" placeholder="Nhập mã hàng..." style="width:110px;"></div>
+      <div><label>Chi nhánh</label><select><option>Tất cả</option><option>VĐ</option><option>TN2</option><option>SC1</option><option>SC2</option><option>SC3</option></select></div>
+      <div><label>Brand name</label><select><option>Tất cả</option></select></div>
+      <div><label>Nhân viên lập</label><select><option>Tất cả</option></select></div>
+      <div><label>Trạng thái PAKD</label><select><option>Tất cả</option><option>Phê duyệt</option></select></div>
+      <div><label>Trạng thái P2</label><select><option>Tất cả</option><option>Đang lập</option><option>Phê duyệt</option></select></div>
+    </div>
+
+    <div class="grid-scroll">
+    <table class="grid" id="mainGrid">
+      <thead>
+        <tr>
+          <th>Doanh thu</th>
+          <th>Đã làm ĐH CO</th>
+          <th>Costing file</th>
+          <th>Biên bản</th>
+          <th>Ngày đồng bộ</th>
+          <th>Ngày XH dự kiến</th>
+          <th>Ngày XH điều chỉnh</th>
+          <th>Ngày lập</th>
+          <th>Trạng thái</th>
+          <th>Ngày xác nhận</th>
+          <th>% Lợi nhuận P2</th>
+          <th>Ngày phê duyệt P2</th>
+          <th>Người phê duyệt P2</th>
+          <th>Trạng thái P2</th>
+          <th>Sử dụng AI</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-code="abc" data-branch="VĐ" data-orig="13/11/2025">
+          <td class="num">9,246</td>
+          <td class="center">☑</td>
+          <td class="link-cell wrap">GIÀ TB 7248-BUY 24.09xlsx</td>
+          <td class="link-cell wrap">—</td>
+          <td>13/11/2025</td>
+          <td class="expected-date">13/11/2025</td>
+          <td class="adj-date"><span class="adj-empty">—</span></td>
+          <td>05/04/2026</td>
+          <td>Phê duyệt</td>
+          <td>09/12/2025</td>
+          <td class="num">0.9 %</td>
+          <td>—</td>
+          <td>—</td>
+          <td>Đang lập</td>
+          <td class="center">☐</td>
+        </tr>
+        <tr data-code="479458" data-branch="VĐ" data-orig="26/10/2024">
+          <td class="num">476,438</td>
+          <td class="center">☑</td>
+          <td class="link-cell wrap">LT_Ch01/2025-COSTING TN2</td>
+          <td class="link-cell wrap">233326050</td>
+          <td>26/10/2024</td>
+          <td class="expected-date">26/10/2024</td>
+          <td class="adj-date"><span class="adj-empty">—</span></td>
+          <td>26/12/2025</td>
+          <td>Phê duyệt</td>
+          <td>28/11/2025</td>
+          <td class="num">11.8 %</td>
+          <td>29/12/2025</td>
+          <td>Nguyễn Thị Phương</td>
+          <td>Phê duyệt</td>
+          <td class="center">☐</td>
+        </tr>
+        <tr data-code="59920" data-branch="VĐ" data-orig="15/11/2025">
+          <td class="num">59,920</td>
+          <td class="center">☐</td>
+          <td class="link-cell wrap">2026065-COSTING TN2</td>
+          <td class="link-cell wrap">24.10.2025-Buy Summary</td>
+          <td>15/11/2025</td>
+          <td class="expected-date">15/11/2025</td>
+          <td class="adj-date"><span class="adj-empty">—</span><span class="adj-pending" title="Đang có yêu cầu chờ duyệt">⏳</span></td>
+          <td>10/01/2026</td>
+          <td>Phê duyệt</td>
+          <td>27/12/2025</td>
+          <td class="num">6.0 %</td>
+          <td>20/12/2025</td>
+          <td>Hoàng Thị Minh Thanh</td>
+          <td>Phê duyệt</td>
+          <td class="center">☑</td>
+        </tr>
+        <tr data-code="12663" data-branch="VĐ" data-orig="23/11/2025">
+          <td class="num">12,663</td>
+          <td class="center">☑</td>
+          <td class="link-cell wrap">24.10.2025-Buy Summary</td>
+          <td class="link-cell wrap">—</td>
+          <td>23/11/2025</td>
+          <td class="expected-date">23/11/2025</td>
+          <td class="adj-date"><span class="adj-empty">—</span></td>
+          <td>07/11/2025</td>
+          <td>Phê duyệt</td>
+          <td>12/08/2025</td>
+          <td class="num">10.2 %</td>
+          <td>—</td>
+          <td>—</td>
+          <td>Đang lập</td>
+          <td class="center">☐</td>
+        </tr>
+        <tr data-code="20460" data-branch="VĐ" data-orig="29/12/2025">
+          <td class="num">452,984</td>
+          <td class="center">☑</td>
+          <td class="link-cell wrap">Costing_1442601/49 final</td>
+          <td class="link-cell wrap">Costing 142005 BCafé</td>
+          <td>29/12/2025</td>
+          <td class="expected-date">29/12/2025</td>
+          <td class="adj-date"><span class="adj-changed">12/01/2026</span></td>
+          <td>22/12/2025</td>
+          <td>Phê duyệt</td>
+          <td>26/12/2025</td>
+          <td class="num">6.0 %</td>
+          <td>03/01/2026</td>
+          <td>Hoàng Thị Minh Thanh</td>
+          <td>Phê duyệt</td>
+          <td class="center">☑</td>
+        </tr>
+        <tr data-code="6880" data-branch="VĐ" data-orig="30/09/2025">
+          <td class="num">6,880</td>
+          <td class="center">☐</td>
+          <td class="link-cell wrap">Costing 142099 BCafé</td>
+          <td class="link-cell wrap">Costing 142007 95.xlsx</td>
+          <td>30/09/2025</td>
+          <td class="expected-date">30/09/2025</td>
+          <td class="adj-date"><span class="adj-empty">—</span></td>
+          <td>29/01/2026</td>
+          <td>Phê duyệt</td>
+          <td>17/09/2025</td>
+          <td class="num">10.2 %</td>
+          <td>12/08/2025</td>
+          <td>Trương Giang Thức</td>
+          <td>Phê duyệt</td>
+          <td class="center">☐</td>
+        </tr>
+        <tr data-code="142629" data-branch="TN2" data-orig="25/09/2025">
+          <td class="num">28,566</td>
+          <td class="center">☑</td>
+          <td class="link-cell wrap">Costing 142629.xlsx</td>
+          <td class="link-cell wrap">—</td>
+          <td>25/09/2025</td>
+          <td class="expected-date">25/09/2025</td>
+          <td class="adj-date"><span class="adj-empty">—</span></td>
+          <td>25/07/2025</td>
+          <td>Phê duyệt</td>
+          <td>24/07/2025</td>
+          <td class="num">7.3 %</td>
+          <td>—</td>
+          <td>—</td>
+          <td>Đang lập</td>
+          <td class="center">☐</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+
+    <div class="hint-note">
+      💡 Right-click vào 1 dòng để mở menu thao tác — mục <b>"Sửa ngày xuất hàng"</b> là chức năng mới bổ sung theo yêu cầu.<br>
+      💡 Cột <b>"Ngày XH điều chỉnh"</b> mặc định <b>để trống</b> (—). Giá trị chỉ được điền vào ô này sau khi yêu cầu điều chỉnh được duyệt đủ <b>2 cấp</b> (TPKD Công ty → TGĐ) trên App Phê duyệt (di động). Trong lúc chờ duyệt, ô vẫn để trống, chỉ có icon ⏳ báo đang có đề xuất xử lý.
+    </div>
+  </div>
+
+  <!-- SCREEN 2 (standalone preview) -->
+  <div class="screen" id="screen2">
+    <p style="color:#5a6b7c;font-size:12.5px;">Đây là popup sẽ hiện ra khi bấm "Sửa ngày xuất hàng" từ menu chuột phải (xem demo trực tiếp ở Màn hình 1). Bên dưới là bản xem trước đầy đủ:</p>
+    <div style="display:flex;justify-content:center;padding:20px 0;">
+      <div class="modal" style="position:static;">
+        <div class="modal-title"><span>Sửa ngày xuất hàng</span><span class="x">✕</span></div>
+        <div class="modal-body">
+          <div class="form-row"><label>Chi nhánh</label><div class="readonly">VĐ</div></div>
+          <div class="form-row"><label>Mã hàng</label><div class="readonly">Costing_142601/49 final (abc)</div></div>
+          <div class="form-row"><label>Ngày xuất hàng gốc</label><div class="readonly">13/07/2026</div></div>
+          <div class="form-row">
+            <label>Ngày điều chỉnh <span style="color:#c0392b">*</span></label>
+            <input type="date" value="2026-08-13">
+          </div>
+          <div class="form-row">
+            <label>Lý do <span style="color:#c0392b">*</span></label>
+            <textarea placeholder="Nhập lý do điều chỉnh ngày xuất hàng...">Khách hàng dời lịch nhận hàng do thay đổi kế hoạch nhập kho.</textarea>
+          </div>
+          <div class="flow-note">➜ Sau khi trình duyệt, yêu cầu sẽ được đẩy sang <b>App Phê duyệt (di động)</b> của TPKD Công ty / TGĐ, không cần hủy PAKD. Cột "Ngày XH điều chỉnh" vẫn để trống cho đến khi duyệt xong.</div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-secondary">Hủy</button>
+          <button class="btn-primary">Trình duyệt</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 3 — MOBILE APP SIMULATION -->
+  <div class="screen" id="screen3">
+    <div class="phone-stage">
+      <div class="device">
+        <div class="notch"></div>
+        <div class="device-screen">
+          <div class="status-bar">
+            <span>9:41</span>
+            <span class="sb-icons">📶 📡 🔋</span>
+          </div>
+          <div class="mobile-appbar">
+            <div>
+              <div class="ma-title">App Phê duyệt</div>
+              <div class="ma-sub">Danh sách điều chỉnh ngày kết thúc mã hàng</div>
+            </div>
+            <div class="mbell-wrap">
+              <button class="mbell-btn" id="mBellBtn">🔔<span class="mbell-badge" id="mBellCount">3</span></button>
+              <div class="mbell-panel" id="mBellPanel">
+                <div class="mbp-head">Thông báo đến lượt bạn duyệt</div>
+                <div id="mBellList">
+                  <div class="mbell-item" data-request-id="req-59920">
+                    <div class="mi-t">Trần Thị B — 2026065-COSTING TN2</div>
+                    <div class="mi-s">Đề xuất 10/02/2026 · Chờ TPKD duyệt</div>
+                  </div>
+                  <div class="mbell-item" data-request-id="req-479458">
+                    <div class="mi-t">Phạm Thu Hằng — LT_Ch01/2025-COSTING</div>
+                    <div class="mi-s">Đề xuất 18/01/2026 · Chờ TPKD duyệt</div>
+                  </div>
+                  <div class="mbell-item" data-request-id="req-gia7248">
+                    <div class="mi-t">Bùi Ngọc Mai — GIÀ TB 7248-BUY</div>
+                    <div class="mi-s">Đề xuất 22/11/2025 · Chờ TPKD duyệt</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mobile-chips">
+            <span class="chip active">Chờ duyệt</span>
+            <span class="chip">Đã duyệt</span>
+            <span class="chip">Từ chối</span>
+            <span class="chip">Tất cả chi nhánh</span>
+          </div>
+
+          <div class="mobile-body" id="mobileBody">
+            <div class="mobile-list-view" id="mobileListView">
+              <div class="list-summary"><span><b>8</b> yêu cầu gần nhất</span><span>Chạm một dòng để xem chi tiết ›</span></div>
+              <div class="approval-table-wrap">
+                <table class="approval-table">
+                  <thead>
+                    <tr>
+                      <th>Người trình</th>
+                      <th>Mã hàng</th>
+                      <th>Ngày XH kế hoạch</th>
+                      <th>Ngày XH điều chỉnh</th>
+                      <th>Trạng thái</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody id="approvalTableBody">
+                    <tr data-request-id="req-59920" data-user="Trần Thị B" data-code="2026065-COSTING TN2" data-branch="VĐ" data-old-date="15/11/2025" data-new-date="10/02/2026" data-reason="Nhà máy trễ tiến độ sản xuất" data-tpkd="Chờ duyệt" data-tgd="—" data-state="Chờ TPKD duyệt" data-status-class="wait" data-actionable="1">
+                      <td class="user-cell"><strong>Trần Thị B</strong><span>NV Kinh doanh</span></td>
+                      <td class="code-cell"><strong>2026065-COSTING TN2</strong><span>VĐ</span></td>
+                      <td class="plan-date-cell">15/11/2025</td>
+                      <td class="adjust-date-cell">10/02/2026</td>
+                      <td><span class="status-pill wait">Chờ TPKD</span></td>
+                      <td class="open-arrow">›</td>
+                    </tr>
+                    <tr data-request-id="req-abc" data-user="Nguyễn Văn A" data-code="Costing_142601/49 final" data-branch="VĐ" data-old-date="13/07/2026" data-new-date="13/08/2026" data-reason="Khách hàng dời lịch nhận hàng do thay đổi kế hoạch nhập kho." data-tpkd="Đã duyệt" data-tgd="Chờ duyệt" data-state="Chờ TGĐ duyệt" data-status-class="wait" data-actionable="1">
+                      <td class="user-cell"><strong>Nguyễn Văn A</strong><span>NV Kinh doanh</span></td>
+                      <td class="code-cell"><strong>Costing_142601/49 final</strong><span>VĐ</span></td>
+                      <td class="plan-date-cell">13/07/2026</td>
+                      <td class="adjust-date-cell">13/08/2026</td>
+                      <td><span class="status-pill wait">Chờ TGĐ</span></td>
+                      <td class="open-arrow">›</td>
+                    </tr>
+                    <tr data-request-id="req-479458" data-user="Phạm Thu Hằng" data-code="LT_Ch01/2025-COSTING" data-branch="SC1" data-old-date="26/10/2024" data-new-date="18/01/2026" data-reason="Khách hàng cập nhật lại lịch giao nhận cuối cùng" data-tpkd="Chờ duyệt" data-tgd="—" data-state="Chờ TPKD duyệt" data-status-class="wait" data-actionable="1">
+                      <td class="user-cell"><strong>Phạm Thu Hằng</strong><span>NV Kinh doanh</span></td>
+                      <td class="code-cell"><strong>LT_Ch01/2025-COSTING</strong><span>SC1</span></td>
+                      <td class="plan-date-cell">26/10/2024</td>
+                      <td class="adjust-date-cell">18/01/2026</td>
+                      <td><span class="status-pill wait">Chờ TPKD</span></td>
+                      <td class="open-arrow">›</td>
+                    </tr>
+                    <tr data-request-id="req-142099" data-user="Lê Văn C" data-code="Costing 142099 BCafé" data-branch="TN2" data-old-date="30/09/2025" data-new-date="15/12/2025" data-reason="Đối tác vận chuyển thay đổi lịch tàu" data-tpkd="Từ chối" data-tgd="—" data-state="Từ chối" data-status-class="reject" data-actionable="0">
+                      <td class="user-cell"><strong>Lê Văn C</strong><span>NV Kinh doanh</span></td>
+                      <td class="code-cell"><strong>Costing 142099 BCafé</strong><span>TN2</span></td>
+                      <td class="plan-date-cell">30/09/2025</td>
+                      <td class="adjust-date-cell">15/12/2025</td>
+                      <td><span class="status-pill reject">Từ chối</span></td>
+                      <td class="open-arrow">›</td>
+                    </tr>
+                    <tr data-request-id="req-142629" data-user="Hoàng Minh" data-code="Costing 142629.xlsx" data-branch="TN2" data-old-date="25/09/2025" data-new-date="20/10/2025" data-reason="Điều chỉnh theo lịch xuất hàng đã xác nhận với khách" data-tpkd="Đã duyệt" data-tgd="Đã duyệt" data-state="Đã duyệt" data-status-class="approved" data-actionable="0">
+                      <td class="user-cell"><strong>Hoàng Minh</strong><span>NV Kinh doanh</span></td>
+                      <td class="code-cell"><strong>Costing 142629.xlsx</strong><span>TN2</span></td>
+                      <td class="plan-date-cell">25/09/2025</td>
+                      <td class="adjust-date-cell">20/10/2025</td>
+                      <td><span class="status-pill approved">Đã duyệt</span></td>
+                      <td class="open-arrow">›</td>
+                    </tr>
+                    <tr data-request-id="req-gia7248" data-user="Bùi Ngọc Mai" data-code="GIÀ TB 7248-BUY" data-branch="SC2" data-old-date="13/11/2025" data-new-date="22/11/2025" data-reason="Bổ sung thời gian hoàn thiện kiểm định chất lượng" data-tpkd="Chờ duyệt" data-tgd="—" data-state="Chờ TPKD duyệt" data-status-class="wait" data-actionable="1">
+                      <td class="user-cell"><strong>Bùi Ngọc Mai</strong><span>NV Kinh doanh</span></td>
+                      <td class="code-cell"><strong>GIÀ TB 7248-BUY</strong><span>SC2</span></td>
+                      <td class="plan-date-cell">13/11/2025</td>
+                      <td class="adjust-date-cell">22/11/2025</td>
+                      <td><span class="status-pill wait">Chờ TPKD</span></td>
+                      <td class="open-arrow">›</td>
+                    </tr>
+                    <tr data-request-id="req-142007" data-user="Đỗ Hải Yến" data-code="Costing 142007 95.xlsx" data-branch="SC3" data-old-date="30/09/2025" data-new-date="05/02/2026" data-reason="Kế hoạch vận chuyển được xác nhận lại" data-tpkd="Đã duyệt" data-tgd="Đã duyệt" data-state="Đã duyệt" data-status-class="approved" data-actionable="0">
+                      <td class="user-cell"><strong>Đỗ Hải Yến</strong><span>NV Kinh doanh</span></td>
+                      <td class="code-cell"><strong>Costing 142007 95.xlsx</strong><span>SC3</span></td>
+                      <td class="plan-date-cell">30/09/2025</td>
+                      <td class="adjust-date-cell">05/02/2026</td>
+                      <td><span class="status-pill approved">Đã duyệt</span></td>
+                      <td class="open-arrow">›</td>
+                    </tr>
+                    <tr data-request-id="req-ltch01" data-user="Vũ Thanh Nam" data-code="LT_Ch01/2025-COSTING TN2" data-branch="VĐ" data-old-date="26/10/2024" data-new-date="07/03/2026" data-reason="Chờ khách hàng hoàn tất thủ tục nhập kho" data-tpkd="Đã duyệt" data-tgd="Chờ duyệt" data-state="Chờ TGĐ duyệt" data-status-class="wait" data-actionable="1">
+                      <td class="user-cell"><strong>Vũ Thanh Nam</strong><span>NV Kinh doanh</span></td>
+                      <td class="code-cell"><strong>LT_Ch01/2025-COSTING TN2</strong><span>VĐ</span></td>
+                      <td class="plan-date-cell">26/10/2024</td>
+                      <td class="adjust-date-cell">07/03/2026</td>
+                      <td><span class="status-pill wait">Chờ TGĐ</span></td>
+                      <td class="open-arrow">›</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="approval-detail-view" id="approvalDetailView">
+              <div class="detail-topbar">
+                <button class="detail-back" id="mBackBtn" aria-label="Quay lại danh sách">←</button>
+                <div><div class="dt-title">Chi tiết phê duyệt</div><div class="dt-sub">Mở đúng yêu cầu của người gửi được chọn</div></div>
+              </div>
+              <div class="detail-card">
+                <div class="detail-user">
+                  <div><strong id="dUser">—</strong><span>Người trình yêu cầu</span></div>
+                  <span class="detail-branch" id="dBranch">—</span>
+                </div>
+                <div class="detail-grid">
+                  <div class="detail-field full"><label>Mã hàng</label><div id="dCode">—</div></div>
+                  <div class="detail-field full"><label>Ngày xuất hàng</label><div class="detail-date-change"><span class="old" id="dOldDate">—</span><span>➜</span><span class="new" id="dNewDate">—</span></div></div>
+                  <div class="detail-field full"><label>Lý do điều chỉnh</label><div id="dReason">—</div></div>
+                  <div class="detail-field"><label>TPKD Công ty</label><div id="dTpkd">—</div></div>
+                  <div class="detail-field"><label>TGĐ</label><div id="dTgd">—</div></div>
+                </div>
+                <div class="detail-steps">
+                  <div class="detail-step" id="dStepTpkd">TPKD: —</div>
+                  <div class="detail-step" id="dStepTgd">TGĐ: —</div>
+                </div>
+                <div class="detail-actions" id="detailActions">
+                  <button class="btn-approve" id="detailApprove">Duyệt</button>
+                  <button class="btn-reject" id="detailReject">Từ chối</button>
+                </div>
+                <div class="detail-processed" id="detailProcessed">Yêu cầu đã được xử lý, chỉ cho phép xem thông tin.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="home-bar"></div>
+      </div>
+    </div>
+    <div class="mobile-caption">📱 Mô phỏng App Phê duyệt: danh sách dạng bảng hiển thị nhiều yêu cầu; chọn một dòng hoặc thông báo trên chuông 🔔 để mở thẳng chi tiết phê duyệt của người trình tương ứng.</div>
+
+    <div class="hint-note">
+      💡 Danh sách phê duyệt hiển thị dạng bảng để lãnh đạo xem được nhiều hồ sơ cùng lúc. Khi bấm một thông báo trên chuông, app <b>mở trực tiếp màn hình chi tiết của đúng người trình/yêu cầu đó</b>, không chỉ cuộn hoặc đánh dấu trong danh sách.<br>
+      💡 2 cấp duyệt tuần tự: <b>TPKD Công ty</b> duyệt trước → sau đó mới đến <b>TGĐ</b>. Nếu 1 trong 2 cấp từ chối, yêu cầu kết thúc luồng. Sau khi <b>TGĐ duyệt xong</b>, hệ thống mới điền giá trị vào ô "Ngày XH điều chỉnh" tại Bảng theo dõi PAKD.
+    </div>
+  </div>
+</div>
+
+<!-- context menu -->
+<div class="ctxmenu" id="ctxMenu">
+  <div class="item"><span class="icon">▤</span> Chèn cột</div>
+  <div class="item"><span class="icon">▥</span> Bỏ chọn cột</div>
+  <div class="item"><span class="icon">▦</span> Ẩn cột</div>
+  <div class="item"><span class="icon">☰</span> Danh sách cột ẩn</div>
+  <div class="sep"></div>
+  <div class="item"><span class="icon">⇩</span> Xuất Excel</div>
+  <div class="item"><span class="icon">👁</span> Hiển thị Excel</div>
+  <div class="sep"></div>
+  <div class="item"><span class="icon">📄</span> Tạo yêu cầu duyệt mẫu</div>
+  <div class="item"><span class="icon">📋</span> Danh sách yêu cầu duyệt mẫu</div>
+  <div class="sep"></div>
+  <div class="item new" id="ctxEditDate"><span class="icon">📅</span> Sửa ngày xuất hàng</div>
+</div>
+
+<!-- live modal -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="modal-title"><span>Sửa ngày xuất hàng</span><span class="x" id="closeModal">✕</span></div>
+    <div class="modal-body">
+      <div class="form-row"><label>Chi nhánh</label><div class="readonly" id="mChiNhanh">—</div></div>
+      <div class="form-row"><label>Mã hàng</label><div class="readonly" id="mMaHang">—</div></div>
+      <div class="form-row"><label>Ngày xuất hàng gốc</label><div class="readonly" id="mNgayGoc">—</div></div>
+      <div class="form-row">
+        <label>Ngày điều chỉnh <span style="color:#c0392b">*</span></label>
+        <input type="date" id="mNgayDieuChinh">
+      </div>
+      <div class="form-row">
+        <label>Lý do <span style="color:#c0392b">*</span></label>
+        <textarea id="mLyDo" placeholder="Nhập lý do điều chỉnh ngày xuất hàng..."></textarea>
+      </div>
+      <div class="flow-note">➜ Sau khi trình duyệt, yêu cầu sẽ được đẩy sang <b>App Phê duyệt (di động)</b>, không cần hủy PAKD. Cột "Ngày XH điều chỉnh" vẫn để trống cho đến khi duyệt xong.</div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" id="cancelModal">Hủy</button>
+      <button class="btn-primary" id="submitModal">Trình duyệt</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">Đã gửi yêu cầu trình duyệt điều chỉnh ngày xuất hàng.</div>
+
+<script>
+  function escapeHtml(value){
+    return String(value).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[ch]));
+  }
+
+  // tabs
+  function activateTab(tabName){
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
+    document.querySelector('.tab[data-tab="'+tabName+'"]').classList.add('active');
+    document.getElementById(tabName).classList.add('active');
+  }
+  document.querySelectorAll('.tab').forEach(t=>{
+    t.addEventListener('click', ()=>{
+      activateTab(t.dataset.tab);
+      history.replaceState(null, '', '#'+t.dataset.tab);
+    });
+  });
+
+  function activateTabFromHash(){
+    const requested = window.location.hash.replace('#','');
+    if(['screen1','screen2','screen3'].includes(requested)) activateTab(requested);
+  }
+  window.addEventListener('hashchange', activateTabFromHash);
+  activateTabFromHash();
+
+  // mobile approval list + notification detail navigation (screen 3)
+  const mBellBtn = document.getElementById('mBellBtn');
+  const mBellPanel = document.getElementById('mBellPanel');
+  const mobileListView = document.getElementById('mobileListView');
+  const approvalDetailView = document.getElementById('approvalDetailView');
+  let activeApprovalRow = null;
+
+  function stepClass(value){
+    if(value === 'Đã duyệt') return 'approved';
+    if(value === 'Từ chối') return 'reject';
+    if(value === 'Chờ duyệt') return 'wait';
+    return '';
+  }
+
+  function openApproval(requestId){
+    const row = document.querySelector('#approvalTableBody tr[data-request-id="'+requestId+'"]');
+    if(!row) return;
+    activeApprovalRow = row;
+    document.querySelectorAll('#approvalTableBody tr').forEach(r=>r.classList.remove('row-highlight'));
+    row.classList.add('row-highlight');
+
+    document.getElementById('dUser').textContent = row.dataset.user;
+    document.getElementById('dBranch').textContent = row.dataset.branch;
+    document.getElementById('dCode').textContent = row.dataset.code;
+    document.getElementById('dOldDate').textContent = row.dataset.oldDate;
+    document.getElementById('dNewDate').textContent = row.dataset.newDate;
+    document.getElementById('dReason').textContent = row.dataset.reason;
+    document.getElementById('dTpkd').textContent = row.dataset.tpkd;
+    document.getElementById('dTgd').textContent = row.dataset.tgd;
+
+    const stepTpkd = document.getElementById('dStepTpkd');
+    const stepTgd = document.getElementById('dStepTgd');
+    stepTpkd.className = 'detail-step '+stepClass(row.dataset.tpkd);
+    stepTgd.className = 'detail-step '+stepClass(row.dataset.tgd);
+    stepTpkd.textContent = 'TPKD: '+row.dataset.tpkd;
+    stepTgd.textContent = 'TGĐ: '+row.dataset.tgd;
+
+    const actionable = row.dataset.actionable === '1';
+    document.getElementById('detailActions').style.display = actionable ? 'flex' : 'none';
+    document.getElementById('detailProcessed').style.display = actionable ? 'none' : 'block';
+
+    mBellPanel.classList.remove('open');
+    mobileListView.classList.add('hidden');
+    approvalDetailView.classList.add('active');
+    approvalDetailView.scrollTop = 0;
+  }
+
+  function closeApprovalDetail(){
+    approvalDetailView.classList.remove('active');
+    mobileListView.classList.remove('hidden');
+    if(activeApprovalRow){
+      activeApprovalRow.scrollIntoView({behavior:'smooth', block:'center'});
+      setTimeout(()=>activeApprovalRow && activeApprovalRow.classList.remove('row-highlight'), 1400);
+    }
+  }
+
+  mBellBtn.addEventListener('click', (e)=>{
+    e.stopPropagation();
+    mBellPanel.classList.toggle('open');
+  });
+  document.addEventListener('click', (e)=>{
+    if(mBellPanel && !mBellPanel.contains(e.target) && !mBellBtn.contains(e.target)){
+      mBellPanel.classList.remove('open');
+    }
+  });
+  document.getElementById('mBellList').addEventListener('click', (e)=>{
+    const item = e.target.closest('.mbell-item');
+    if(!item) return;
+    openApproval(item.dataset.requestId);
+  });
+  document.getElementById('approvalTableBody').addEventListener('click', (e)=>{
+    const row = e.target.closest('tr[data-request-id]');
+    if(row) openApproval(row.dataset.requestId);
+  });
+  document.getElementById('mBackBtn').addEventListener('click', closeApprovalDetail);
+
+  function resolveActiveApproval(result, cssClass){
+    if(!activeApprovalRow) return;
+    activeApprovalRow.dataset.state = result;
+    activeApprovalRow.dataset.statusClass = cssClass;
+    activeApprovalRow.dataset.actionable = '0';
+    const pill = activeApprovalRow.querySelector('.status-pill');
+    pill.className = 'status-pill '+cssClass;
+    pill.textContent = result;
+    document.getElementById('detailActions').style.display = 'none';
+    document.getElementById('detailProcessed').style.display = 'block';
+    document.getElementById('detailProcessed').textContent = 'Đã cập nhật trạng thái: '+result+'.';
+
+    const requestId = activeApprovalRow.dataset.requestId;
+    const notice = document.querySelector('#mBellList .mbell-item[data-request-id="'+requestId+'"]');
+    if(notice) notice.remove();
+    const countEl = document.getElementById('mBellCount');
+    const nextCount = Math.max(0, parseInt(countEl.textContent,10) - (notice ? 1 : 0));
+    countEl.textContent = nextCount;
+    countEl.style.display = nextCount ? 'flex' : 'none';
+  }
+  document.getElementById('detailApprove').addEventListener('click', ()=> resolveActiveApproval('Đã duyệt', 'approved'));
+  document.getElementById('detailReject').addEventListener('click', ()=> resolveActiveApproval('Từ chối', 'reject'));
+
+  // context menu (screen 1, WinForm)
+  const ctx = document.getElementById('ctxMenu');
+  let currentRow = null;
+
+  document.querySelectorAll('#mainGrid tbody tr').forEach(row=>{
+    row.addEventListener('contextmenu', e=>{
+      e.preventDefault();
+      document.querySelectorAll('#mainGrid tbody tr').forEach(r=>r.classList.remove('ctx-open'));
+      row.classList.add('ctx-open');
+      currentRow = row;
+      ctx.style.left = e.pageX + 'px';
+      ctx.style.top = e.pageY + 'px';
+      ctx.style.display = 'block';
+    });
+  });
+
+  document.addEventListener('click', (e)=>{
+    if(!ctx.contains(e.target)){
+      ctx.style.display='none';
+    }
+  });
+
+  document.getElementById('ctxEditDate').addEventListener('click', ()=>{
+    ctx.style.display='none';
+    if(!currentRow) return;
+    document.getElementById('mChiNhanh').textContent = currentRow.dataset.branch;
+    document.getElementById('mMaHang').textContent = currentRow.querySelector('.link-cell').textContent + ' (' + currentRow.dataset.code + ')';
+    document.getElementById('mNgayGoc').textContent = currentRow.querySelector('.expected-date').textContent;
+    document.getElementById('mNgayDieuChinh').value='';
+    document.getElementById('mLyDo').value='';
+    document.getElementById('overlay').style.display='flex';
+  });
+
+  document.getElementById('closeModal').addEventListener('click', ()=> document.getElementById('overlay').style.display='none');
+  document.getElementById('cancelModal').addEventListener('click', ()=> document.getElementById('overlay').style.display='none');
+
+  document.getElementById('submitModal').addEventListener('click', ()=>{
+    const dateVal = document.getElementById('mNgayDieuChinh').value;
+    if(!dateVal || !document.getElementById('mLyDo').value.trim()){
+      alert('Vui lòng nhập đầy đủ Ngày điều chỉnh và Lý do.');
+      return;
+    }
+    document.getElementById('overlay').style.display='none';
+    if(currentRow){
+      // BR-06: ô "Ngày XH điều chỉnh" vẫn để TRỐNG khi đang chờ duyệt,
+      // chỉ thêm icon ⏳ báo có đề xuất — value chỉ được điền khi duyệt đủ 2 cấp (mô phỏng ở App di động).
+      const adjCell = currentRow.querySelector('.adj-date');
+      if(!adjCell.querySelector('.adj-pending')){
+        const pend = document.createElement('span');
+        pend.className='adj-pending';
+        pend.title='Đang có yêu cầu chờ duyệt';
+        pend.textContent='⏳';
+        adjCell.appendChild(pend);
+      }
+      currentRow.classList.remove('ctx-open');
+
+      // đẩy thông báo mới sang chuông của App Phê duyệt (di động)
+      const countEl = document.getElementById('mBellCount');
+      countEl.style.display='flex';
+      countEl.textContent = parseInt(countEl.textContent || '0',10) + 1;
+      const requestId = 'req-'+currentRow.dataset.code+'-'+Date.now();
+      const codeText = currentRow.querySelector('.link-cell').textContent.trim();
+      const newDateText = new Date(dateVal+'T00:00:00').toLocaleDateString('vi-VN');
+      const reasonText = document.getElementById('mLyDo').value.trim();
+
+      const item = document.createElement('div');
+      item.className='mbell-item';
+      item.dataset.requestId=requestId;
+      item.innerHTML = '<div class="mi-t">Bạn — '+escapeHtml(codeText)+'</div>'+
+        '<div class="mi-s">Đề xuất '+newDateText+' · Chờ TPKD duyệt</div>';
+      document.getElementById('mBellList').prepend(item);
+
+      // thêm một dòng mới vào bảng danh sách phê duyệt
+      const row = document.createElement('tr');
+      row.dataset.requestId = requestId;
+      row.dataset.user = 'Bạn';
+      row.dataset.code = codeText;
+      row.dataset.branch = currentRow.dataset.branch;
+      row.dataset.oldDate = currentRow.querySelector('.expected-date').textContent;
+      row.dataset.newDate = newDateText;
+      row.dataset.reason = reasonText;
+      row.dataset.tpkd = 'Chờ duyệt';
+      row.dataset.tgd = '—';
+      row.dataset.state = 'Chờ TPKD duyệt';
+      row.dataset.statusClass = 'wait';
+      row.dataset.actionable = '1';
+      row.innerHTML = '<td class="user-cell"><strong>Bạn</strong><span>NV Kinh doanh</span></td>'+
+        '<td class="code-cell"><strong>'+escapeHtml(codeText)+'</strong><span>'+escapeHtml(currentRow.dataset.branch)+'</span></td>'+
+        '<td class="plan-date-cell">'+escapeHtml(row.dataset.oldDate)+'</td>'+
+        '<td class="adjust-date-cell">'+newDateText+'</td>'+
+        '<td><span class="status-pill wait">Chờ TPKD</span></td><td class="open-arrow">›</td>';
+      document.getElementById('approvalTableBody').prepend(row);
+    }
+    const toast = document.getElementById('toast');
+    toast.style.display='block';
+    setTimeout(()=> toast.style.display='none', 2600);
+  });
+</script>
+<script src="../assets/erp-sidebar.js"></script>
+<script src="../assets/admin-editor.js"></script>
+
+</body>
+</html>

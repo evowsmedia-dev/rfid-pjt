@@ -6,7 +6,12 @@ const MIME_BY_EXT = {
   '.jpg': 'image/jpeg',
   '.jpeg': 'image/jpeg',
   '.png': 'image/png',
-  '.webp': 'image/webp'
+  '.webp': 'image/webp',
+  '.m4v': 'video/mp4',
+  '.mov': 'video/quicktime',
+  '.mp4': 'video/mp4',
+  '.ogv': 'video/ogg',
+  '.webm': 'video/webm'
 };
 
 function sendText(res, status, message) {

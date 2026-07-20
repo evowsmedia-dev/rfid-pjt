@@ -4,6 +4,7 @@
 
   var contentApi = '/api/docs-content';
   var imageApi = '/api/page-image';
+  var videoApi = '/api/page-video';
   var sessionApi = '/api/admin-session';
   var logoutApi = '/api/admin-logout';
   var saveTimers = new Map();
@@ -14,6 +15,7 @@
   var tableElements = [];
   var textElements = [];
   var imageElements = [];
+  var videoElements = [];
   var boxClipboard = null;
   var activeTextElement = null;
   var boxTools = null;
@@ -112,6 +114,18 @@
     });
   }
 
+  function collectVideoElements() {
+    var slots = Array.prototype.slice.call(document.querySelectorAll(
+      '.video-upload-preview[data-video-preview], video[data-live-video-key]'
+    ));
+    var seen = new Set();
+    return slots.filter(function (element) {
+      if (!element || isBlocked(element) || seen.has(element)) return false;
+      seen.add(element);
+      return true;
+    });
+  }
+
   function collectTableElements() {
     var seen = new Set();
     return Array.prototype.filter.call(document.querySelectorAll(
@@ -160,6 +174,21 @@
     });
   }
 
+  function assignVideoKeys(elements) {
+    var counters = {};
+    elements.forEach(function (element) {
+      if (element.dataset.liveVideoKey) return;
+      if (element.matches('.video-upload-preview[data-video-preview]')) {
+        element.dataset.liveVideoKey = 'video:' + element.dataset.videoPreview;
+        return;
+      }
+      var owner = ownerId(element);
+      var name = owner + ':video';
+      counters[name] = (counters[name] || 0) + 1;
+      element.dataset.liveVideoKey = name + ':' + counters[name];
+    });
+  }
+
   function setImageSlot(element, edit) {
     var src = edit && edit.src ? assetSrc(edit.src) : '';
     if (!src) return;
@@ -175,12 +204,39 @@
     }
   }
 
+  function setVideoSlot(element, edit) {
+    var src = edit && edit.src ? assetSrc(edit.src) : '';
+    if (!src) return;
+    if (element.matches('.video-upload-preview[data-video-preview]')) {
+      element.innerHTML = '';
+      var video = document.createElement('video');
+      video.src = src;
+      video.controls = true;
+      video.preload = 'metadata';
+      video.playsInline = true;
+      element.appendChild(video);
+    } else {
+      element.src = src;
+      element.controls = true;
+      element.preload = 'metadata';
+      element.playsInline = true;
+    }
+  }
+
   function clearImageSlot(element) {
     if (element.matches('.local-shot-preview[data-image-preview]')) {
       var step = element.dataset.imagePreview || '';
       element.textContent = step === '1'
         ? 'Chưa có ảnh. Chọn ảnh màn hình đăng nhập hoặc menu CBQL → Đi học hỏi từ máy tính.'
         : 'Chưa có ảnh. Chọn ảnh minh hoạ bước ' + step + ' từ máy tính.';
+    } else {
+      element.removeAttribute('src');
+    }
+  }
+
+  function clearVideoSlot(element) {
+    if (element.matches('.video-upload-preview[data-video-preview]')) {
+      element.textContent = 'Chưa có video. Chọn file MP4, WEBM hoặc MOV từ máy tính.';
     } else {
       element.removeAttribute('src');
     }
@@ -200,6 +256,10 @@
     imageElements.forEach(function (element) {
       var edit = currentEdits[element.dataset.liveImageKey];
       if (edit && edit.type === 'image') setImageSlot(element, edit);
+    });
+    videoElements.forEach(function (element) {
+      var edit = currentEdits[element.dataset.liveVideoKey];
+      if (edit && edit.type === 'video') setVideoSlot(element, edit);
     });
   }
 
@@ -225,6 +285,7 @@
       'body.admin-editing [data-live-key]{outline:1.5px dashed rgba(94,179,50,.48);outline-offset:3px;cursor:text;}',
       'body.admin-editing [data-live-key]:focus{outline:2px solid #ea8c00;background:rgba(255,244,229,.6);}',
       'body.admin-editing [data-live-image-key]{outline:2px dashed rgba(8,145,178,.55);outline-offset:4px;}',
+      'body.admin-editing [data-live-video-key]{outline:2px dashed rgba(234,140,0,.6);outline-offset:4px;}',
       '.tre-image-tools{display:none;gap:6px;margin:8px 0 0;justify-content:center;}',
       'body.admin-editing .tre-image-tools{display:flex;}',
       '.tre-image-tools button{border:1px solid #d9e2dc;border-radius:8px;background:#fff;color:#1a2332;font-size:11px;font-weight:800;padding:6px 9px;cursor:pointer;}',
@@ -347,6 +408,30 @@
     setStatus('Đã lưu ảnh');
   }
 
+  async function uploadVideo(element, file) {
+    if (!file || !file.type || file.type.indexOf('video/') !== 0) {
+      window.alert('Vui lòng chọn file video.');
+      return;
+    }
+    setStatus('Đang tải video...');
+    var dataUrl = await fileToDataUrl(file);
+    var response = await fetch(videoApi, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
+      body: JSON.stringify({
+        page: pagePath(),
+        key: element.dataset.liveVideoKey,
+        dataUrl: dataUrl,
+        title: element.getAttribute('aria-label') || 'Video HDSD'
+      })
+    });
+    var payload = await response.json().catch(function () { return {}; });
+    if (!response.ok) throw new Error(payload.error || 'Không tải được video.');
+    setVideoSlot(element, { type: 'video', src: payload.src, title: 'Video HDSD' });
+    setStatus('Đã lưu video');
+  }
+
   async function uploadInlineImage(element, file) {
     if (!file || !file.type || file.type.indexOf('image/') !== 0) {
       window.alert('Vui lòng chọn file ảnh.');
@@ -426,6 +511,40 @@
     });
 
     if (element.matches('.local-shot-preview[data-image-preview]')) {
+      element.insertAdjacentElement('afterend', tools);
+    } else if (element.parentElement) {
+      element.parentElement.insertBefore(tools, element.nextSibling);
+    }
+  }
+
+  function addVideoTools(element) {
+    if (element.dataset.videoToolsReady === '1') return;
+    element.dataset.videoToolsReady = '1';
+    var tools = document.createElement('div');
+    tools.className = 'tre-image-tools';
+    tools.innerHTML = '<button type="button" data-video-upload>Đổi video</button><button type="button" data-video-clear>Xóa video</button><input type="file" accept="video/mp4,video/webm,video/quicktime,video/*" hidden>';
+    var input = tools.querySelector('input');
+    tools.querySelector('[data-video-upload]').addEventListener('click', function () { input.click(); });
+    input.addEventListener('change', function () {
+      var file = input.files && input.files[0];
+      if (!file) return;
+      uploadVideo(element, file).catch(function (error) {
+        setStatus('Lỗi video');
+        window.alert(error.message);
+      }).finally(function () {
+        input.value = '';
+      });
+    });
+    tools.querySelector('[data-video-clear]').addEventListener('click', function () {
+      deleteOverride(element.dataset.liveVideoKey, 'video').then(function () {
+        clearVideoSlot(element);
+      }).catch(function (error) {
+        setStatus('Lỗi xóa');
+        window.alert(error.message);
+      });
+    });
+
+    if (element.matches('.video-upload-preview[data-video-preview]')) {
       element.insertAdjacentElement('afterend', tools);
     } else if (element.parentElement) {
       element.parentElement.insertBefore(tools, element.nextSibling);
@@ -590,13 +709,16 @@
   function refreshEditableCollections() {
     textElements = collectTextElements();
     imageElements = collectImageElements();
+    videoElements = collectVideoElements();
     assignTextKeys(textElements);
     assignImageKeys(imageElements);
+    assignVideoKeys(videoElements);
     if (editing) {
       textElements.forEach(bindEditableText);
       textElements.forEach(addBoxTools);
       tableElements.forEach(enableTableCells);
       imageElements.forEach(addImageTools);
+      videoElements.forEach(addVideoTools);
     }
   }
 
@@ -700,6 +822,23 @@
       }
     }, true);
 
+    document.addEventListener('change', function (event) {
+      if (!editing) return;
+      var input = event.target.closest && event.target.closest('[data-video-input]');
+      if (!input) return;
+      var key = input.dataset.videoInput;
+      var slot = document.querySelector('[data-video-preview="' + key + '"]');
+      var file = input.files && input.files[0];
+      if (slot && file) {
+        window.setTimeout(function () {
+          uploadVideo(slot, file).catch(function (error) {
+            setStatus('Lỗi video');
+            window.alert(error.message);
+          });
+        }, 50);
+      }
+    }, true);
+
     document.addEventListener('click', function (event) {
       if (!editing) return;
       var button = event.target.closest && event.target.closest('[data-clear-step]');
@@ -709,6 +848,22 @@
       if (slot) {
         window.setTimeout(function () {
           deleteOverride(slot.dataset.liveImageKey, 'image').catch(function (error) {
+            setStatus('Lỗi xóa');
+            window.alert(error.message);
+          });
+        }, 50);
+      }
+    }, true);
+
+    document.addEventListener('click', function (event) {
+      if (!editing) return;
+      var button = event.target.closest && event.target.closest('[data-clear-video]');
+      if (!button) return;
+      var key = button.dataset.clearVideo;
+      var slot = document.querySelector('[data-video-preview="' + key + '"]');
+      if (slot) {
+        window.setTimeout(function () {
+          deleteOverride(slot.dataset.liveVideoKey, 'video').catch(function (error) {
             setStatus('Lỗi xóa');
             window.alert(error.message);
           });
@@ -750,6 +905,7 @@
     tableElements.forEach(addTableTools);
     tableElements.forEach(enableTableCells);
     imageElements.forEach(addImageTools);
+    videoElements.forEach(addVideoTools);
     setStatus('Đang sửa');
   }
 
@@ -820,8 +976,10 @@
 
     textElements = collectTextElements();
     imageElements = collectImageElements();
+    videoElements = collectVideoElements();
     assignTextKeys(textElements);
     assignImageKeys(imageElements);
+    assignVideoKeys(videoElements);
     applyEdits(edits);
     adminSession = await loadSession();
     bindHrUploadControls();

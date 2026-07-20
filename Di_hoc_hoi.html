@@ -145,6 +145,13 @@ tr:last-child td{border-bottom:none;}
 .local-shot-preview{min-height:160px;border-radius:10px;background:var(--bg);display:flex;align-items:center;justify-content:center;overflow:hidden;color:var(--gray-t);font-size:11.5px;text-align:center;padding:16px;}
 .local-shot-preview img{display:block;max-width:60% !important;height:auto;border-radius:8px;border:1px solid var(--gray-bd);box-shadow:var(--shadow);}
 .local-shot input[type=file]{display:none;}
+.video-upload{margin-top:12px;border:1px dashed var(--gray-bd);border-radius:12px;background:#fff;padding:12px;box-shadow:var(--shadow-sm);}
+.video-upload-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;}
+.video-upload-title{font-size:12px;font-weight:800;color:var(--dark);}
+.video-upload-actions{display:flex;gap:8px;flex-wrap:wrap;}
+.video-upload-preview{min-height:260px;border-radius:10px;background:var(--bg);display:flex;align-items:center;justify-content:center;overflow:hidden;color:var(--gray-t);font-size:11.5px;text-align:center;padding:16px;}
+.video-upload-preview video{display:block;width:100%;max-width:760px;border-radius:10px;border:1px solid var(--gray-bd);box-shadow:var(--shadow);background:#000;}
+.video-upload input[type=file]{display:none;}
 
 @media print{ .side-panel{display:none;} .main-content{max-width:100%;} }
 
@@ -188,7 +195,7 @@ body.tabs-ready .node.lvl-2.tab-visible{margin-top:0;padding-top:0;border-top:0;
 }
 
 </style><link rel="stylesheet" href="assets/erp-sidebar.css">
-</head><body><div class="side-panel"><div class="sp-doc-title">HDSD App Đào tạo &amp; Học hỏi CBQL</div><div class="sp-nav-label">Mục lục</div><nav class="sp-nav" id="sidenav"><a class="sp-link lvl-1" data-target="ch1" href="#ch1">Chương 1. Quy trình phần mềm</a><a class="sp-link lvl-1" data-target="ch2" href="#ch2">Chương 2. Hướng dẫn sử dụng phần mềm</a><a class="sp-link lvl-2" data-target="ch2-1" href="#ch2-1">Vào Nhân sự/Học hỏi tại CN</a><a class="sp-link lvl-3" data-target="step1" href="#step1">Bước 1: Đăng nhập và truy cập</a><a class="sp-link lvl-3" data-target="step2" href="#step2">Bước 2: Xem danh sách tuần và thống kê</a><a class="sp-link lvl-3" data-target="step3" href="#step3">Bước 3: Nhập học hỏi mới</a><a class="sp-link lvl-3" data-target="step4" href="#step4">Bước 4: Chỉnh sửa dòng học hỏi</a><a class="sp-link lvl-3" data-target="step5" href="#step5">Bước 5: Theo dõi danh sách và tìm kiếm</a><a class="sp-link lvl-3" data-target="step6" href="#step6">Bước 6: Lọc báo cáo CBQL</a><a class="sp-link lvl-3" data-target="step7" href="#step7">Bước 7: Xem kết quả lọc</a><a class="sp-link lvl-3" data-target="step8" href="#step8">Bước 8: Xuất và chia sẻ file báo cáo</a></nav></div><div class="main-content"><div class="main-content-inner"><section class="chapter-wrap" id="ch1"><div class="node lvl-1" id="ch1"><div class="chapter-header">
+</head><body><div class="side-panel"><div class="sp-doc-title">HDSD App Đào tạo &amp; Học hỏi CBQL</div><div class="sp-nav-label">Mục lục</div><nav class="sp-nav" id="sidenav"><a class="sp-link lvl-1" data-target="ch1" href="#ch1">Chương 1. Quy trình phần mềm</a><a class="sp-link lvl-1" data-target="ch2" href="#ch2">Chương 2. Hướng dẫn sử dụng phần mềm</a><a class="sp-link lvl-2" data-target="ch2-1" href="#ch2-1">Vào Nhân sự/Học hỏi tại CN</a><a class="sp-link lvl-3" data-target="step1" href="#step1">Bước 1: Đăng nhập và truy cập</a><a class="sp-link lvl-3" data-target="step2" href="#step2">Bước 2: Xem danh sách tuần và thống kê</a><a class="sp-link lvl-3" data-target="step3" href="#step3">Bước 3: Nhập học hỏi mới</a><a class="sp-link lvl-3" data-target="step4" href="#step4">Bước 4: Chỉnh sửa dòng học hỏi</a><a class="sp-link lvl-3" data-target="step5" href="#step5">Bước 5: Theo dõi danh sách và tìm kiếm</a><a class="sp-link lvl-3" data-target="step6" href="#step6">Bước 6: Lọc báo cáo CBQL</a><a class="sp-link lvl-3" data-target="step7" href="#step7">Bước 7: Xem kết quả lọc</a><a class="sp-link lvl-3" data-target="step8" href="#step8">Bước 8: Xuất và chia sẻ file báo cáo</a><a class="sp-link lvl-2" data-target="video-hdsd" href="#video-hdsd">Video HDSD</a></nav></div><div class="main-content"><div class="main-content-inner"><section class="chapter-wrap" id="ch1"><div class="node lvl-1" id="ch1"><div class="chapter-header">
 <div class="chapter-badge">CH1</div>
 <h2>Chương 1. Quy trình phần mềm</h2>
 </div><div class="full-text"><p class="chapter-intro">
@@ -514,6 +521,17 @@ body.tabs-ready .node.lvl-2.tab-visible{margin-top:0;padding-top:0;border-top:0;
 <input id="step8ImageInput" data-image-input="8" type="file" accept="image/*">
 <div class="local-shot-preview" data-image-preview="8">Chưa có ảnh. Chọn ảnh minh hoạ bước 8 từ máy tính.</div>
 </div></div></div></div></div>
+<div class="node lvl-2" id="video-hdsd"><h3>Video HDSD</h3><div class="full-text"><p>Tải lên video hướng dẫn sử dụng App Đi học để người xem có thể mở trực tiếp trên trang tài liệu.</p></div><div class="video-upload" data-video="hdsd" id="video-hdsd-upload">
+<div class="video-upload-head">
+<div class="video-upload-title">Video hướng dẫn sử dụng</div>
+<div class="video-upload-actions">
+<label class="local-shot-btn" for="hdsdVideoInput">Tải video từ máy</label>
+<button class="local-shot-btn secondary" type="button" data-clear-video="hdsd">Xoá video</button>
+</div>
+</div>
+<input id="hdsdVideoInput" data-video-input="hdsd" type="file" accept="video/mp4,video/webm,video/quicktime,video/*">
+<div class="video-upload-preview" data-video-preview="hdsd">Chưa có video. Chọn file MP4, WEBM hoặc MOV từ máy tính.</div>
+</div></div>
 </section></div></div>
 
 <script>
@@ -566,6 +584,55 @@ body.tabs-ready .node.lvl-2.tab-visible{margin-top:0;padding-top:0;border-top:0;
       localStorage.removeItem(storageKey);
       input.value = '';
       preview.textContent = defaultText(step);
+    });
+  });
+})();
+
+(() => {
+  const uploads = Array.from(document.querySelectorAll('.video-upload[data-video]'));
+  if(!uploads.length) return;
+  const objectUrls = new Map();
+
+  function defaultText(){
+    return 'Chưa có video. Chọn file MP4, WEBM hoặc MOV từ máy tính.';
+  }
+
+  function showVideo(preview, src){
+    preview.innerHTML = '';
+    const video = document.createElement('video');
+    video.src = src;
+    video.controls = true;
+    video.preload = 'metadata';
+    video.playsInline = true;
+    preview.appendChild(video);
+  }
+
+  uploads.forEach((upload) => {
+    const key = upload.dataset.video;
+    const input = upload.querySelector(`[data-video-input="${key}"]`);
+    const preview = upload.querySelector(`[data-video-preview="${key}"]`);
+    const clear = upload.querySelector(`[data-clear-video="${key}"]`);
+    if(!key || !input || !preview || !clear) return;
+
+    input.addEventListener('change', () => {
+      const file = input.files && input.files[0];
+      if(!file) return;
+      if(!file.type.startsWith('video/')){
+        preview.textContent = 'File không phải video. Vui lòng chọn MP4, WEBM hoặc MOV.';
+        input.value = '';
+        return;
+      }
+      if(objectUrls.has(key)) URL.revokeObjectURL(objectUrls.get(key));
+      const src = URL.createObjectURL(file);
+      objectUrls.set(key, src);
+      showVideo(preview, src);
+    });
+
+    clear.addEventListener('click', () => {
+      if(objectUrls.has(key)) URL.revokeObjectURL(objectUrls.get(key));
+      objectUrls.delete(key);
+      input.value = '';
+      preview.textContent = defaultText();
     });
   });
 })();

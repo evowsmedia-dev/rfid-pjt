@@ -206,21 +206,70 @@
 
   function setVideoSlot(element, edit) {
     var src = edit && edit.src ? assetSrc(edit.src) : '';
-    if (!src) return;
+    var embedSrc = edit && edit.embedSrc ? String(edit.embedSrc || '') : '';
+    if (!src && !embedSrc) return;
     if (element.matches('.video-upload-preview[data-video-preview]')) {
       element.innerHTML = '';
-      var video = document.createElement('video');
-      video.src = src;
-      video.controls = true;
-      video.preload = 'metadata';
-      video.playsInline = true;
-      element.appendChild(video);
+      if (embedSrc) {
+        var iframe = document.createElement('iframe');
+        iframe.src = embedSrc;
+        iframe.title = edit.title || 'Video HDSD';
+        iframe.loading = 'lazy';
+        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+        iframe.allowFullscreen = true;
+        element.appendChild(iframe);
+      } else {
+        var video = document.createElement('video');
+        video.src = src;
+        video.controls = true;
+        video.preload = 'metadata';
+        video.playsInline = true;
+        element.appendChild(video);
+      }
     } else {
       element.src = src;
       element.controls = true;
       element.preload = 'metadata';
       element.playsInline = true;
     }
+  }
+
+  function youtubeEmbedUrl(value) {
+    var raw = String(value || '').trim();
+    if (!raw) return '';
+    var url;
+    try {
+      url = new URL(raw);
+    } catch (error) {
+      try {
+        url = new URL('https://' + raw);
+      } catch (innerError) {
+        return '';
+      }
+    }
+    var host = url.hostname.replace(/^www\./, '').toLowerCase();
+    var id = '';
+    if (host === 'youtu.be') {
+      id = url.pathname.split('/').filter(Boolean)[0] || '';
+    } else if (host === 'youtube.com' || host === 'm.youtube.com' || host === 'music.youtube.com') {
+      if (url.pathname === '/watch') id = url.searchParams.get('v') || '';
+      if (!id && url.pathname.indexOf('/embed/') === 0) id = url.pathname.split('/')[2] || '';
+      if (!id && url.pathname.indexOf('/shorts/') === 0) id = url.pathname.split('/')[2] || '';
+      if (!id && url.pathname.indexOf('/live/') === 0) id = url.pathname.split('/')[2] || '';
+    }
+    id = String(id || '').replace(/[^\w-]/g, '').slice(0, 32);
+    if (!id) return '';
+    var params = new URLSearchParams();
+    params.set('rel', '0');
+    var start = url.searchParams.get('t') || url.searchParams.get('start') || '';
+    var seconds = 0;
+    if (/^\d+$/.test(start)) seconds = parseInt(start, 10);
+    var complex = String(start).match(/(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?$/);
+    if (!seconds && complex) {
+      seconds = (parseInt(complex[1] || '0', 10) * 3600) + (parseInt(complex[2] || '0', 10) * 60) + parseInt(complex[3] || '0', 10);
+    }
+    if (seconds) params.set('start', String(seconds));
+    return 'https://www.youtube.com/embed/' + id + '?' + params.toString();
   }
 
   function clearImageSlot(element) {
@@ -432,6 +481,36 @@
     setStatus('Đã lưu video');
   }
 
+  async function saveVideoEmbed(element, url) {
+    var embedSrc = youtubeEmbedUrl(url);
+    if (!embedSrc) {
+      window.alert('Link YouTube không hợp lệ.');
+      return;
+    }
+    setStatus('Đang lưu YouTube...');
+    var response = await fetch(contentApi, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
+      body: JSON.stringify({
+        page: pagePath(),
+        key: element.dataset.liveVideoKey,
+        value: {
+          type: 'video',
+          provider: 'youtube',
+          src: embedSrc,
+          embedSrc: embedSrc,
+          originalUrl: String(url || '').trim(),
+          title: 'Video HDSD'
+        }
+      })
+    });
+    var payload = await response.json().catch(function () { return {}; });
+    if (!response.ok) throw new Error(payload.error || 'Không lưu được link YouTube.');
+    setVideoSlot(element, { type: 'video', provider: 'youtube', embedSrc: embedSrc, title: 'Video HDSD' });
+    setStatus('Đã lưu YouTube');
+  }
+
   async function uploadInlineImage(element, file) {
     if (!file || !file.type || file.type.indexOf('image/') !== 0) {
       window.alert('Vui lòng chọn file ảnh.');
@@ -522,9 +601,18 @@
     element.dataset.videoToolsReady = '1';
     var tools = document.createElement('div');
     tools.className = 'tre-image-tools';
-    tools.innerHTML = '<button type="button" data-video-upload>Đổi video</button><button type="button" data-video-clear>Xóa video</button><input type="file" accept="video/mp4,video/webm,video/quicktime,video/*" hidden>';
+    tools.innerHTML = '<button type="button" data-video-upload>Đổi video</button><button type="button" data-video-youtube>YouTube</button><button type="button" data-video-clear>Xóa video</button><input type="file" accept="video/mp4,video/webm,video/quicktime,video/*" hidden>';
     var input = tools.querySelector('input');
     tools.querySelector('[data-video-upload]').addEventListener('click', function () { input.click(); });
+    tools.querySelector('[data-video-youtube]').addEventListener('click', function () {
+      var url = window.prompt('Dán link YouTube');
+      if (!url) return;
+      saveVideoEmbed(element, url).catch(function (error) {
+        setStatus('Lỗi YouTube');
+        clearVideoSlot(element);
+        window.alert(error.message);
+      });
+    });
     input.addEventListener('change', function () {
       var file = input.files && input.files[0];
       if (!file) return;
@@ -866,6 +954,24 @@
         window.setTimeout(function () {
           deleteOverride(slot.dataset.liveVideoKey, 'video').catch(function (error) {
             setStatus('Lỗi xóa');
+            window.alert(error.message);
+          });
+        }, 50);
+      }
+    }, true);
+
+    document.addEventListener('click', function (event) {
+      if (!editing) return;
+      var button = event.target.closest && event.target.closest('[data-video-embed]');
+      if (!button) return;
+      var key = button.dataset.videoEmbed;
+      var slot = document.querySelector('[data-video-preview="' + key + '"]');
+      var input = document.querySelector('[data-video-url="' + key + '"]');
+      if (slot && input) {
+        window.setTimeout(function () {
+          saveVideoEmbed(slot, input.value).catch(function (error) {
+            setStatus('Lỗi YouTube');
+            clearVideoSlot(slot);
             window.alert(error.message);
           });
         }, 50);

@@ -150,7 +150,12 @@ tr:last-child td{border-bottom:none;}
 .video-upload-title{font-size:12px;font-weight:800;color:var(--dark);}
 .video-upload-actions{display:flex;gap:8px;flex-wrap:wrap;}
 .video-upload-preview{height:clamp(220px,calc(100vh - 230px),620px);min-height:0;border-radius:10px;background:var(--bg);display:flex;align-items:center;justify-content:center;overflow:hidden;color:var(--gray-t);font-size:11.5px;text-align:center;padding:12px;}
-.video-upload-preview video{display:block;width:auto;height:auto;max-width:100%;max-height:100%;object-fit:contain;border-radius:10px;border:1px solid var(--gray-bd);box-shadow:var(--shadow);background:#000;}
+.video-upload-preview video,.video-upload-preview iframe{display:block;width:auto;height:auto;max-width:100%;max-height:100%;object-fit:contain;border-radius:10px;border:1px solid var(--gray-bd);box-shadow:var(--shadow);background:#000;}
+.video-upload-preview iframe{width:100%;height:100%;border:0;}
+.video-url-row{display:flex;gap:8px;margin:0 0 10px;}
+.video-url-row input{flex:1;min-width:0;border:1px solid var(--gray-bd);border-radius:8px;padding:8px 10px;font-size:12px;color:var(--dark);}
+.video-url-row input:focus{outline:2px solid rgba(94,179,50,.22);border-color:var(--brand);}
+.video-url-row button{flex-shrink:0;}
 .video-upload input[type=file]{display:none;}
 
 @media print{ .side-panel{display:none;} .main-content{max-width:100%;} }
@@ -531,6 +536,10 @@ body.tabs-ready .node.lvl-2.tab-visible{margin-top:0;padding-top:0;border-top:0;
 </div>
 </div>
 <input id="hdsdVideoInput" data-video-input="hdsd" type="file" accept="video/mp4,video/webm,video/quicktime,video/*">
+<div class="video-url-row">
+<input id="hdsdVideoUrl" data-video-url="hdsd" type="url" placeholder="Dán link YouTube">
+<button class="local-shot-btn" type="button" data-video-embed="hdsd">Embed YouTube</button>
+</div>
 <div class="video-upload-preview" data-video-preview="hdsd">Chưa có video. Chọn file MP4, WEBM hoặc MOV từ máy tính.</div>
 </div></div>
 </section></div></div>
@@ -594,14 +603,16 @@ body.tabs-ready .node.lvl-2.tab-visible{margin-top:0;padding-top:0;border-top:0;
   if(!uploads.length) return;
 
   function defaultText(){
-    return 'Chưa có video. Chọn file MP4, WEBM hoặc MOV từ máy tính.';
+    return 'Chưa có video. Chọn file MP4, WEBM, MOV hoặc dán link YouTube.';
   }
 
   uploads.forEach((upload) => {
     const key = upload.dataset.video;
     const input = upload.querySelector(`[data-video-input="${key}"]`);
+    const urlInput = upload.querySelector(`[data-video-url="${key}"]`);
     const preview = upload.querySelector(`[data-video-preview="${key}"]`);
     const clear = upload.querySelector(`[data-clear-video="${key}"]`);
+    const embed = upload.querySelector(`[data-video-embed="${key}"]`);
     if(!key || !input || !preview || !clear) return;
 
     input.addEventListener('change', () => {
@@ -615,8 +626,20 @@ body.tabs-ready .node.lvl-2.tab-visible{margin-top:0;padding-top:0;border-top:0;
       input.value = '';
     });
 
+    if(embed && urlInput){
+      embed.addEventListener('click', () => {
+        if(document.body.classList.contains('admin-editing')){
+          preview.textContent = 'Đang lưu link YouTube...';
+          return;
+        }
+        preview.textContent = 'Cần đăng nhập admin và bật sửa để lưu link YouTube cho mọi người xem.';
+      });
+    }
+
     clear.addEventListener('click', () => {
+      if(!document.body.classList.contains('admin-editing')) return;
       input.value = '';
+      if(urlInput) urlInput.value = '';
       preview.textContent = defaultText();
     });
   });

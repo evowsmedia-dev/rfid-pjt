@@ -9,6 +9,7 @@ Nội dung sau khi lưu không nằm ở cache trình duyệt. Hệ thống ghi 
 - Text override: `content-overrides.json`.
 - Ảnh upload: `content-assets/<page>/<key>-<timestamp>.<ext>`.
 - Video upload: `content-assets/<page>/<key>-<timestamp>.<ext>`.
+- Video YouTube: URL embed được lưu trong `content-overrides.json`.
 
 Ảnh và video được load qua `/api/content-asset?path=...`, nên preview và FE người xem có thể hiển thị ngay sau khi upload, không cần chờ Vercel deploy static asset mới.
 
@@ -39,7 +40,7 @@ Cần cấu hình:
    - `Thêm dòng`: thêm một dòng trống ngay sau dòng đang chọn.
    - `Xóa dòng`: xóa dòng đang chọn, nhưng giữ tối thiểu 1 dòng nội dung trong `tbody`.
 8. Với ảnh minh họa có sẵn, bấm `Đổi ảnh` hoặc dùng nút upload ảnh sẵn có trên page HR. Ảnh được upload vào repo và override cho mọi người xem.
-9. Với video HDSD trên page HR, mở menu `Video HDSD`, bấm `Bật sửa`, sau đó chọn `Tải video từ máy`. Chỉ khi upload trong admin mode thì video mới được lưu public cho mọi người xem qua link.
+9. Với video HDSD trên page HR, mở menu `Video HDSD`, bấm `Bật sửa`, sau đó chọn `Tải video từ máy` hoặc dán link YouTube rồi bấm `Embed YouTube`. Chỉ khi thực hiện trong admin mode thì video mới được lưu public cho mọi người xem qua link.
 10. Bấm `Thoát` để đăng xuất admin.
 
 Có thể mở trực tiếp link cũ dạng `?edit=1` hoặc `#step1?edit=1`; nếu chưa đăng nhập, hệ thống sẽ chuyển sang `/admin.html` rồi quay lại page đó.
@@ -89,4 +90,5 @@ Page trong `docs/`:
 - Video HDSD HR có key ổn định `video:hdsd`.
 - Ảnh chèn inline vào box text được upload vào `content-assets/` rồi lưu URL proxy `/api/content-asset?path=...` trong HTML override của box đó.
 - Ảnh tối đa 5MB, hỗ trợ PNG, JPG, WEBP và GIF.
-- Video tối đa 50MB, hỗ trợ MP4, WEBM, MOV, M4V và OGV.
+- Video file tối đa 50MB, hỗ trợ MP4, WEBM, MOV, M4V và OGV.
+- YouTube hỗ trợ link dạng `youtube.com/watch?v=...`, `youtu.be/...`, `/shorts/...`, `/live/...` và `/embed/...`.

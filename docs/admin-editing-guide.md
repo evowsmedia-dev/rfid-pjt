@@ -2,14 +2,15 @@
 
 ## Mục tiêu
 
-Cho phép admin đăng nhập, mở bất kỳ page tài liệu HTML nào trên `rfid-pjt.vercel.app`, chỉnh sửa text hoặc ảnh minh họa trực tiếp trên page mà không thay đổi UI dành cho người xem.
+Cho phép admin đăng nhập, mở bất kỳ page tài liệu HTML nào trên `rfid-pjt.vercel.app`, chỉnh sửa text, ảnh minh họa hoặc video HDSD trực tiếp trên page mà không thay đổi UI dành cho người xem.
 
 Nội dung sau khi lưu không nằm ở cache trình duyệt. Hệ thống ghi thay đổi vào GitHub:
 
 - Text override: `content-overrides.json`.
 - Ảnh upload: `content-assets/<page>/<key>-<timestamp>.<ext>`.
+- Video upload: `content-assets/<page>/<key>-<timestamp>.<ext>`.
 
-Ảnh được load qua `/api/content-asset?path=...`, nên preview và FE người xem có thể hiển thị ngay sau khi upload, không cần chờ Vercel deploy static asset mới.
+Ảnh và video được load qua `/api/content-asset?path=...`, nên preview và FE người xem có thể hiển thị ngay sau khi upload, không cần chờ Vercel deploy static asset mới.
 
 ## Biến môi trường trên Vercel
 
@@ -38,7 +39,8 @@ Cần cấu hình:
    - `Thêm dòng`: thêm một dòng trống ngay sau dòng đang chọn.
    - `Xóa dòng`: xóa dòng đang chọn, nhưng giữ tối thiểu 1 dòng nội dung trong `tbody`.
 8. Với ảnh minh họa có sẵn, bấm `Đổi ảnh` hoặc dùng nút upload ảnh sẵn có trên page HR. Ảnh được upload vào repo và override cho mọi người xem.
-9. Bấm `Thoát` để đăng xuất admin.
+9. Với video HDSD trên page HR, mở menu `Video HDSD`, bấm `Bật sửa`, sau đó chọn `Tải video từ máy`. Chỉ khi upload trong admin mode thì video mới được lưu public cho mọi người xem qua link.
+10. Bấm `Thoát` để đăng xuất admin.
 
 Có thể mở trực tiếp link cũ dạng `?edit=1` hoặc `#step1?edit=1`; nếu chưa đăng nhập, hệ thống sẽ chuyển sang `/admin.html` rồi quay lại page đó.
 
@@ -72,9 +74,10 @@ Page trong `docs/`:
 - `POST /api/admin-logout`: đăng xuất.
 - `GET /api/admin-session`: kiểm tra trạng thái đăng nhập.
 - `GET /api/docs-content?page=/path.html`: đọc override public.
-- `POST /api/docs-content`: lưu/xóa override text hoặc ảnh, yêu cầu admin session.
+- `POST /api/docs-content`: lưu/xóa override text, ảnh hoặc video, yêu cầu admin session.
 - `POST /api/page-image`: upload ảnh vào repo, yêu cầu admin session.
-- `GET /api/content-asset?path=content-assets/...`: đọc ảnh đã upload từ GitHub để hiển thị public.
+- `POST /api/page-video`: upload video vào repo, yêu cầu admin session.
+- `GET /api/content-asset?path=content-assets/...`: đọc ảnh/video đã upload từ GitHub để hiển thị public.
 
 ## Ghi chú kỹ thuật
 
@@ -83,5 +86,7 @@ Page trong `docs/`:
 - Các key text được sinh theo vùng gần nhất có `id` và thứ tự tag, ví dụ `ch1:p:1`.
 - Khi thêm/xóa dòng bảng, hệ thống lưu override ở cấp `table` để cấu trúc bảng mới hiển thị cho mọi người xem.
 - Ảnh minh họa HR có key ổn định theo bước, ví dụ `step1:image`.
+- Video HDSD HR có key ổn định `video:hdsd`.
 - Ảnh chèn inline vào box text được upload vào `content-assets/` rồi lưu URL proxy `/api/content-asset?path=...` trong HTML override của box đó.
 - Ảnh tối đa 5MB, hỗ trợ PNG, JPG, WEBP và GIF.
+- Video tối đa 50MB, hỗ trợ MP4, WEBM, MOV, M4V và OGV.

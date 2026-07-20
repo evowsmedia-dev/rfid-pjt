@@ -77,3 +77,11 @@ module.exports = async function handler(req, res) {
     return json(res, error.statusCode || 500, { error: error.message || 'Unknown error.' });
   }
 };
+
+module.exports.config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '60mb'
+    }
+  }
+};

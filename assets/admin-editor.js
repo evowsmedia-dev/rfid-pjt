@@ -833,6 +833,7 @@
         window.setTimeout(function () {
           uploadVideo(slot, file).catch(function (error) {
             setStatus('Lỗi video');
+            clearVideoSlot(slot);
             window.alert(error.message);
           });
         }, 50);

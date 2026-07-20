@@ -258,7 +258,7 @@ Phạm vi đã triển khai:
 
 ## 16. Cơ chế chỉnh sửa nội dung tài liệu
 
-Mục tiêu là cho phép admin chỉnh sửa text và ảnh trên các page HTML hiện có mà không thay đổi UI hiển thị cho người xem thường.
+Mục tiêu là cho phép admin chỉnh sửa text, ảnh và video HDSD trên các page HTML hiện có mà không thay đổi UI hiển thị cho người xem thường.
 
 Luồng admin:
 
@@ -266,9 +266,9 @@ Luồng admin:
 2. Đăng nhập bằng mật khẩu admin.
 3. Mở page tài liệu cần sửa.
 4. Bấm `Bật sửa` ở thanh công cụ admin.
-5. Sửa text trực tiếp trên page hoặc upload/xóa ảnh minh họa.
+5. Sửa text trực tiếp trên page hoặc upload/xóa ảnh minh họa, video HDSD.
 6. Copy toàn bộ nội dung một box và paste vào box text khác khi cần tái sử dụng cấu trúc nội dung.
-7. Chèn ảnh từ máy vào một box text bất kỳ hoặc thay ảnh minh họa sẵn có.
+7. Chèn ảnh từ máy vào một box text bất kỳ, thay ảnh minh họa sẵn có hoặc upload video HDSD trong admin mode.
 8. Thêm hoặc xóa dòng trong các bảng tài liệu khi cần chỉnh cấu trúc bảng.
 9. Nội dung được lưu vào GitHub để người khác xem cùng một bản, không phụ thuộc cache/localStorage.
 
@@ -278,7 +278,8 @@ Thành phần kỹ thuật:
 - `api/admin-login.js`, `api/admin-logout.js`, `api/admin-session.js`: quản lý session admin bằng cookie HttpOnly.
 - `api/docs-content.js`: đọc/ghi override nội dung trong `content-overrides.json`.
 - `api/page-image.js`: upload ảnh vào `content-assets/` và ghi override ảnh.
-- `api/content-asset.js`: phục vụ ảnh từ GitHub qua URL public để preview/FE hiển thị ngay sau khi upload.
+- `api/page-video.js`: upload video vào `content-assets/` và ghi override video.
+- `api/content-asset.js`: phục vụ ảnh/video từ GitHub qua URL public để preview/FE hiển thị ngay sau khi upload.
 - `scripts/inject-admin-editor.js`: tự gắn editor vào file HTML mới khi build/deploy.
 - `docs/admin-editing-guide.md`: tài liệu vận hành cơ chế chỉnh sửa.
 

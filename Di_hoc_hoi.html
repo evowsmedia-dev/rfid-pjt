@@ -592,20 +592,9 @@ body.tabs-ready .node.lvl-2.tab-visible{margin-top:0;padding-top:0;border-top:0;
 (() => {
   const uploads = Array.from(document.querySelectorAll('.video-upload[data-video]'));
   if(!uploads.length) return;
-  const objectUrls = new Map();
 
   function defaultText(){
     return 'Chưa có video. Chọn file MP4, WEBM hoặc MOV từ máy tính.';
-  }
-
-  function showVideo(preview, src){
-    preview.innerHTML = '';
-    const video = document.createElement('video');
-    video.src = src;
-    video.controls = true;
-    video.preload = 'metadata';
-    video.playsInline = true;
-    preview.appendChild(video);
   }
 
   uploads.forEach((upload) => {
@@ -618,20 +607,15 @@ body.tabs-ready .node.lvl-2.tab-visible{margin-top:0;padding-top:0;border-top:0;
     input.addEventListener('change', () => {
       const file = input.files && input.files[0];
       if(!file) return;
-      if(!file.type.startsWith('video/')){
-        preview.textContent = 'File không phải video. Vui lòng chọn MP4, WEBM hoặc MOV.';
-        input.value = '';
+      if(document.body.classList.contains('admin-editing')){
+        preview.textContent = 'Đang tải video lên hệ thống...';
         return;
       }
-      if(objectUrls.has(key)) URL.revokeObjectURL(objectUrls.get(key));
-      const src = URL.createObjectURL(file);
-      objectUrls.set(key, src);
-      showVideo(preview, src);
+      preview.textContent = 'Cần đăng nhập admin và bật sửa để video được lưu cho mọi người xem.';
+      input.value = '';
     });
 
     clear.addEventListener('click', () => {
-      if(objectUrls.has(key)) URL.revokeObjectURL(objectUrls.get(key));
-      objectUrls.delete(key);
       input.value = '';
       preview.textContent = defaultText();
     });

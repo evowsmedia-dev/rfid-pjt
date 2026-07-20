@@ -271,6 +271,7 @@ Luồng admin:
 7. Chèn ảnh từ máy vào một box text bất kỳ, thay ảnh minh họa sẵn có, upload video HDSD hoặc dán link YouTube trong admin mode.
 8. Thêm hoặc xóa dòng trong các bảng tài liệu khi cần chỉnh cấu trúc bảng.
 9. Nội dung được lưu vào GitHub để người khác xem cùng một bản, không phụ thuộc cache/localStorage.
+10. Với người xem thường, các control cấu hình như field dán link YouTube được ẩn; người xem chỉ thấy nội dung/player đã được lưu public.
 
 Thành phần kỹ thuật:
 
@@ -280,6 +281,7 @@ Thành phần kỹ thuật:
 - `api/page-image.js`: upload ảnh vào `content-assets/` và ghi override ảnh.
 - `api/page-video.js`: upload video file vào `content-assets/` và ghi override video.
 - YouTube embed được lưu vào `content-overrides.json` với key video ổn định, ví dụ `video:hdsd`.
+- Field dán link YouTube trên `/Di_hoc_hoi.html` chỉ hiển thị khi `body.admin-editing`; public viewer không thấy control này.
 - `api/content-asset.js`: phục vụ ảnh/video từ GitHub qua URL public để preview/FE hiển thị ngay sau khi upload.
 - `scripts/inject-admin-editor.js`: tự gắn editor vào file HTML mới khi build/deploy.
 - `docs/admin-editing-guide.md`: tài liệu vận hành cơ chế chỉnh sửa.

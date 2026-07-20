@@ -41,6 +41,8 @@ Cần cấu hình:
    - `Xóa dòng`: xóa dòng đang chọn, nhưng giữ tối thiểu 1 dòng nội dung trong `tbody`.
 8. Với ảnh minh họa có sẵn, bấm `Đổi ảnh` hoặc dùng nút upload ảnh sẵn có trên page HR. Ảnh được upload vào repo và override cho mọi người xem.
 9. Với video HDSD trên page HR, mở menu `Video HDSD`, bấm `Bật sửa`, sau đó chọn `Tải video từ máy` hoặc dán link YouTube rồi bấm `Embed YouTube`. Chỉ khi thực hiện trong admin mode thì video mới được lưu public cho mọi người xem qua link.
+   - Field dán link YouTube và nút `Embed YouTube` chỉ hiển thị khi admin đã bật sửa.
+   - Người xem thường chỉ thấy vùng xem video/player, không thấy field cấu hình link.
 10. Bấm `Thoát` để đăng xuất admin.
 
 Có thể mở trực tiếp link cũ dạng `?edit=1` hoặc `#step1?edit=1`; nếu chưa đăng nhập, hệ thống sẽ chuyển sang `/admin.html` rồi quay lại page đó.
@@ -88,6 +90,7 @@ Page trong `docs/`:
 - Khi thêm/xóa dòng bảng, hệ thống lưu override ở cấp `table` để cấu trúc bảng mới hiển thị cho mọi người xem.
 - Ảnh minh họa HR có key ổn định theo bước, ví dụ `step1:image`.
 - Video HDSD HR có key ổn định `video:hdsd`.
+- Field cấu hình video YouTube trên HR được ẩn mặc định bằng CSS và chỉ mở lại bằng `body.admin-editing`.
 - Ảnh chèn inline vào box text được upload vào `content-assets/` rồi lưu URL proxy `/api/content-asset?path=...` trong HTML override của box đó.
 - Ảnh tối đa 5MB, hỗ trợ PNG, JPG, WEBP và GIF.
 - Video file tối đa 50MB, hỗ trợ MP4, WEBM, MOV, M4V và OGV.

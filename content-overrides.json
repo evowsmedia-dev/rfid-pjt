@@ -141,8 +141,9 @@
     },
     "/Tre_smart_help_center.html": {
       "page-benefits:h1:1": "Tương tác User - CS trên cùng 1 hệ thống",
-      "page-benefits:p:1": "Smart Help Center gom tìm kiếm hướng dẫn, nội dung đa phương tiện, trợ lý AI, hỗ trợ người thật và ticket vào một luồng thống nhất. Người dùng giải quyết vấn đề nhanh hơn; đội IT giảm hỏi đáp lặp lại và nhận ticket đầy đủ dữ liệu ngay từ đầu."
+      "page-benefits:p:1": "Smart Help Center gom tìm kiếm hướng dẫn, nội dung đa phương tiện, trợ lý AI, hỗ trợ người thật và ticket vào một luồng thống nhất. Người dùng giải quyết vấn đề nhanh hơn; đội IT giảm hỏi đáp lặp lại và nhận ticket đầy đủ dữ liệu ngay từ đầu.",
+      "page-home:h1:1": "Gặp vướng mắc?&nbsp;<br>Hỏi <span style=\"color:var(--brand-700)\">Smart Help Center</span>."
     }
   },
-  "updatedAt": "2026-07-26T16:38:00.158Z"
+  "updatedAt": "2026-07-26T16:38:13.989Z"
 }

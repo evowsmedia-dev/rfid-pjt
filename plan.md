@@ -252,6 +252,7 @@ Phạm vi đã triển khai:
 
 - Trang chủ `index.html` dùng brand `Tre ERP Docs`.
 - Module Nhân sự có tài liệu `HDSD App Đào tạo & Học hỏi CBQL` tại `Di_hoc_hoi.html`.
+- Menu level 1 `PA Tre Smart Help Center` mở tài liệu `Tre_smart_help_center.html`.
 - Tài liệu RFID hiện có được nhóm vào module Kho.
 - Các URL RFID cũ ở root được giữ bằng redirect/stub sang thư mục `docs/`.
 - Tất cả page tài liệu được gắn sidebar portal ERP cố định và sidebar nội bộ của tài liệu vẫn giữ nguyên.

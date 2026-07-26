@@ -11,7 +11,8 @@
     ['KHSX', 'index.html#dm-khsx', 'erp-lvl-1'],
     ['Công nghệ', 'index.html#dm-congnghe', 'erp-lvl-1'],
     ['QLCL', 'index.html#dm-qlcl', 'erp-lvl-1'],
-    ['Kho', 'docs/02-process-flow.html', 'erp-lvl-1']
+    ['Kho', 'docs/02-process-flow.html', 'erp-lvl-1'],
+    ['PA Tre Smart Help Center', 'Tre_smart_help_center.html', 'erp-lvl-1']
   ];
   var warehouseLinks = [
     ['Quy trình RFID', '02-process-flow.html'],
@@ -27,7 +28,7 @@
     'pda-mockup-kho-PL.html'
   ];
   function hrefFor(href){
-    return href.indexOf('docs/') === 0 || href.indexOf('Di_hoc_hoi') === 0 || href.indexOf('index') === 0 ? prefix + href : href;
+    return href.indexOf('docs/') === 0 || href.indexOf('Di_hoc_hoi') === 0 || href.indexOf('Tre_smart_help_center') === 0 || href.indexOf('index') === 0 ? prefix + href : href;
   }
   function render(){
     if(document.querySelector('.erp-global-sidebar')) return;

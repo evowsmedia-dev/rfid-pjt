@@ -145,8 +145,8 @@
       "page-home:h1:1": "Gặp vướng mắc?&nbsp;<br>Hỏi <span style=\"color:var(--brand-700)\">Tre Support</span>.",
       "page-benefits:h3:2": "<i class=\"fa-solid fa-screwdriver-wrench\" style=\"color:var(--brand-700)\"></i> Lợi ích cho bên cung cấp phần mềm",
       "page-benefits:li:7": "<i class=\"fa-solid fa-circle-dot\"></i><span><span class=\"dev-code\">https://support.tre360.vn/admin</span>: quản trị tenant, user, bài viết, file hướng dẫn và phân quyền.</span><img src=\"/api/content-asset?path=content-assets%2FTre_smart_help_center%2Fpage-benefits-li-7-inline-image-1785206841440.png\" alt=\"Ảnh minh họa\" loading=\"lazy\" style=\"max-width: 60%; height: auto; display: block; margin: 10px auto;\">",
-      "page-benefits:li:8": "<i class=\"fa-solid fa-check\"></i><span><strong>Guest:</strong> chỉ xem trang giới thiệu, chưa xem tài liệu theo công ty. Khi bấm vào xem chi tiết tài liệu hoặc</span>"
+      "page-benefits:li:8": "<i class=\"fa-solid fa-check\"></i><span><strong>Guest:</strong> chỉ xem trang giới thiệu, chưa xem tài liệu theo công ty. Khi bấm vào xem chi tiết tài liệu hoặc bấm chát h</span>"
     }
   },
-  "updatedAt": "2026-07-28T03:11:51.533Z"
+  "updatedAt": "2026-07-28T03:11:57.035Z"
 }

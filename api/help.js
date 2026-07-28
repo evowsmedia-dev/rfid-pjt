@@ -211,12 +211,12 @@ module.exports = async function handler(req, res) {
   try {
     const url = new URL(req.url, `https://${req.headers.host || 'localhost'}`);
     const action = url.searchParams.get('action') || '';
-    if (action === 'login') return handleLogin(req, res);
-    if (action === 'session') return handleSession(req, res);
+    if (action === 'login') return await handleLogin(req, res);
+    if (action === 'session') return await handleSession(req, res);
     if (action === 'logout') return handleLogout(req, res);
-    if (action === 'content') return handleContent(req, res);
-    if (action === 'admin-data') return handleAdminData(req, res);
-    if (action === 'upload') return handleUpload(req, res);
+    if (action === 'content') return await handleContent(req, res);
+    if (action === 'admin-data') return await handleAdminData(req, res);
+    if (action === 'upload') return await handleUpload(req, res);
     return json(res, 404, { error: 'Help Center action không tồn tại.' });
   } catch (error) {
     return json(res, error.statusCode || 500, { error: error.message || 'Unknown error.' });

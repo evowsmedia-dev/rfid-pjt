@@ -4,6 +4,8 @@
 
 Tre Support dùng chung một web app cho nội bộ và khách hàng ngoài, nhưng nội dung hướng dẫn và file đính kèm được tách riêng theo tenant.
 
+Phần demo/giải pháp của Tre Support là public. Người dùng chỉ cần đăng nhập khi muốn xem bộ HDSD riêng theo tài khoản nội bộ hoặc khách hàng ngoài.
+
 ## Đăng nhập người dùng
 
 - Người dùng nội bộ đăng nhập vào tenant `internal`.

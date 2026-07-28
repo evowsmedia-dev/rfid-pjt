@@ -5,6 +5,67 @@
   var currentTenant = null;
   var selectedFiles = [];
   var isAuthenticated = false;
+  var contentMode = 'demo';
+  var DEMO_MODULES = [
+    {name:'Kế toán', icon:'fa-calculator', desc:'Hóa đơn, công nợ, hạch toán và báo cáo.', count:1},
+    {name:'Kho', icon:'fa-boxes-stacked', desc:'Nhập kho, xuất kho, kiểm kê và tồn kho.', count:3},
+    {name:'Bán hàng', icon:'fa-cart-shopping', desc:'Đơn hàng, duyệt giá và trạng thái giao hàng.', count:2},
+    {name:'Nhân sự', icon:'fa-id-card', desc:'Chấm công, đơn từ và thông tin nhân viên.', count:1},
+    {name:'Hệ thống', icon:'fa-gear', desc:'Đăng nhập, mật khẩu, phân quyền và đồng bộ.', count:2},
+    {name:'TNGoffice', icon:'fa-mobile-screen-button', desc:'Thao tác app, thông báo và phê duyệt.', count:1}
+  ];
+  var DEMO_ARTICLES = [
+    {
+      id:'demo-duyet-don-winform',
+      title:'Cách duyệt đơn hàng trên ERP Winform',
+      module:'Bán hàng',
+      platform:'pc',
+      desc:'Hướng dẫn kiểm tra thông tin và duyệt đơn hàng trên màn hình desktop.',
+      time:'4 phút',
+      views:1240,
+      keywords:'duyet don hang ban hang winform',
+      steps:[
+        {title:'Mở đúng module', body:'Đăng nhập ERP Winform và truy cập module Bán hàng.'},
+        {title:'Kiểm tra đơn hàng', body:'Đối chiếu khách hàng, mã hàng, số lượng, ngày giao và trạng thái xử lý.'},
+        {title:'Duyệt hoặc trả lại', body:'Bấm Duyệt nếu thông tin hợp lệ; nếu sai, ghi chú lý do và trả lại bước trước.'}
+      ],
+      notes:['Nếu nút Duyệt không hiển thị, kiểm tra lại phân quyền hoặc trạng thái đơn hàng.']
+    },
+    {
+      id:'demo-duyet-don-mobile',
+      title:'Duyệt đơn hàng trên TNGoffice Mobile',
+      module:'Bán hàng',
+      platform:'mobile',
+      desc:'Thao tác duyệt nhanh bằng điện thoại và kiểm tra trạng thái xử lý.',
+      time:'3 phút',
+      views:980,
+      keywords:'duyet don hang mobile app tngoffice',
+      steps:[
+        {title:'Mở thông báo phê duyệt', body:'Mở TNGoffice và chọn thông báo đơn hàng cần xử lý.'},
+        {title:'Xem chi tiết', body:'Kiểm tra thông tin chính, trạng thái hiện tại và người gửi yêu cầu.'},
+        {title:'Xác nhận', body:'Chọn Duyệt hoặc Từ chối kèm lý do.'}
+      ],
+      notes:[]
+    },
+    {
+      id:'demo-login-error',
+      title:'Khắc phục lỗi không đăng nhập được',
+      module:'Hệ thống',
+      platform:'mobile',
+      desc:'Kiểm tra kết nối, phiên bản ứng dụng và đặt lại mật khẩu.',
+      time:'2 phút',
+      views:1720,
+      keywords:'loi dang nhap mat khau mobile',
+      steps:[
+        {title:'Kiểm tra kết nối', body:'Đảm bảo thiết bị có mạng ổn định và không bị chặn VPN/proxy.'},
+        {title:'Kiểm tra tài khoản', body:'Nhập đúng tên đăng nhập, mật khẩu và thử đăng nhập lại.'},
+        {title:'Gửi hỗ trợ', body:'Nếu vẫn lỗi, chụp màn hình thông báo và tạo ticket hỗ trợ.'}
+      ],
+      notes:[]
+    },
+    {id:'demo-nhap-kho-nvl', title:'Nhập kho nguyên vật liệu trên Winform', module:'Kho', platform:'pc', desc:'Quy trình nhập phiếu, đối chiếu số lượng và lưu chứng từ.', time:'6 phút', views:850, keywords:'nhap kho nguyen vat lieu pc', steps:[], notes:[]},
+    {id:'demo-quet-ma-nhap-kho', title:'Quét mã nhập kho bằng TNGoffice', module:'Kho', platform:'mobile', desc:'Dùng camera điện thoại để quét mã và xác nhận số lượng.', time:'4 phút', views:760, keywords:'quet ma nhap kho barcode mobile', steps:[], notes:[]}
+  ];
 
   var $ = function(selector){ return document.querySelector(selector); };
   var $$ = function(selector){ return Array.prototype.slice.call(document.querySelectorAll(selector)); };
@@ -81,8 +142,13 @@
     var button = $('#helpLoginOpen');
     if(!button) return;
     button.innerHTML = isAuthenticated
-      ? '<i class="fa-solid fa-arrow-right-to-bracket"></i> Vào Tre Support'
+      ? '<i class="fa-solid fa-book-open"></i> HDSD của tôi'
       : '<i class="fa-solid fa-right-to-bracket"></i> Đăng nhập khách ngoài';
+  }
+
+  function removeTenantBar(){
+    var bar = $('#helpTenantBar');
+    if(bar) bar.remove();
   }
 
   function showPage(name){
@@ -132,6 +198,10 @@
   }
 
   function updateTenantBar(){
+    if(contentMode === 'demo'){
+      removeTenantBar();
+      return;
+    }
     renderTenantBar();
     var label = $('#helpTenantBar span');
     if(label) label.textContent = currentTenant ? currentTenant.name : '';
@@ -233,6 +303,7 @@
     currentUser = payload.user;
     currentTenant = payload.tenant;
     isAuthenticated = true;
+    contentMode = 'tenant';
     modules = payload.modules || [];
     articles = payload.articles || [];
     unlock();
@@ -243,17 +314,31 @@
     else showPage(options.targetPage || 'home');
   }
 
-  async function openAppPage(name){
+  function openDemoPage(name){
+    contentMode = 'demo';
+    modules = DEMO_MODULES.slice();
+    articles = DEMO_ARTICLES.slice();
+    currentTenant = null;
+    removeTenantBar();
+    updateSolutionLoginButton();
+    renderHome();
+    showPage(name);
+    return true;
+  }
+
+  async function openTenantPage(name){
     if(!isAuthenticated){
       showLogin();
       return false;
     }
-    if(!articles.length){
-      await loadContent({targetPage:name});
-      return true;
-    }
-    showPage(name);
+    if(contentMode !== 'tenant' || !articles.length) await loadContent({targetPage:name});
+    else showPage(name);
     return true;
+  }
+
+  function openCurrentPage(name){
+    if(contentMode === 'tenant') return openTenantPage(name);
+    return Promise.resolve(openDemoPage(name));
   }
 
   function bindBaseUi(){
@@ -265,11 +350,12 @@
         event.preventDefault();
         var page = el.dataset.page;
         if(page === 'benefits') showPage('benefits');
-        else openAppPage(page).catch(function(error){ toast(error.message); showLogin(); });
+        else if(page === 'home' && (el.closest('#solutionHeader') || el.closest('#page-benefits'))) openDemoPage('home');
+        else openCurrentPage(page).catch(function(error){ toast(error.message); showLogin(); });
       });
     });
     if($('#helpLoginOpen')) $('#helpLoginOpen').addEventListener('click', function(){
-      if(isAuthenticated) openAppPage('home').catch(function(error){ toast(error.message); });
+      if(isAuthenticated) openTenantPage('home').catch(function(error){ toast(error.message); });
       else showLogin();
     });
     if($('#menuBtn')) $('#menuBtn').addEventListener('click', function(){ $('#mobileMenu').classList.toggle('hidden'); });
@@ -296,20 +382,32 @@
     });
     if($('#heroSearchForm')) $('#heroSearchForm').addEventListener('submit', function(event){
       event.preventDefault();
-      $('#kbSearch').value = $('#heroSearch').value;
-      openAppPage('knowledge').then(function(ok){ if(ok) renderKnowledge(); }).catch(function(error){ toast(error.message); });
+      var query = $('#heroSearch').value;
+      openCurrentPage('knowledge').then(function(ok){
+        if(!ok) return;
+        $('#kbSearch').value = query;
+        renderKnowledge();
+      }).catch(function(error){ toast(error.message); });
     });
     $$('[data-platform-shortcut]').forEach(function(btn){
       btn.addEventListener('click', function(){
-        $('#platformFilter').value = btn.dataset.platformShortcut;
-        openAppPage('knowledge').then(function(ok){ if(ok) renderKnowledge(); }).catch(function(error){ toast(error.message); });
+        var platform = btn.dataset.platformShortcut;
+        openCurrentPage('knowledge').then(function(ok){
+          if(!ok) return;
+          $('#platformFilter').value = platform;
+          renderKnowledge();
+        }).catch(function(error){ toast(error.message); });
       });
     });
     document.addEventListener('click', function(event){
       var btn = event.target.closest('[data-module]');
       if(!btn) return;
-      $('#moduleFilter').value = btn.dataset.module;
-      openAppPage('knowledge').then(function(ok){ if(ok) renderKnowledge(); }).catch(function(error){ toast(error.message); });
+      var moduleName = btn.dataset.module;
+      openCurrentPage('knowledge').then(function(ok){
+        if(!ok) return;
+        $('#moduleFilter').value = moduleName;
+        renderKnowledge();
+      }).catch(function(error){ toast(error.message); });
     });
   }
 
@@ -362,7 +460,7 @@
     });
     if($('#ticketFromChat')) $('#ticketFromChat').addEventListener('click', function(){
       closeChat();
-      openAppPage('ticket').catch(function(error){ toast(error.message); });
+      openCurrentPage('ticket').catch(function(error){ toast(error.message); });
     });
   }
 
@@ -409,8 +507,12 @@
     bindTicket();
     try{
       var session = await requestJson('/api/help?action=session');
-      if(session.authenticated) await loadContent({stayOnBenefits:true});
-      else updateSolutionLoginButton();
+      if(session.authenticated){
+        currentUser = session.user;
+        currentTenant = session.tenant;
+        isAuthenticated = true;
+      }
+      updateSolutionLoginButton();
     }catch(error){
       updateSolutionLoginButton();
     }

@@ -4,6 +4,7 @@
   var currentUser = null;
   var currentTenant = null;
   var selectedFiles = [];
+  var isAuthenticated = false;
 
   var $ = function(selector){ return document.querySelector(selector); };
   var $$ = function(selector){ return Array.prototype.slice.call(document.querySelectorAll(selector)); };
@@ -30,7 +31,6 @@
   }
 
   function showLogin(){
-    document.body.classList.add('help-locked');
     var old = $('#helpLoginShell');
     if(old) old.remove();
     var shell = document.createElement('div');
@@ -46,11 +46,14 @@
         '<input id="helpPassword" name="password" type="password" autocomplete="current-password">'+
         '<div style="display:flex;gap:10px;align-items:center;margin-top:16px">'+
           '<button class="primary-btn" type="submit">Đăng nhập</button>'+
-          '<a class="secondary-btn" href="index.html">Tre ERP Docs</a>'+
+          '<button class="secondary-btn" type="button" id="helpLoginCancel">Đóng</button>'+
         '</div>'+
         '<div class="help-login-status" id="helpLoginStatus"></div>'+
       '</form>';
     document.body.insertBefore(shell, document.body.firstChild);
+    $('#helpLoginCancel').addEventListener('click', function(){
+      shell.remove();
+    });
     $('#helpLoginForm').addEventListener('submit', async function(event){
       event.preventDefault();
       var status = $('#helpLoginStatus');
@@ -70,9 +73,16 @@
   }
 
   function unlock(){
-    document.body.classList.remove('help-locked');
     var shell = $('#helpLoginShell');
     if(shell) shell.remove();
+  }
+
+  function updateSolutionLoginButton(){
+    var button = $('#helpLoginOpen');
+    if(!button) return;
+    button.innerHTML = isAuthenticated
+      ? '<i class="fa-solid fa-arrow-right-to-bracket"></i> Vào Tre Support'
+      : '<i class="fa-solid fa-right-to-bracket"></i> Đăng nhập khách ngoài';
   }
 
   function showPage(name){
@@ -113,7 +123,11 @@
       await requestJson('/api/help?action=logout', {method:'POST'}).catch(function(){});
       currentUser = null;
       currentTenant = null;
-      showLogin();
+      isAuthenticated = false;
+      modules = [];
+      articles = [];
+      updateSolutionLoginButton();
+      showPage('benefits');
     });
   }
 
@@ -213,16 +227,33 @@
     });
   }
 
-  async function loadContent(){
+  async function loadContent(options){
+    options = options || {};
     var payload = await requestJson('/api/help?action=content');
     currentUser = payload.user;
     currentTenant = payload.tenant;
+    isAuthenticated = true;
     modules = payload.modules || [];
     articles = payload.articles || [];
     unlock();
     updateTenantBar();
+    updateSolutionLoginButton();
     renderHome();
-    showPage('home');
+    if(options.stayOnBenefits) showPage('benefits');
+    else showPage(options.targetPage || 'home');
+  }
+
+  async function openAppPage(name){
+    if(!isAuthenticated){
+      showLogin();
+      return false;
+    }
+    if(!articles.length){
+      await loadContent({targetPage:name});
+      return true;
+    }
+    showPage(name);
+    return true;
   }
 
   function bindBaseUi(){
@@ -230,7 +261,16 @@
       el.addEventListener('click', function(event){ event.preventDefault(); showPage('benefits'); });
     });
     $$('[data-page]').forEach(function(el){
-      el.addEventListener('click', function(event){ event.preventDefault(); showPage(el.dataset.page); });
+      el.addEventListener('click', function(event){
+        event.preventDefault();
+        var page = el.dataset.page;
+        if(page === 'benefits') showPage('benefits');
+        else openAppPage(page).catch(function(error){ toast(error.message); showLogin(); });
+      });
+    });
+    if($('#helpLoginOpen')) $('#helpLoginOpen').addEventListener('click', function(){
+      if(isAuthenticated) openAppPage('home').catch(function(error){ toast(error.message); });
+      else showLogin();
     });
     if($('#menuBtn')) $('#menuBtn').addEventListener('click', function(){ $('#mobileMenu').classList.toggle('hidden'); });
     ['kbSearch','platformFilter','moduleFilter'].forEach(function(id){
@@ -257,22 +297,19 @@
     if($('#heroSearchForm')) $('#heroSearchForm').addEventListener('submit', function(event){
       event.preventDefault();
       $('#kbSearch').value = $('#heroSearch').value;
-      showPage('knowledge');
-      renderKnowledge();
+      openAppPage('knowledge').then(function(ok){ if(ok) renderKnowledge(); }).catch(function(error){ toast(error.message); });
     });
     $$('[data-platform-shortcut]').forEach(function(btn){
       btn.addEventListener('click', function(){
         $('#platformFilter').value = btn.dataset.platformShortcut;
-        showPage('knowledge');
-        renderKnowledge();
+        openAppPage('knowledge').then(function(ok){ if(ok) renderKnowledge(); }).catch(function(error){ toast(error.message); });
       });
     });
     document.addEventListener('click', function(event){
       var btn = event.target.closest('[data-module]');
       if(!btn) return;
       $('#moduleFilter').value = btn.dataset.module;
-      showPage('knowledge');
-      renderKnowledge();
+      openAppPage('knowledge').then(function(ok){ if(ok) renderKnowledge(); }).catch(function(error){ toast(error.message); });
     });
   }
 
@@ -325,7 +362,7 @@
     });
     if($('#ticketFromChat')) $('#ticketFromChat').addEventListener('click', function(){
       closeChat();
-      showPage('ticket');
+      openAppPage('ticket').catch(function(error){ toast(error.message); });
     });
   }
 
@@ -372,13 +409,10 @@
     bindTicket();
     try{
       var session = await requestJson('/api/help?action=session');
-      if(!session.authenticated) {
-        showLogin();
-        return;
-      }
-      await loadContent();
+      if(session.authenticated) await loadContent({stayOnBenefits:true});
+      else updateSolutionLoginButton();
     }catch(error){
-      showLogin();
+      updateSolutionLoginButton();
     }
   }
 

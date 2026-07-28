@@ -1,16 +1,12 @@
-body.help-locked #appHeader,
-body.help-locked main,
-body.help-locked footer,
-body.help-locked .chat-launcher,
-body.help-locked .chat-panel{
-  display:none!important;
-}
 .help-login-shell{
-  min-height:100vh;
+  position:fixed;
+  inset:0;
+  z-index:10000;
   display:grid;
   place-items:center;
   padding:24px;
-  background:linear-gradient(180deg,#fff 0,#fbfdf8 56%,#f5f8f1 100%);
+  background:rgba(12,20,28,.38);
+  backdrop-filter:blur(10px);
 }
 .help-login-card{
   width:min(430px,100%);

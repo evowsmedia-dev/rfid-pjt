@@ -303,7 +303,7 @@ Phạm vi triển khai V1:
 
 - Người dùng Tre Support đăng nhập bằng tài khoản riêng, độc lập với admin editor.
 - Phần demo/giải pháp Tre Support là public; nút `Mở demo Web App` không yêu cầu đăng nhập.
-- Nút `Đăng nhập khách ngoài` dùng để khách hàng ngoài xem đúng bộ HDSD theo tenant của họ.
+- Nút `Đăng nhập` dùng để người dùng nội bộ/khách hàng ngoài xem đúng bộ HDSD theo tenant/công ty của họ.
 - Session người dùng chứa `tenantId`, `userId`, `displayName`, `role`.
 - API `/api/help?action=content` chỉ trả dữ liệu theo `tenantId` trong session, không tin query string hoặc localStorage.
 - Dữ liệu Tre Support nằm trong `help-center-content.json`, gồm `tenants`, `users`, `modules`, `articles`.

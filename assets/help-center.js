@@ -139,13 +139,16 @@
   }
 
   function updateSolutionLoginButton(){
-    var label = isAuthenticated ? 'HDSD của tôi' : 'Đăng nhập';
     var desktop = $('#helpLoginOpen');
     var mobile = $('#helpLoginOpenMobile');
-    if(desktop) desktop.innerHTML = isAuthenticated
-      ? '<i class="fa-solid fa-book-open"></i> '+label
-      : '<i class="fa-solid fa-right-to-bracket"></i> '+label;
-    if(mobile) mobile.textContent = label;
+    if(desktop) {
+      desktop.hidden = isAuthenticated;
+      desktop.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Đăng nhập';
+    }
+    if(mobile) {
+      mobile.hidden = isAuthenticated;
+      mobile.textContent = 'Đăng nhập';
+    }
   }
 
   function removeTenantBar(){

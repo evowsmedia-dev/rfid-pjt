@@ -206,11 +206,10 @@
 
   <g>
     <rect x="1338" y="322" width="222" height="150" rx="10" fill="url(#red)" stroke="#ef5a5a" stroke-width="2"/>
-    <text x="1410" y="367" class="node-title">/admin</text>
+    <text x="1360" y="367" class="node-title">/admin</text>
     <text x="1360" y="405" class="node-body">Quản trị tenant, user,</text>
     <text x="1360" y="430" class="node-body">bài viết, file hướng dẫn</text>
     <text x="1360" y="455" class="node-body">và phân quyền.</text>
-    <text x="1360" y="372" font-size="34" fill="#ef5a5a">⬟</text>
     <path class="branch-red" d="M1350 472v486h20"/>
     <path class="branch-red" d="M1350 562h20"/>
     <path class="branch-red" d="M1350 684h20"/>

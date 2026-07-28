@@ -294,3 +294,33 @@ Biến môi trường cần có trên Vercel:
 - `GITHUB_BRANCH`.
 - `ADMIN_PASSWORD`.
 - `AUTH_SECRET`.
+
+## 17. Tre Smart Help Center đa khách hàng
+
+`Tre_smart_help_center.html` được nâng cấp thành Help Center có đăng nhập người dùng và tách nội dung theo tenant.
+
+Phạm vi triển khai V1:
+
+- Người dùng Help Center đăng nhập bằng tài khoản riêng, độc lập với admin editor.
+- Session người dùng chứa `tenantId`, `userId`, `displayName`, `role`.
+- API `/api/help-content` chỉ trả dữ liệu theo `tenantId` trong session, không tin query string hoặc localStorage.
+- Dữ liệu Help Center nằm trong `help-center-content.json`, gồm `tenants`, `users`, `modules`, `articles`.
+- File upload của Help Center lưu riêng theo tenant/article tại `content-assets/help-center/<tenantId>/<articleId>/`.
+- File được xem/tải qua `/api/content-asset`; asset Help Center yêu cầu người dùng cùng tenant hoặc admin.
+- Admin quản trị nội dung tại `/help-admin.html`, bắt buộc chọn tenant trước khi tạo/sửa bài.
+- Form admin hỗ trợ nhập module, platform, tiêu đề, mô tả, keywords, các bước hướng dẫn, lưu ý và upload nhiều file đính kèm.
+- Người xem Help Center chỉ thấy dữ liệu, hướng dẫn và file đính kèm thuộc tenant của tài khoản đăng nhập.
+
+Giới hạn file V1:
+
+- Ảnh `png/jpg/webp/gif`: tối đa 5MB.
+- Video `mp4/webm/mov`: tối đa 50MB.
+- Tài liệu `pdf/doc/docx/xls/xlsx/ppt/pptx`: tối đa 20MB.
+
+Tài khoản seed phục vụ kiểm thử:
+
+- Nội bộ: `internal` / `internal123`.
+- Khách hàng A: `customer-a` / `khach123`.
+- Khách hàng B: `customer-b` / `khach123`.
+
+Các tài khoản này là dữ liệu mẫu trong `help-center-content.json`; khi vận hành thật cần thay đổi mật khẩu hoặc thay bằng cơ chế cấp user chính thức.

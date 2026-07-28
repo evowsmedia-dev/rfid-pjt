@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const root = path.resolve(__dirname, '..');
-const skip = new Set(['admin.html']);
+const skip = new Set(['admin.html', 'help-admin.html']);
 
 function walk(dir) {
   const entries = fs.readdirSync(dir, { withFileTypes: true });

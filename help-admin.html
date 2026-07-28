@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Help Center Admin · Tre ERP Docs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+:root{--brand:#5eb332;--brand-d:#3f7d22;--ink:#1a2332;--muted:#667085;--bd:#e4e7ec;--bg:#f6f7f9;--panel:#fff;--danger:#dc2626;}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f7f8fa;color:var(--ink);}
+button,input,select,textarea{font:inherit}
+button{border:0;cursor:pointer}
+.shell{display:grid;grid-template-columns:310px minmax(0,1fr);min-height:100vh}
+.sidebar{border-right:1px solid var(--bd);background:#fff;padding:22px;position:sticky;top:0;height:100vh;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.mark{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--brand),var(--brand-d));color:#fff;display:grid;place-items:center;font-weight:800}
+.brand b{display:block;font-size:15px}.brand span{display:block;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-top:2px}
+.field{display:grid;gap:7px;margin-bottom:14px}.field label{font-size:12px;font-weight:800;color:#344054}
+input,select,textarea{width:100%;border:1px solid var(--bd);border-radius:10px;background:#fff;color:var(--ink);outline:none}
+input,select{height:40px;padding:0 11px}textarea{min-height:86px;padding:10px 11px;resize:vertical;line-height:1.5}
+input:focus,select:focus,textarea:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(94,179,50,.14)}
+.article-list{display:grid;gap:8px;margin-top:14px}
+.article-item{width:100%;text-align:left;border:1px solid var(--bd);background:#fff;border-radius:10px;padding:10px}
+.article-item.active{border-color:var(--brand);box-shadow:0 0 0 3px rgba(94,179,50,.12)}
+.article-item b{display:block;font-size:13px}.article-item span{display:block;color:var(--muted);font-size:11px;margin-top:4px}
+.main{padding:24px;min-width:0}
+.topbar{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:18px}
+h1{font-size:24px;margin:0 0 6px}.topbar p{margin:0;color:var(--muted);font-size:13px}
+.actions{display:flex;gap:10px;flex-wrap:wrap}.btn{height:40px;border-radius:10px;padding:0 14px;font-weight:800;font-size:13px;display:inline-flex;align-items:center;gap:8px;text-decoration:none}
+.primary{background:var(--brand);color:#fff}.secondary{background:#fff;border:1px solid var(--bd);color:var(--ink)}.danger{background:#fff;border:1px solid #fecaca;color:var(--danger)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.panel{background:#fff;border:1px solid var(--bd);border-radius:14px;padding:18px;box-shadow:0 12px 28px rgba(16,24,40,.04)}
+.panel h2{font-size:16px;margin:0 0 14px}.span-2{grid-column:span 2}.hint{font-size:12px;color:var(--muted);line-height:1.5;margin-top:6px}
+.status{min-height:20px;margin-top:12px;font-size:12px;font-weight:800}.status.ok{color:#15803d}.status.err{color:var(--danger)}
+.attachments{display:grid;gap:10px;margin-top:12px}.attachment{display:grid;grid-template-columns:42px 1fr auto;gap:10px;align-items:center;border:1px solid var(--bd);border-radius:12px;padding:10px;background:#fcfcfd}
+.attachment i{width:42px;height:42px;border-radius:10px;background:#eef6e9;color:var(--brand-d);display:grid;place-items:center}.attachment b{font-size:13px}.attachment span{display:block;color:var(--muted);font-size:11px;margin-top:3px}
+.empty{font-size:13px;color:var(--muted);padding:12px;border:1px dashed var(--bd);border-radius:10px;background:#fcfcfd}
+@media(max-width:900px){.shell{grid-template-columns:1fr}.sidebar{position:relative;height:auto}.grid{grid-template-columns:1fr}.span-2{grid-column:auto}.topbar{align-items:flex-start;flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="mark">Tre</div>
+      <div><b>Tre ERP Docs</b><span>Help Center Admin</span></div>
+    </div>
+    <div class="field">
+      <label for="tenantSelect">Phạm vi nội dung</label>
+      <select id="tenantSelect"></select>
+      <div class="hint">Bắt buộc chọn đúng Nội bộ hoặc khách hàng ngoài trước khi tạo/sửa bài.</div>
+    </div>
+    <div class="field">
+      <label for="articleSearch">Tìm bài trong tenant</label>
+      <input id="articleSearch" placeholder="Nhập tiêu đề, module, từ khóa">
+    </div>
+    <div class="actions">
+      <button class="btn secondary" id="newArticle" type="button"><i class="fa-solid fa-plus"></i> Bài mới</button>
+      <a class="btn secondary" href="Tre_smart_help_center.html"><i class="fa-solid fa-eye"></i> Xem Help Center</a>
+    </div>
+    <div class="article-list" id="articleList"></div>
+  </aside>
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <h1>Quản trị nội dung Help Center</h1>
+        <p>Soạn hướng dẫn và upload file riêng theo từng tenant. Người xem chỉ nhận dữ liệu theo tài khoản đăng nhập.</p>
+      </div>
+      <div class="actions">
+        <button class="btn primary" id="saveArticle" type="button"><i class="fa-solid fa-floppy-disk"></i> Lưu bài</button>
+        <button class="btn danger" id="deleteArticle" type="button"><i class="fa-solid fa-trash"></i> Xóa bài</button>
+        <a class="btn secondary" href="index.html"><i class="fa-solid fa-house"></i> Portal</a>
+      </div>
+    </div>
+    <div class="grid">
+      <section class="panel">
+        <h2>Thông tin chính</h2>
+        <div class="field"><label for="title">Tiêu đề</label><input id="title" placeholder="VD: Cách duyệt đơn hàng"></div>
+        <div class="grid">
+          <div class="field"><label for="moduleName">Module</label><input id="moduleName" list="moduleOptions" placeholder="VD: Đơn hàng"><datalist id="moduleOptions"></datalist></div>
+          <div class="field"><label for="platform">Nền tảng</label><select id="platform"><option value="pc">Winform/PC</option><option value="mobile">Mobile</option></select></div>
+        </div>
+        <div class="grid">
+          <div class="field"><label for="time">Thời lượng</label><input id="time" placeholder="3 phút"></div>
+          <div class="field"><label for="views">Lượt xem</label><input id="views" type="number" min="0" step="1"></div>
+        </div>
+        <div class="field"><label for="desc">Mô tả ngắn</label><textarea id="desc" placeholder="Mô tả người dùng sẽ học được gì trong bài này"></textarea></div>
+        <div class="field"><label for="keywords">Từ khóa</label><input id="keywords" placeholder="duyệt, đơn hàng, mobile"></div>
+        <div class="hint">ID bài hiện tại: <strong id="articleIdLabel">chưa tạo</strong></div>
+      </section>
+      <section class="panel">
+        <h2>File đính kèm</h2>
+        <div class="field">
+          <label for="fileUpload">Upload ảnh, video hoặc tài liệu</label>
+          <input id="fileUpload" type="file" multiple accept="image/png,image/jpeg,image/webp,image/gif,video/mp4,video/webm,video/quicktime,application/pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx">
+          <div class="hint">Ảnh tối đa 5MB, video 50MB, tài liệu 20MB. File lưu theo tenant/article trên production.</div>
+        </div>
+        <div class="attachments" id="attachments"></div>
+      </section>
+      <section class="panel span-2">
+        <h2>Nội dung hướng dẫn</h2>
+        <div class="field">
+          <label for="steps">Các bước hướng dẫn</label>
+          <textarea id="steps" style="min-height:190px" placeholder="Mỗi dòng là một bước: Tiêu đề | Nội dung chi tiết"></textarea>
+          <div class="hint">Ví dụ: Mở menu Đơn hàng | Vào màn hình Danh sách đơn hàng và chọn bộ lọc cần xem.</div>
+        </div>
+        <div class="field">
+          <label for="notes">Lưu ý</label>
+          <textarea id="notes" placeholder="Mỗi dòng là một lưu ý riêng"></textarea>
+        </div>
+      </section>
+    </div>
+    <div class="status" id="status"></div>
+  </main>
+</div>
+<script>
+(function(){
+  var state = {store:null, tenantId:'', current:null};
+  var $ = function(sel){ return document.querySelector(sel); };
+  function requestJson(url, options){
+    options = options || {};
+    options.credentials = 'same-origin';
+    return fetch(url, options).then(function(response){
+      return response.json().catch(function(){ return {}; }).then(function(payload){
+        if(!response.ok) throw new Error(payload.error || 'Không xử lý được yêu cầu.');
+        return payload;
+      });
+    });
+  }
+  function setStatus(message, ok){
+    var el = $('#status');
+    el.textContent = message || '';
+    el.className = 'status ' + (message ? (ok ? 'ok' : 'err') : '');
+  }
+  function tenantArticles(){
+    return (state.store && state.store.articles && state.store.articles[state.tenantId]) || [];
+  }
+  function tenantModules(){
+    return (state.store && state.store.modules && state.store.modules[state.tenantId]) || [];
+  }
+  function slug(value){
+    return String(value || '').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,70) || ('article-' + Date.now());
+  }
+  function iconFor(file){
+    if(file.type === 'image') return 'fa-image';
+    if(file.type === 'video') return 'fa-video';
+    return 'fa-file-lines';
+  }
+  function renderTenants(){
+    $('#tenantSelect').innerHTML = (state.store.tenants || []).map(function(tenant){
+      return '<option value="'+tenant.id+'">'+tenant.name+' ('+tenant.id+')</option>';
+    }).join('');
+    state.tenantId = state.tenantId || ($('#tenantSelect').value || '');
+    $('#tenantSelect').value = state.tenantId;
+  }
+  function renderModules(){
+    $('#moduleOptions').innerHTML = tenantModules().map(function(module){
+      return '<option value="'+module.name+'"></option>';
+    }).join('');
+  }
+  function renderList(){
+    var term = $('#articleSearch').value.trim().toLowerCase();
+    var rows = tenantArticles().filter(function(article){
+      var haystack = [article.title, article.module, article.keywords, article.desc].join(' ').toLowerCase();
+      return !term || haystack.indexOf(term) !== -1;
+    });
+    $('#articleList').innerHTML = rows.length ? rows.map(function(article){
+      var active = state.current && article.id === state.current.id ? ' active' : '';
+      return '<button class="article-item'+active+'" type="button" data-id="'+article.id+'"><b>'+escapeHtml(article.title)+'</b><span>'+escapeHtml(article.module)+' · '+escapeHtml(article.platform || 'pc')+'</span></button>';
+    }).join('') : '<div class="empty">Chưa có bài nào trong tenant này.</div>';
+    Array.prototype.forEach.call(document.querySelectorAll('.article-item'), function(btn){
+      btn.addEventListener('click', function(){ selectArticle(btn.dataset.id); });
+    });
+  }
+  function escapeHtml(value){
+    return String(value || '').replace(/[&<>"']/g, function(ch){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];
+    });
+  }
+  function emptyArticle(){
+    return {id:'', tenantId:state.tenantId, title:'', platform:'pc', module:'', desc:'', views:0, time:'3 phút', keywords:'', steps:[], notes:[], attachments:[]};
+  }
+  function selectArticle(id){
+    state.current = tenantArticles().find(function(article){ return article.id === id; }) || emptyArticle();
+    fillForm();
+    renderList();
+  }
+  function fillForm(){
+    var a = state.current || emptyArticle();
+    $('#articleIdLabel').textContent = a.id || 'sẽ tự tạo khi lưu/upload';
+    $('#title').value = a.title || '';
+    $('#moduleName').value = a.module || '';
+    $('#platform').value = a.platform || 'pc';
+    $('#time').value = a.time || '3 phút';
+    $('#views').value = Number(a.views || 0);
+    $('#desc').value = a.desc || '';
+    $('#keywords').value = a.keywords || '';
+    $('#steps').value = (a.steps || []).map(function(step){ return (step.title || '') + (step.body ? ' | ' + step.body : ''); }).join('\n');
+    $('#notes').value = (a.notes || []).join('\n');
+    renderAttachments();
+  }
+  function readForm(){
+    var id = (state.current && state.current.id) || slug($('#title').value || $('#moduleName').value);
+    return {
+      id:id,
+      tenantId:state.tenantId,
+      title:$('#title').value,
+      platform:$('#platform').value,
+      module:$('#moduleName').value,
+      desc:$('#desc').value,
+      views:Number($('#views').value || 0),
+      time:$('#time').value,
+      keywords:$('#keywords').value,
+      steps:$('#steps').value.split('\n').map(function(line){
+        var parts = line.split('|');
+        return {title:(parts.shift() || '').trim(), body:parts.join('|').trim()};
+      }).filter(function(step){ return step.title || step.body; }),
+      notes:$('#notes').value.split('\n').map(function(line){ return line.trim(); }).filter(Boolean),
+      attachments:(state.current && state.current.attachments) || [],
+      updatedAt:new Date().toISOString()
+    };
+  }
+  function renderAttachments(){
+    var files = (state.current && state.current.attachments) || [];
+    $('#attachments').innerHTML = files.length ? files.map(function(file){
+      var size = file.size ? Math.round(file.size / 1024) + 'KB' : '';
+      return '<div class="attachment"><i class="fa-solid '+iconFor(file)+'"></i><div><b>'+escapeHtml(file.name)+'</b><span>'+escapeHtml(file.type || 'file')+' · '+size+'</span></div><button class="btn danger" type="button" data-remove="'+file.id+'"><i class="fa-solid fa-xmark"></i></button></div>';
+    }).join('') : '<div class="empty">Chưa có file đính kèm.</div>';
+    Array.prototype.forEach.call(document.querySelectorAll('[data-remove]'), function(btn){
+      btn.addEventListener('click', function(){
+        state.current.attachments = (state.current.attachments || []).filter(function(file){ return file.id !== btn.dataset.remove; });
+        renderAttachments();
+      });
+    });
+  }
+  function fileToDataUrl(file){
+    return new Promise(function(resolve, reject){
+      var reader = new FileReader();
+      reader.onload = function(){ resolve(reader.result); };
+      reader.onerror = function(){ reject(new Error('Không đọc được file.')); };
+      reader.readAsDataURL(file);
+    });
+  }
+  async function uploadFiles(files){
+    if(!state.tenantId){ setStatus('Vui lòng chọn tenant trước khi upload.', false); return; }
+    state.current = readForm();
+    if(!state.current.id) state.current.id = slug(state.current.title || state.current.module);
+    fillForm();
+    for(var i = 0; i < files.length; i += 1){
+      setStatus('Đang upload ' + files[i].name + '...', true);
+      var dataUrl = await fileToDataUrl(files[i]);
+      var payload = await requestJson('/api/help-upload', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({tenantId:state.tenantId, articleId:state.current.id, fileName:files[i].name, dataUrl:dataUrl})
+      });
+      state.current.attachments = state.current.attachments || [];
+      state.current.attachments.push(payload.attachment);
+    }
+    renderAttachments();
+    setStatus('Upload xong. Bấm Lưu bài để gắn file vào nội dung cho người xem.', true);
+    $('#fileUpload').value = '';
+  }
+  async function saveArticle(){
+    if(!state.tenantId){ setStatus('Vui lòng chọn tenant.', false); return; }
+    var article = readForm();
+    if(!article.title || !article.module){ setStatus('Vui lòng nhập tiêu đề và module.', false); return; }
+    setStatus('Đang lưu bài...', true);
+    var payload = await requestJson('/api/help-admin-data', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({action:'saveArticle', tenantId:state.tenantId, article:article})
+    });
+    state.store = payload.store;
+    state.current = payload.article;
+    renderModules();
+    renderList();
+    fillForm();
+    setStatus('Đã lưu bài lên production source.', true);
+  }
+  async function deleteArticle(){
+    if(!state.current || !state.current.id){ setStatus('Chưa chọn bài để xóa.', false); return; }
+    if(!confirm('Xóa bài "' + state.current.title + '" khỏi tenant hiện tại?')) return;
+    setStatus('Đang xóa bài...', true);
+    var payload = await requestJson('/api/help-admin-data', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({action:'deleteArticle', tenantId:state.tenantId, articleId:state.current.id})
+    });
+    state.store = payload.store;
+    state.current = emptyArticle();
+    renderModules();
+    renderList();
+    fillForm();
+    setStatus('Đã xóa bài.', true);
+  }
+  async function init(){
+    try{
+      state.store = await requestJson('/api/help-admin-data');
+      state.tenantId = (state.store.tenants[0] && state.store.tenants[0].id) || '';
+      renderTenants();
+      renderModules();
+      state.current = tenantArticles()[0] || emptyArticle();
+      fillForm();
+      renderList();
+    }catch(error){
+      if(String(error.message || '').indexOf('Admin login') !== -1){
+        location.href = '/admin.html?next=/help-admin.html';
+        return;
+      }
+      setStatus(error.message, false);
+    }
+  }
+  $('#tenantSelect').addEventListener('change', function(){
+    state.tenantId = this.value;
+    state.current = tenantArticles()[0] || emptyArticle();
+    renderModules();
+    fillForm();
+    renderList();
+    setStatus('', true);
+  });
+  $('#articleSearch').addEventListener('input', renderList);
+  $('#newArticle').addEventListener('click', function(){ state.current = emptyArticle(); fillForm(); renderList(); });
+  $('#saveArticle').addEventListener('click', function(){ saveArticle().catch(function(error){ setStatus(error.message, false); }); });
+  $('#deleteArticle').addEventListener('click', function(){ deleteArticle().catch(function(error){ setStatus(error.message, false); }); });
+  $('#fileUpload').addEventListener('change', function(){ uploadFiles(Array.prototype.slice.call(this.files || [])).catch(function(error){ setStatus(error.message, false); }); });
+  init();
+})();
+</script>
+</body>
+</html>

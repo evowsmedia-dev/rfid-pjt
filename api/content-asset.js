@@ -1,17 +1,25 @@
 const path = require('path');
-const { githubConfig, githubGetContent } = require('./_shared');
+const { getSession, githubConfig, githubGetContent } = require('./_shared');
+const { getHelpSession } = require('./_help');
 
 const MIME_BY_EXT = {
+  '.doc': 'application/msword',
+  '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
   '.gif': 'image/gif',
-  '.jpg': 'image/jpeg',
   '.jpeg': 'image/jpeg',
-  '.png': 'image/png',
-  '.webp': 'image/webp',
+  '.jpg': 'image/jpeg',
   '.m4v': 'video/mp4',
   '.mov': 'video/quicktime',
   '.mp4': 'video/mp4',
   '.ogv': 'video/ogg',
-  '.webm': 'video/webm'
+  '.pdf': 'application/pdf',
+  '.png': 'image/png',
+  '.ppt': 'application/vnd.ms-powerpoint',
+  '.pptx': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+  '.webm': 'video/webm',
+  '.webp': 'image/webp',
+  '.xls': 'application/vnd.ms-excel',
+  '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 };
 
 function sendText(res, status, message) {
@@ -28,6 +36,12 @@ function safeAssetPath(value) {
   return normalized;
 }
 
+function helpTenantFromPath(assetPath) {
+  const parts = assetPath.split('/');
+  if (parts[0] === 'content-assets' && parts[1] === 'help-center' && parts[2]) return parts[2];
+  return '';
+}
+
 module.exports = async function handler(req, res) {
   try {
     if (req.method !== 'GET' && req.method !== 'HEAD') return sendText(res, 405, 'Method not allowed.');
@@ -35,6 +49,14 @@ module.exports = async function handler(req, res) {
     const url = new URL(req.url, `https://${req.headers.host || 'localhost'}`);
     const assetPath = safeAssetPath(url.searchParams.get('path'));
     if (!assetPath) return sendText(res, 400, 'Invalid asset path.');
+    const helpTenantId = helpTenantFromPath(assetPath);
+    if (helpTenantId) {
+      const helpSession = getHelpSession(req);
+      const adminSession = getSession(req);
+      if (!adminSession && (!helpSession || helpSession.tenantId !== helpTenantId)) {
+        return sendText(res, 403, 'Asset forbidden.');
+      }
+    }
 
     const config = githubConfig();
     if (!config.owner || !config.repo) return sendText(res, 500, 'GITHUB_REPO must be owner/repo.');

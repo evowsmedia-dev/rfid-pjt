@@ -56,7 +56,7 @@
       var status = $('#helpLoginStatus');
       status.textContent = 'Đang đăng nhập...';
       try{
-        await requestJson('/api/help-login', {
+        await requestJson('/api/help?action=login', {
           method:'POST',
           headers:{'Content-Type':'application/json'},
           body: JSON.stringify({username:this.username.value, password:this.password.value})
@@ -110,7 +110,7 @@
     bar.innerHTML = '<i class="fa-solid fa-building"></i> <span></span> <button class="ghost-btn" type="button" style="padding:4px 7px" id="helpLogout">Thoát</button>';
     nav.appendChild(bar);
     $('#helpLogout').addEventListener('click', async function(){
-      await requestJson('/api/help-logout', {method:'POST'}).catch(function(){});
+      await requestJson('/api/help?action=logout', {method:'POST'}).catch(function(){});
       currentUser = null;
       currentTenant = null;
       showLogin();
@@ -214,7 +214,7 @@
   }
 
   async function loadContent(){
-    var payload = await requestJson('/api/help-content');
+    var payload = await requestJson('/api/help?action=content');
     currentUser = payload.user;
     currentTenant = payload.tenant;
     modules = payload.modules || [];
@@ -371,7 +371,7 @@
     bindChat();
     bindTicket();
     try{
-      var session = await requestJson('/api/help-session');
+      var session = await requestJson('/api/help?action=session');
       if(!session.authenticated) {
         showLogin();
         return;

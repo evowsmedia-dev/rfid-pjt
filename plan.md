@@ -303,7 +303,7 @@ Phạm vi triển khai V1:
 
 - Người dùng Help Center đăng nhập bằng tài khoản riêng, độc lập với admin editor.
 - Session người dùng chứa `tenantId`, `userId`, `displayName`, `role`.
-- API `/api/help-content` chỉ trả dữ liệu theo `tenantId` trong session, không tin query string hoặc localStorage.
+- API `/api/help?action=content` chỉ trả dữ liệu theo `tenantId` trong session, không tin query string hoặc localStorage.
 - Dữ liệu Help Center nằm trong `help-center-content.json`, gồm `tenants`, `users`, `modules`, `articles`.
 - File upload của Help Center lưu riêng theo tenant/article tại `content-assets/help-center/<tenantId>/<articleId>/`.
 - File được xem/tải qua `/api/content-asset`; asset Help Center yêu cầu người dùng cùng tenant hoặc admin.

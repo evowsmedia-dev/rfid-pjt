@@ -252,7 +252,7 @@ h1{font-size:24px;margin:0 0 6px}.topbar p{margin:0;color:var(--muted);font-size
     for(var i = 0; i < files.length; i += 1){
       setStatus('Đang upload ' + files[i].name + '...', true);
       var dataUrl = await fileToDataUrl(files[i]);
-      var payload = await requestJson('/api/help-upload', {
+      var payload = await requestJson('/api/help?action=upload', {
         method:'POST',
         headers:{'Content-Type':'application/json'},
         body:JSON.stringify({tenantId:state.tenantId, articleId:state.current.id, fileName:files[i].name, dataUrl:dataUrl})
@@ -269,7 +269,7 @@ h1{font-size:24px;margin:0 0 6px}.topbar p{margin:0;color:var(--muted);font-size
     var article = readForm();
     if(!article.title || !article.module){ setStatus('Vui lòng nhập tiêu đề và module.', false); return; }
     setStatus('Đang lưu bài...', true);
-    var payload = await requestJson('/api/help-admin-data', {
+    var payload = await requestJson('/api/help?action=admin-data', {
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({action:'saveArticle', tenantId:state.tenantId, article:article})
@@ -285,7 +285,7 @@ h1{font-size:24px;margin:0 0 6px}.topbar p{margin:0;color:var(--muted);font-size
     if(!state.current || !state.current.id){ setStatus('Chưa chọn bài để xóa.', false); return; }
     if(!confirm('Xóa bài "' + state.current.title + '" khỏi tenant hiện tại?')) return;
     setStatus('Đang xóa bài...', true);
-    var payload = await requestJson('/api/help-admin-data', {
+    var payload = await requestJson('/api/help?action=admin-data', {
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({action:'deleteArticle', tenantId:state.tenantId, articleId:state.current.id})
@@ -299,7 +299,7 @@ h1{font-size:24px;margin:0 0 6px}.topbar p{margin:0;color:var(--muted);font-size
   }
   async function init(){
     try{
-      state.store = await requestJson('/api/help-admin-data');
+      state.store = await requestJson('/api/help?action=admin-data');
       state.tenantId = (state.store.tenants[0] && state.store.tenants[0].id) || '';
       renderTenants();
       renderModules();

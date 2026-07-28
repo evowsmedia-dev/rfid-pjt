@@ -143,8 +143,9 @@
       "page-benefits:h1:1": "Tương tác User - CS trên cùng 1 hệ thống",
       "page-benefits:p:1": "Tre Support gom tìm kiếm hướng dẫn, nội dung đa phương tiện, trợ lý AI, hỗ trợ người thật và ticket vào một luồng thống nhất. Người dùng giải quyết vấn đề nhanh hơn; đội IT giảm hỏi đáp lặp lại và nhận ticket đầy đủ dữ liệu ngay từ đầu.",
       "page-home:h1:1": "Gặp vướng mắc?&nbsp;<br>Hỏi <span style=\"color:var(--brand-700)\">Tre Support</span>.",
-      "page-benefits:h3:2": "<i class=\"fa-solid fa-screwdriver-wrench\" style=\"color:var(--brand-700)\"></i> Lợi ích cho bên cung cấp phần mềm"
+      "page-benefits:h3:2": "<i class=\"fa-solid fa-screwdriver-wrench\" style=\"color:var(--brand-700)\"></i> Lợi ích cho bên cung cấp phần mềm",
+      "page-benefits:li:7": "<i class=\"fa-solid fa-circle-dot\"></i><span><span class=\"dev-code\">https://support.tre360.vn/admin</span>: quản trị tenant, user, bài viết, file hướng dẫn và phân quyền.</span>"
     }
   },
-  "updatedAt": "2026-07-27T01:28:23.253Z"
+  "updatedAt": "2026-07-28T02:47:14.338Z"
 }

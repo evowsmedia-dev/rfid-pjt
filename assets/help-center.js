@@ -188,7 +188,7 @@
     var bar = document.createElement('span');
     bar.id = 'helpTenantBar';
     bar.className = 'tenant-pill';
-    bar.innerHTML = '<i class="fa-solid fa-building"></i> <span></span> <button class="ghost-btn" type="button" style="padding:4px 7px" id="helpLogout">Thoát</button>';
+    bar.innerHTML = '<span></span> <button class="ghost-btn" type="button" style="padding:4px 7px" id="helpLogout">Thoát</button>';
     nav.appendChild(bar);
     $('#helpLogout').addEventListener('click', async function(){
       await requestJson('/api/help?action=logout', {method:'POST'}).catch(function(){});

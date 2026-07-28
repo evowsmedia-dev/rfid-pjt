@@ -139,11 +139,13 @@
   }
 
   function updateSolutionLoginButton(){
-    var button = $('#helpLoginOpen');
-    if(!button) return;
-    button.innerHTML = isAuthenticated
-      ? '<i class="fa-solid fa-book-open"></i> HDSD của tôi'
-      : '<i class="fa-solid fa-right-to-bracket"></i> Đăng nhập khách ngoài';
+    var label = isAuthenticated ? 'HDSD của tôi' : 'Đăng nhập';
+    var desktop = $('#helpLoginOpen');
+    var mobile = $('#helpLoginOpenMobile');
+    if(desktop) desktop.innerHTML = isAuthenticated
+      ? '<i class="fa-solid fa-book-open"></i> '+label
+      : '<i class="fa-solid fa-right-to-bracket"></i> '+label;
+    if(mobile) mobile.textContent = label;
   }
 
   function removeTenantBar(){
@@ -355,6 +357,11 @@
       });
     });
     if($('#helpLoginOpen')) $('#helpLoginOpen').addEventListener('click', function(){
+      if(isAuthenticated) openTenantPage('home').catch(function(error){ toast(error.message); });
+      else showLogin();
+    });
+    if($('#helpLoginOpenMobile')) $('#helpLoginOpenMobile').addEventListener('click', function(event){
+      event.preventDefault();
       if(isAuthenticated) openTenantPage('home').catch(function(error){ toast(error.message); });
       else showLogin();
     });

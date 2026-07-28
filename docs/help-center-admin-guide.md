@@ -1,8 +1,8 @@
-# Hướng dẫn quản trị Tre Smart Help Center
+# Hướng dẫn quản trị Tre Support
 
 ## Mục tiêu
 
-Tre Smart Help Center dùng chung một web app cho nội bộ và khách hàng ngoài, nhưng nội dung hướng dẫn và file đính kèm được tách riêng theo tenant.
+Tre Support dùng chung một web app cho nội bộ và khách hàng ngoài, nhưng nội dung hướng dẫn và file đính kèm được tách riêng theo tenant.
 
 ## Đăng nhập người dùng
 
@@ -32,7 +32,7 @@ Nội dung sau khi lưu được ghi vào `help-center-content.json` trên GitHu
 
 ## Upload file
 
-File Help Center được lưu tại:
+File Tre Support được lưu tại:
 
 `content-assets/help-center/<tenantId>/<articleId>/<file-name>`
 
@@ -49,4 +49,4 @@ Sau khi upload, admin cần bấm `Lưu bài` để file được gắn vào art
 - Login `internal` chỉ thấy nội dung nội bộ.
 - Login `customer-a` chỉ thấy nội dung Khách hàng A.
 - Login `customer-b` chỉ thấy nội dung Khách hàng B.
-- Link file Help Center chỉ mở được khi có session đúng tenant hoặc session admin.
+- Link file Tre Support chỉ mở được khi có session đúng tenant hoặc session admin.

@@ -252,7 +252,7 @@ Phạm vi đã triển khai:
 
 - Trang chủ `index.html` dùng brand `Tre ERP Docs`.
 - Module Nhân sự có tài liệu `HDSD App Đào tạo & Học hỏi CBQL` tại `Di_hoc_hoi.html`.
-- Menu level 1 `PA Tre Smart Help Center` mở tài liệu `Tre_smart_help_center.html`.
+- Menu level 1 `Tre Support` mở tài liệu `Tre_smart_help_center.html`.
 - Tài liệu RFID hiện có được nhóm vào module Kho.
 - Các URL RFID cũ ở root được giữ bằng redirect/stub sang thư mục `docs/`.
 - Tất cả page tài liệu được gắn sidebar portal ERP cố định và sidebar nội bộ của tài liệu vẫn giữ nguyên.
@@ -295,21 +295,21 @@ Biến môi trường cần có trên Vercel:
 - `ADMIN_PASSWORD`.
 - `AUTH_SECRET`.
 
-## 17. Tre Smart Help Center đa khách hàng
+## 17. Tre Support đa khách hàng
 
-`Tre_smart_help_center.html` được nâng cấp thành Help Center có đăng nhập người dùng và tách nội dung theo tenant.
+`Tre_smart_help_center.html` được nâng cấp thành Tre Support có đăng nhập người dùng và tách nội dung theo tenant.
 
 Phạm vi triển khai V1:
 
-- Người dùng Help Center đăng nhập bằng tài khoản riêng, độc lập với admin editor.
+- Người dùng Tre Support đăng nhập bằng tài khoản riêng, độc lập với admin editor.
 - Session người dùng chứa `tenantId`, `userId`, `displayName`, `role`.
 - API `/api/help?action=content` chỉ trả dữ liệu theo `tenantId` trong session, không tin query string hoặc localStorage.
-- Dữ liệu Help Center nằm trong `help-center-content.json`, gồm `tenants`, `users`, `modules`, `articles`.
-- File upload của Help Center lưu riêng theo tenant/article tại `content-assets/help-center/<tenantId>/<articleId>/`.
-- File được xem/tải qua `/api/content-asset`; asset Help Center yêu cầu người dùng cùng tenant hoặc admin.
+- Dữ liệu Tre Support nằm trong `help-center-content.json`, gồm `tenants`, `users`, `modules`, `articles`.
+- File upload của Tre Support lưu riêng theo tenant/article tại `content-assets/help-center/<tenantId>/<articleId>/`.
+- File được xem/tải qua `/api/content-asset`; asset Tre Support yêu cầu người dùng cùng tenant hoặc admin.
 - Admin quản trị nội dung tại `/help-admin.html`, bắt buộc chọn tenant trước khi tạo/sửa bài.
 - Form admin hỗ trợ nhập module, platform, tiêu đề, mô tả, keywords, các bước hướng dẫn, lưu ý và upload nhiều file đính kèm.
-- Người xem Help Center chỉ thấy dữ liệu, hướng dẫn và file đính kèm thuộc tenant của tài khoản đăng nhập.
+- Người xem Tre Support chỉ thấy dữ liệu, hướng dẫn và file đính kèm thuộc tenant của tài khoản đăng nhập.
 
 Giới hạn file V1:
 

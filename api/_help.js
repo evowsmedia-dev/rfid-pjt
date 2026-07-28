@@ -84,7 +84,7 @@ function getHelpSession(req) {
 function requireHelpSession(req) {
   const session = getHelpSession(req);
   if (!session) {
-    const error = new Error('Help Center login required.');
+    const error = new Error('Tre Support login required.');
     error.statusCode = 401;
     throw error;
   }

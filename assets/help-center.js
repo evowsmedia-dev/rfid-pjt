@@ -38,7 +38,7 @@
     shell.className = 'help-login-shell';
     shell.innerHTML =
       '<form class="help-login-card" id="helpLoginForm">'+
-        '<h1>Đăng nhập Help Center</h1>'+
+        '<h1>Đăng nhập Tre Support</h1>'+
         '<p>Vui lòng đăng nhập để xem đúng bộ hướng dẫn dành cho nội bộ hoặc khách hàng của bạn.</p>'+
         '<label for="helpUsername">Tài khoản</label>'+
         '<input id="helpUsername" name="username" autocomplete="username" autofocus>'+

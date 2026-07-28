@@ -210,6 +210,25 @@
     .benefit-list{display:grid;gap:12px}
     .benefit-item{display:flex;gap:12px;color:#465149;line-height:1.5}
     .benefit-item i{color:var(--brand-700);margin-top:3px}
+    .dev-handoff{margin:26px auto 8px;display:grid;gap:18px}
+    .dev-heading{background:#fff;border:1px solid var(--line);border-radius:24px;padding:24px;box-shadow:var(--shadow)}
+    .dev-heading h2{font-size:34px;margin:10px 0 8px}
+    .dev-heading p{margin:0;color:var(--muted);line-height:1.7;max-width:920px}
+    .dev-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+    .dev-card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:20px;box-shadow:var(--shadow)}
+    .dev-card h3{margin:0 0 14px;display:flex;align-items:center;gap:10px}
+    .dev-card h3 i{color:var(--brand-700)}
+    .dev-list{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+    .dev-list li{display:flex;gap:10px;color:#465149;line-height:1.5}
+    .dev-list li i{color:var(--brand-700);margin-top:3px}
+    .dev-table-wrap{overflow:auto;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}
+    .dev-table{width:100%;min-width:760px;border-collapse:collapse}
+    .dev-table caption{text-align:left;padding:16px 16px 4px;font-size:18px;font-weight:900;color:#243126}
+    .dev-table th,.dev-table td{padding:14px 16px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top;font-size:14px;line-height:1.5}
+    .dev-table th{background:var(--soft);color:#243126;font-weight:900}
+    .dev-table tr:last-child td{border-bottom:0}
+    .dev-tag{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:999px;padding:4px 8px;background:#fbfdf7;color:var(--brand-700);font-size:12px;font-weight:800}
+    .dev-code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;color:#243126;background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:2px 6px}
 
     .toast{
       position:fixed;right:18px;bottom:18px;z-index:100;background:#17211a;color:#fff;padding:14px 16px;border-radius:14px;
@@ -325,7 +344,7 @@
       .search-wrap .primary-btn{width:100%}
       .platform-card{min-width:0;flex:1}
       .section{padding:32px 0}
-      .module-grid,.article-grid,.benefit-grid,.impact-grid,.faq-grid{grid-template-columns:1fr}
+      .module-grid,.article-grid,.benefit-grid,.impact-grid,.faq-grid,.dev-grid{grid-template-columns:1fr}
       .section-head{align-items:flex-start;flex-direction:column}
       .toolbar{grid-template-columns:1fr}
       .toolbar .control:first-child{grid-column:auto}
@@ -572,6 +591,195 @@
           <div class="benefit-item"><i class="fa-solid fa-check"></i><span>Dữ liệu tìm kiếm và ticket giúp nhận diện chức năng khó dùng hoặc lỗi nhiều.</span></div>
           <div class="benefit-item"><i class="fa-solid fa-check"></i><span>Tạo kho tri thức dùng lại, giảm phụ thuộc vào từng cá nhân hỗ trợ.</span></div>
         </div>
+      </div>
+    </div>
+
+    <div class="container dev-handoff">
+      <div class="dev-heading">
+        <span class="eyebrow"><i class="fa-solid fa-code-branch"></i> Tài liệu cho đội dev</span>
+        <h2>Tre Support · Phạm vi web app</h2>
+        <p>Tre Support là cổng hướng dẫn sử dụng và hỗ trợ tập trung cho hệ thống ERP. V1 giữ trang giải pháp public, demo web app cho nội bộ, kho hướng dẫn theo tenant, quản trị nội dung, upload file đính kèm và nền tảng mở rộng cho khách hàng ngoài đăng nhập xem đúng tài liệu của họ.</p>
+      </div>
+
+      <div class="dev-grid">
+        <div class="dev-card">
+          <h3><i class="fa-solid fa-sitemap"></i> Sitemap V1</h3>
+          <ul class="dev-list">
+            <li><i class="fa-solid fa-circle-dot"></i><span><span class="dev-code">/Tre_smart_help_center.html</span>: trang giải pháp public và điểm vào demo.</span></li>
+            <li><i class="fa-solid fa-circle-dot"></i><span><span class="dev-code">Demo Web App</span>: trang chủ, kho hướng dẫn, chi tiết bài viết, ticket hỗ trợ và trợ lý hỗ trợ.</span></li>
+            <li><i class="fa-solid fa-circle-dot"></i><span><span class="dev-code">/help-admin.html</span>: quản trị nội dung Help Center theo tenant.</span></li>
+            <li><i class="fa-solid fa-circle-dot"></i><span><span class="dev-code">/admin.html</span>: quản trị chỉnh sửa nội dung HTML tài liệu ERP hiện có.</span></li>
+            <li><i class="fa-solid fa-circle-dot"></i><span><span class="dev-code">/api/help</span> và <span class="dev-code">/api/content-asset</span>: API nội dung, upload và proxy file.</span></li>
+          </ul>
+        </div>
+
+        <div class="dev-card">
+          <h3><i class="fa-solid fa-route"></i> Luồng chính</h3>
+          <ul class="dev-list">
+            <li><i class="fa-solid fa-check"></i><span>Người xem public mở trang giải pháp, bấm demo, tìm hướng dẫn, thử chat hoặc tạo ticket giả lập.</span></li>
+            <li><i class="fa-solid fa-check"></i><span>Khách ngoài đăng nhập bằng tài khoản được cấp, hệ thống lấy tenant từ session và chỉ trả về tài liệu gắn tenant đó.</span></li>
+            <li><i class="fa-solid fa-check"></i><span>Admin đăng nhập, chọn tenant nội bộ hoặc khách hàng ngoài, tạo/sửa bài hướng dẫn và upload file đi kèm.</span></li>
+            <li><i class="fa-solid fa-check"></i><span>Người dùng mở lại link sau khi lưu vẫn xem được nội dung và file từ server, không phụ thuộc cache trình duyệt.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="dev-table-wrap">
+        <table class="dev-table">
+          <caption>Danh sách màn hình</caption>
+          <thead>
+            <tr>
+              <th>Màn hình</th>
+              <th>Người dùng</th>
+              <th>Mục tiêu</th>
+              <th>Ghi chú UI</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Trang giải pháp</strong></td>
+              <td>Public, Sales, BA, Dev</td>
+              <td>Trình bày giá trị, lợi ích, phạm vi triển khai và demo Tre Support.</td>
+              <td>Giữ layout hiện tại, bổ sung nội dung dev bên dưới phần lợi ích.</td>
+            </tr>
+            <tr>
+              <td><strong>Demo Home</strong></td>
+              <td>Nội bộ, khách demo</td>
+              <td>Điểm vào tìm kiếm, chọn nền tảng, module và mở các luồng hỗ trợ.</td>
+              <td>Giao diện giống khách nội bộ; không tách nút “HDSD của tôi”.</td>
+            </tr>
+            <tr>
+              <td><strong>Kho hướng dẫn</strong></td>
+              <td>User theo tenant</td>
+              <td>Hiển thị danh sách bài hướng dẫn theo module, nền tảng và từ khóa.</td>
+              <td>Nội dung lọc theo tenant từ session, không tin query string.</td>
+            </tr>
+            <tr>
+              <td><strong>Chi tiết bài viết</strong></td>
+              <td>User theo tenant</td>
+              <td>Xem mô tả, từng bước, lưu ý, ảnh/video và file đính kèm.</td>
+              <td>Media responsive, file có link xem/tải qua proxy asset.</td>
+            </tr>
+            <tr>
+              <td><strong>Ticket hỗ trợ</strong></td>
+              <td>User ERP</td>
+              <td>Gửi lỗi/yêu cầu kèm module, nền tảng, mức độ và file minh chứng.</td>
+              <td>V1 là mock UI; phase sau tích hợp ticket thật.</td>
+            </tr>
+            <tr>
+              <td><strong>Trợ lý hỗ trợ</strong></td>
+              <td>User ERP</td>
+              <td>Gợi ý bài viết, bước xử lý và đường dẫn tạo ticket khi cần.</td>
+              <td>V1 giả lập hội thoại; phase sau nối AI/search index.</td>
+            </tr>
+            <tr>
+              <td><strong>Đăng nhập khách ngoài</strong></td>
+              <td>Khách hàng ngoài</td>
+              <td>Xác thực user và xác định tenant để xem đúng bộ hướng dẫn.</td>
+              <td>Nút đăng nhập đã có trên header; wiring thật là phase kế tiếp.</td>
+            </tr>
+            <tr>
+              <td><strong>Help Admin</strong></td>
+              <td>Admin Tre</td>
+              <td>Quản trị bài hướng dẫn, tenant, file upload và metadata.</td>
+              <td>Bắt buộc chọn tenant trước khi tạo/sửa nội dung.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="dev-table-wrap">
+        <table class="dev-table">
+          <caption>Bảng mô tả chức năng</caption>
+          <thead>
+            <tr>
+              <th>Nhóm chức năng</th>
+              <th>Chức năng</th>
+              <th>Mô tả</th>
+              <th>Trạng thái V1</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="dev-tag">Public</span></td>
+              <td>Trang giải pháp và demo</td>
+              <td>Cho phép người xem hiểu mô hình hỗ trợ, mở demo và thử các luồng chính.</td>
+              <td>Đang dùng</td>
+            </tr>
+            <tr>
+              <td><span class="dev-tag">Content</span></td>
+              <td>Search/filter hướng dẫn</td>
+              <td>Tìm bài theo tiêu đề, module, platform, keyword và mô tả.</td>
+              <td>Đang dùng</td>
+            </tr>
+            <tr>
+              <td><span class="dev-tag">Content</span></td>
+              <td>Chi tiết bài hướng dẫn</td>
+              <td>Render structured content gồm mô tả, step, note, media và attachment.</td>
+              <td>Đang dùng</td>
+            </tr>
+            <tr>
+              <td><span class="dev-tag">Tenant</span></td>
+              <td>Tách nội dung theo khách hàng</td>
+              <td>Mỗi tenant có bộ module, article và attachment riêng; user chỉ thấy dữ liệu của tenant trong session.</td>
+              <td>Nền tảng đã có, cần hoàn thiện login thật</td>
+            </tr>
+            <tr>
+              <td><span class="dev-tag">Admin</span></td>
+              <td>Tạo/sửa bài hướng dẫn</td>
+              <td>Admin chọn tenant, nhập nội dung, thêm bước, lưu ý, keyword và file đính kèm.</td>
+              <td>Đang dùng</td>
+            </tr>
+            <tr>
+              <td><span class="dev-tag">Upload</span></td>
+              <td>Upload ảnh, video, tài liệu</td>
+              <td>Lưu file theo tenant/article, trả metadata và URL public proxy để người khác mở được sau reload.</td>
+              <td>Đang dùng</td>
+            </tr>
+            <tr>
+              <td><span class="dev-tag">Support</span></td>
+              <td>Chat và ticket</td>
+              <td>Thu thập câu hỏi, thông tin lỗi, file minh chứng và gợi ý bài liên quan.</td>
+              <td>Mock UI</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="dev-grid">
+        <div class="dev-card">
+          <h3><i class="fa-solid fa-database"></i> Data contract</h3>
+          <ul class="dev-list">
+            <li><i class="fa-solid fa-table"></i><span><span class="dev-code">tenants</span>: id, name, type, active.</span></li>
+            <li><i class="fa-solid fa-table"></i><span><span class="dev-code">users</span>: username, displayName, tenantId, role, passwordHash, active.</span></li>
+            <li><i class="fa-solid fa-table"></i><span><span class="dev-code">modules</span>: tenantId, name, icon, description, displayOrder.</span></li>
+            <li><i class="fa-solid fa-table"></i><span><span class="dev-code">articles</span>: tenantId, module, platform, title, description, keywords, steps, notes, attachments.</span></li>
+            <li><i class="fa-solid fa-table"></i><span><span class="dev-code">attachments</span>: originalName, mime, size, type, assetPath, url, uploadedAt, uploadedBy.</span></li>
+          </ul>
+        </div>
+
+        <div class="dev-card">
+          <h3><i class="fa-solid fa-plug"></i> API dự kiến</h3>
+          <ul class="dev-list">
+            <li><i class="fa-solid fa-link"></i><span><span class="dev-code">GET /api/help?action=session</span>: kiểm tra phiên đăng nhập hiện tại.</span></li>
+            <li><i class="fa-solid fa-link"></i><span><span class="dev-code">POST /api/help?action=login</span>: đăng nhập user Help Center.</span></li>
+            <li><i class="fa-solid fa-link"></i><span><span class="dev-code">GET /api/help?action=content</span>: trả module/article theo tenant trong session.</span></li>
+            <li><i class="fa-solid fa-link"></i><span><span class="dev-code">GET /api/help?action=admin-data</span>: trả dữ liệu quản trị cho admin.</span></li>
+            <li><i class="fa-solid fa-link"></i><span><span class="dev-code">POST /api/help?action=upload</span>: upload file theo tenant và article.</span></li>
+            <li><i class="fa-solid fa-link"></i><span><span class="dev-code">GET /api/content-asset?path=...</span>: proxy file đã lưu để xem/tải.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="dev-card">
+        <h3><i class="fa-solid fa-shield-halved"></i> Yêu cầu phi chức năng và roadmap</h3>
+        <ul class="dev-list">
+          <li><i class="fa-solid fa-lock"></i><span>Tenant isolation là bắt buộc: API lấy tenant từ session server-side, không lấy từ query string hoặc localStorage.</span></li>
+          <li><i class="fa-solid fa-mobile-screen"></i><span>Responsive cho desktop/mobile; bảng, media và khung chat không được tràn ngang viewport.</span></li>
+          <li><i class="fa-solid fa-file-shield"></i><span>Giới hạn upload V1: ảnh 5MB, video 50MB, tài liệu 20MB; kiểm tra MIME và extension.</span></li>
+          <li><i class="fa-solid fa-clock-rotate-left"></i><span>Nội dung/file sau khi lưu phải tồn tại trên server để người khác mở link vẫn xem được.</span></li>
+          <li><i class="fa-solid fa-forward"></i><span>Phase sau: wiring nút đăng nhập thật, SSO/ERP account, ticket thật, analytics tìm kiếm, versioning bài viết và phân quyền admin theo tenant.</span></li>
+        </ul>
       </div>
     </div>
   </section>

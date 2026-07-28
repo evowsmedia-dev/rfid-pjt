@@ -596,93 +596,102 @@
 
     <div class="container dev-handoff">
       <div class="dev-heading">
-        <span class="eyebrow"><i class="fa-solid fa-code-branch"></i> Tài liệu cho đội dev</span>
-        <h2>Tre Support · Phạm vi web app</h2>
-        <p>Tre Support là cổng hướng dẫn sử dụng và hỗ trợ tập trung cho hệ thống ERP. V1 giữ trang giải pháp public, demo web app cho nội bộ, kho hướng dẫn theo tenant, quản trị nội dung, upload file đính kèm và nền tảng mở rộng cho khách hàng ngoài đăng nhập xem đúng tài liệu của họ.</p>
+        <span class="eyebrow"><i class="fa-solid fa-code-branch"></i> Đặc tả web app</span>
+        <h2>Tre Support · Nội dung cần phát triển</h2>
+        <p>Tre Support là web app vận hành trung tâm hỗ trợ và hướng dẫn sử dụng cho người dùng ERP. Phần dưới đây mô tả cấu trúc màn hình, chức năng, quyền truy cập, dữ liệu và API cần thiết để đội dev triển khai app thật; trang giải pháp và bản demo chỉ là lớp giới thiệu trước khi người dùng vào ứng dụng.</p>
       </div>
 
       <div class="dev-grid">
         <div class="dev-card">
-          <h3><i class="fa-solid fa-sitemap"></i> Sitemap V1</h3>
+          <h3><i class="fa-solid fa-sitemap"></i> Sitemap web app</h3>
           <ul class="dev-list">
-            <li><i class="fa-solid fa-circle-dot"></i><span><span class="dev-code">/Tre_smart_help_center.html</span>: trang giải pháp public và điểm vào demo.</span></li>
-            <li><i class="fa-solid fa-circle-dot"></i><span><span class="dev-code">Demo Web App</span>: trang chủ, kho hướng dẫn, chi tiết bài viết, ticket hỗ trợ và trợ lý hỗ trợ.</span></li>
-            <li><i class="fa-solid fa-circle-dot"></i><span><span class="dev-code">/help-admin.html</span>: quản trị nội dung Help Center theo tenant.</span></li>
-            <li><i class="fa-solid fa-circle-dot"></i><span><span class="dev-code">/admin.html</span>: quản trị chỉnh sửa nội dung HTML tài liệu ERP hiện có.</span></li>
-            <li><i class="fa-solid fa-circle-dot"></i><span><span class="dev-code">/api/help</span> và <span class="dev-code">/api/content-asset</span>: API nội dung, upload và proxy file.</span></li>
+            <li><i class="fa-solid fa-circle-dot"></i><span><span class="dev-code">/support</span>: dashboard hỗ trợ sau khi vào app, gồm tìm kiếm nhanh, module thường dùng và bài viết nổi bật.</span></li>
+            <li><i class="fa-solid fa-circle-dot"></i><span><span class="dev-code">/support/articles</span>: danh sách hướng dẫn sử dụng theo module, nền tảng, tag công ty và từ khóa.</span></li>
+            <li><i class="fa-solid fa-circle-dot"></i><span><span class="dev-code">/support/articles/:slug</span>: chi tiết bài hướng dẫn, step-by-step, media và file đính kèm.</span></li>
+            <li><i class="fa-solid fa-circle-dot"></i><span><span class="dev-code">/support/tickets</span>: danh sách ticket của user hoặc của tenant, tùy quyền.</span></li>
+            <li><i class="fa-solid fa-circle-dot"></i><span><span class="dev-code">/support/tickets/new</span>: tạo yêu cầu hỗ trợ kèm mô tả lỗi, ảnh, video, file chứng từ.</span></li>
+            <li><i class="fa-solid fa-circle-dot"></i><span><span class="dev-code">/support/assistant</span>: trợ lý hỗ trợ gợi ý bài viết và hướng dẫn thao tác.</span></li>
+            <li><i class="fa-solid fa-circle-dot"></i><span><span class="dev-code">/support/admin</span>: quản trị tenant, user, bài viết, file hướng dẫn và phân quyền.</span></li>
           </ul>
         </div>
 
         <div class="dev-card">
-          <h3><i class="fa-solid fa-route"></i> Luồng chính</h3>
+          <h3><i class="fa-solid fa-user-shield"></i> Quyền truy cập</h3>
           <ul class="dev-list">
-            <li><i class="fa-solid fa-check"></i><span>Người xem public mở trang giải pháp, bấm demo, tìm hướng dẫn, thử chat hoặc tạo ticket giả lập.</span></li>
-            <li><i class="fa-solid fa-check"></i><span>Khách ngoài đăng nhập bằng tài khoản được cấp, hệ thống lấy tenant từ session và chỉ trả về tài liệu gắn tenant đó.</span></li>
-            <li><i class="fa-solid fa-check"></i><span>Admin đăng nhập, chọn tenant nội bộ hoặc khách hàng ngoài, tạo/sửa bài hướng dẫn và upload file đi kèm.</span></li>
-            <li><i class="fa-solid fa-check"></i><span>Người dùng mở lại link sau khi lưu vẫn xem được nội dung và file từ server, không phụ thuộc cache trình duyệt.</span></li>
+            <li><i class="fa-solid fa-check"></i><span><strong>Guest:</strong> chỉ xem trang giới thiệu, chưa xem tài liệu theo công ty.</span></li>
+            <li><i class="fa-solid fa-check"></i><span><strong>Internal user:</strong> xem hướng dẫn nội bộ, tạo ticket, xem ticket của chính mình.</span></li>
+            <li><i class="fa-solid fa-check"></i><span><strong>Customer user:</strong> xem tài liệu được gắn tenant/tag công ty của họ, không thấy nội dung nội bộ hoặc khách khác.</span></li>
+            <li><i class="fa-solid fa-check"></i><span><strong>Tenant admin:</strong> quản lý user và ticket trong tenant được cấp quyền.</span></li>
+            <li><i class="fa-solid fa-check"></i><span><strong>Tre admin:</strong> quản trị tất cả tenant, nội dung, file, tag, module và trạng thái bài viết.</span></li>
           </ul>
         </div>
       </div>
 
       <div class="dev-table-wrap">
         <table class="dev-table">
-          <caption>Danh sách màn hình</caption>
+          <caption>Danh sách màn hình web app</caption>
           <thead>
             <tr>
               <th>Màn hình</th>
-              <th>Người dùng</th>
+              <th>Vai trò</th>
               <th>Mục tiêu</th>
-              <th>Ghi chú UI</th>
+              <th>Thành phần chính</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td><strong>Trang giải pháp</strong></td>
-              <td>Public, Sales, BA, Dev</td>
-              <td>Trình bày giá trị, lợi ích, phạm vi triển khai và demo Tre Support.</td>
-              <td>Giữ layout hiện tại, bổ sung nội dung dev bên dưới phần lợi ích.</td>
+              <td><strong>Login</strong></td>
+              <td>Internal user, Customer user, Admin</td>
+              <td>Xác thực người dùng và tạo session chứa tenant, role, display name.</td>
+              <td>Form tài khoản/mật khẩu, trạng thái lỗi, nút đăng nhập, link quên mật khẩu ở phase sau.</td>
             </tr>
             <tr>
-              <td><strong>Demo Home</strong></td>
-              <td>Nội bộ, khách demo</td>
-              <td>Điểm vào tìm kiếm, chọn nền tảng, module và mở các luồng hỗ trợ.</td>
-              <td>Giao diện giống khách nội bộ; không tách nút “HDSD của tôi”.</td>
+              <td><strong>Support Home</strong></td>
+              <td>User theo tenant</td>
+              <td>Đưa người dùng tới đúng hướng dẫn hoặc kênh hỗ trợ nhanh nhất.</td>
+              <td>Search bar, module cards, bài viết phổ biến, ticket gần đây, CTA tạo ticket.</td>
             </tr>
             <tr>
-              <td><strong>Kho hướng dẫn</strong></td>
+              <td><strong>Article Library</strong></td>
               <td>User theo tenant</td>
               <td>Hiển thị danh sách bài hướng dẫn theo module, nền tảng và từ khóa.</td>
-              <td>Nội dung lọc theo tenant từ session, không tin query string.</td>
+              <td>Filter module/platform/tag, sort, trạng thái rỗng, phân trang hoặc lazy load.</td>
             </tr>
             <tr>
-              <td><strong>Chi tiết bài viết</strong></td>
+              <td><strong>Article Detail</strong></td>
               <td>User theo tenant</td>
               <td>Xem mô tả, từng bước, lưu ý, ảnh/video và file đính kèm.</td>
-              <td>Media responsive, file có link xem/tải qua proxy asset.</td>
+              <td>Mục lục, step content, image/video viewer, attachment list, feedback hữu ích/không hữu ích.</td>
             </tr>
             <tr>
-              <td><strong>Ticket hỗ trợ</strong></td>
+              <td><strong>Ticket List</strong></td>
+              <td>User ERP</td>
+              <td>Theo dõi trạng thái các yêu cầu đã gửi hoặc được phân công xử lý.</td>
+              <td>Bảng ticket, status, priority, assignee, module, ngày tạo, search/filter.</td>
+            </tr>
+            <tr>
+              <td><strong>Create Ticket</strong></td>
               <td>User ERP</td>
               <td>Gửi lỗi/yêu cầu kèm module, nền tảng, mức độ và file minh chứng.</td>
-              <td>V1 là mock UI; phase sau tích hợp ticket thật.</td>
+              <td>Form module/platform, mô tả, bước tái hiện, mức độ ảnh hưởng, upload file.</td>
             </tr>
             <tr>
-              <td><strong>Trợ lý hỗ trợ</strong></td>
+              <td><strong>Support Assistant</strong></td>
               <td>User ERP</td>
               <td>Gợi ý bài viết, bước xử lý và đường dẫn tạo ticket khi cần.</td>
-              <td>V1 giả lập hội thoại; phase sau nối AI/search index.</td>
+              <td>Chat panel, suggested articles, nút chuyển câu hỏi thành ticket.</td>
             </tr>
             <tr>
-              <td><strong>Đăng nhập khách ngoài</strong></td>
-              <td>Khách hàng ngoài</td>
-              <td>Xác thực user và xác định tenant để xem đúng bộ hướng dẫn.</td>
-              <td>Nút đăng nhập đã có trên header; wiring thật là phase kế tiếp.</td>
+              <td><strong>Content Admin</strong></td>
+              <td>Tre admin</td>
+              <td>Tạo/sửa/xóa bài hướng dẫn, chọn tenant áp dụng và quản lý file đính kèm.</td>
+              <td>Tenant selector, form article, step editor, upload manager, publish status.</td>
             </tr>
             <tr>
-              <td><strong>Help Admin</strong></td>
-              <td>Admin Tre</td>
-              <td>Quản trị bài hướng dẫn, tenant, file upload và metadata.</td>
-              <td>Bắt buộc chọn tenant trước khi tạo/sửa nội dung.</td>
+              <td><strong>Tenant & User Admin</strong></td>
+              <td>Tre admin, Tenant admin</td>
+              <td>Quản lý tenant, tag công ty, user, role và trạng thái tài khoản.</td>
+              <td>Danh sách tenant/user, tạo tài khoản, reset mật khẩu, khóa/mở tài khoản.</td>
             </tr>
           </tbody>
         </table>
@@ -690,7 +699,7 @@
 
       <div class="dev-table-wrap">
         <table class="dev-table">
-          <caption>Bảng mô tả chức năng</caption>
+          <caption>Bảng mô tả chức năng web app</caption>
           <thead>
             <tr>
               <th>Nhóm chức năng</th>
@@ -701,46 +710,52 @@
           </thead>
           <tbody>
             <tr>
-              <td><span class="dev-tag">Public</span></td>
-              <td>Trang giải pháp và demo</td>
-              <td>Cho phép người xem hiểu mô hình hỗ trợ, mở demo và thử các luồng chính.</td>
-              <td>Đang dùng</td>
+              <td><span class="dev-tag">Auth</span></td>
+              <td>Đăng nhập và session</td>
+              <td>Xác thực user, gán tenantId/role, lưu session httpOnly, hỗ trợ logout.</td>
+              <td>Cần triển khai thật</td>
             </tr>
             <tr>
               <td><span class="dev-tag">Content</span></td>
-              <td>Search/filter hướng dẫn</td>
-              <td>Tìm bài theo tiêu đề, module, platform, keyword và mô tả.</td>
-              <td>Đang dùng</td>
+              <td>Kho bài hướng dẫn</td>
+              <td>Quản lý bài viết theo tenant, module, platform, tag công ty, keyword và trạng thái publish.</td>
+              <td>Đã có nền tảng, cần chuẩn hóa schema</td>
             </tr>
             <tr>
               <td><span class="dev-tag">Content</span></td>
-              <td>Chi tiết bài hướng dẫn</td>
-              <td>Render structured content gồm mô tả, step, note, media và attachment.</td>
-              <td>Đang dùng</td>
+              <td>Tìm kiếm và lọc</td>
+              <td>Tìm bài theo title, description, keyword, module, platform, tenant tag.</td>
+              <td>Cần triển khai index tốt hơn</td>
             </tr>
             <tr>
               <td><span class="dev-tag">Tenant</span></td>
-              <td>Tách nội dung theo khách hàng</td>
-              <td>Mỗi tenant có bộ module, article và attachment riêng; user chỉ thấy dữ liệu của tenant trong session.</td>
-              <td>Nền tảng đã có, cần hoàn thiện login thật</td>
+              <td>Tách dữ liệu theo công ty</td>
+              <td>Cùng một chức năng ERP có thể có hướng dẫn khác nhau cho nội bộ, khách A, khách B.</td>
+              <td>Bắt buộc cho V1 khách ngoài</td>
             </tr>
             <tr>
               <td><span class="dev-tag">Admin</span></td>
-              <td>Tạo/sửa bài hướng dẫn</td>
-              <td>Admin chọn tenant, nhập nội dung, thêm bước, lưu ý, keyword và file đính kèm.</td>
-              <td>Đang dùng</td>
+              <td>Article editor</td>
+              <td>Soạn nội dung không phá UI: tiêu đề, mô tả, step, bảng, lưu ý, ảnh, video, tài liệu.</td>
+              <td>Cần hoàn thiện UX</td>
             </tr>
             <tr>
               <td><span class="dev-tag">Upload</span></td>
-              <td>Upload ảnh, video, tài liệu</td>
-              <td>Lưu file theo tenant/article, trả metadata và URL public proxy để người khác mở được sau reload.</td>
+              <td>File hướng dẫn</td>
+              <td>Upload song song ảnh/video/document, lưu server theo tenant/article và hiển thị được cho người khác.</td>
               <td>Đang dùng</td>
             </tr>
             <tr>
-              <td><span class="dev-tag">Support</span></td>
-              <td>Chat và ticket</td>
-              <td>Thu thập câu hỏi, thông tin lỗi, file minh chứng và gợi ý bài liên quan.</td>
-              <td>Mock UI</td>
+              <td><span class="dev-tag">Ticket</span></td>
+              <td>Quản lý yêu cầu hỗ trợ</td>
+              <td>Tạo, theo dõi, phân loại, gán người xử lý, cập nhật trạng thái và trao đổi với user.</td>
+              <td>Phase sau tích hợp thật</td>
+            </tr>
+            <tr>
+              <td><span class="dev-tag">Assistant</span></td>
+              <td>Trợ lý hỗ trợ</td>
+              <td>Trả lời dựa trên kho hướng dẫn của tenant hiện tại, gợi ý bài liên quan và tạo ticket khi không xử lý được.</td>
+              <td>Phase sau nối AI/search</td>
             </tr>
           </tbody>
         </table>
@@ -748,37 +763,44 @@
 
       <div class="dev-grid">
         <div class="dev-card">
-          <h3><i class="fa-solid fa-database"></i> Data contract</h3>
+          <h3><i class="fa-solid fa-database"></i> Data model cần có</h3>
           <ul class="dev-list">
-            <li><i class="fa-solid fa-table"></i><span><span class="dev-code">tenants</span>: id, name, type, active.</span></li>
-            <li><i class="fa-solid fa-table"></i><span><span class="dev-code">users</span>: username, displayName, tenantId, role, passwordHash, active.</span></li>
-            <li><i class="fa-solid fa-table"></i><span><span class="dev-code">modules</span>: tenantId, name, icon, description, displayOrder.</span></li>
-            <li><i class="fa-solid fa-table"></i><span><span class="dev-code">articles</span>: tenantId, module, platform, title, description, keywords, steps, notes, attachments.</span></li>
-            <li><i class="fa-solid fa-table"></i><span><span class="dev-code">attachments</span>: originalName, mime, size, type, assetPath, url, uploadedAt, uploadedBy.</span></li>
+            <li><i class="fa-solid fa-table"></i><span><span class="dev-code">tenants</span>: id, name, type internal/customer, companyTags, active.</span></li>
+            <li><i class="fa-solid fa-table"></i><span><span class="dev-code">users</span>: username, displayName, tenantId, role, passwordHash, active, lastLoginAt.</span></li>
+            <li><i class="fa-solid fa-table"></i><span><span class="dev-code">modules</span>: code, name, icon, description, displayOrder, active.</span></li>
+            <li><i class="fa-solid fa-table"></i><span><span class="dev-code">articles</span>: tenantId, moduleCode, platform, title, slug, summary, keywords, companyTags, status.</span></li>
+            <li><i class="fa-solid fa-table"></i><span><span class="dev-code">articleBlocks</span>: articleId, type text/table/step/note/media, order, content.</span></li>
+            <li><i class="fa-solid fa-table"></i><span><span class="dev-code">attachments</span>: articleId, tenantId, originalName, mime, size, assetPath, uploadedAt, uploadedBy.</span></li>
+            <li><i class="fa-solid fa-table"></i><span><span class="dev-code">tickets</span>: tenantId, createdBy, moduleCode, title, description, priority, status, assigneeId.</span></li>
           </ul>
         </div>
 
         <div class="dev-card">
-          <h3><i class="fa-solid fa-plug"></i> API dự kiến</h3>
+          <h3><i class="fa-solid fa-plug"></i> API cần phát triển</h3>
           <ul class="dev-list">
             <li><i class="fa-solid fa-link"></i><span><span class="dev-code">GET /api/help?action=session</span>: kiểm tra phiên đăng nhập hiện tại.</span></li>
             <li><i class="fa-solid fa-link"></i><span><span class="dev-code">POST /api/help?action=login</span>: đăng nhập user Help Center.</span></li>
-            <li><i class="fa-solid fa-link"></i><span><span class="dev-code">GET /api/help?action=content</span>: trả module/article theo tenant trong session.</span></li>
-            <li><i class="fa-solid fa-link"></i><span><span class="dev-code">GET /api/help?action=admin-data</span>: trả dữ liệu quản trị cho admin.</span></li>
-            <li><i class="fa-solid fa-link"></i><span><span class="dev-code">POST /api/help?action=upload</span>: upload file theo tenant và article.</span></li>
+            <li><i class="fa-solid fa-link"></i><span><span class="dev-code">GET /api/help?action=modules</span>: danh sách module được phép xem theo tenant.</span></li>
+            <li><i class="fa-solid fa-link"></i><span><span class="dev-code">GET /api/help?action=articles</span>: danh sách bài viết theo filter và tenant session.</span></li>
+            <li><i class="fa-solid fa-link"></i><span><span class="dev-code">GET /api/help?action=article</span>: chi tiết bài viết theo slug, có kiểm tra quyền tenant.</span></li>
+            <li><i class="fa-solid fa-link"></i><span><span class="dev-code">POST /api/help?action=article-save</span>: admin tạo/sửa bài viết và block nội dung.</span></li>
+            <li><i class="fa-solid fa-link"></i><span><span class="dev-code">POST /api/help?action=upload</span>: upload file theo tenant/article.</span></li>
+            <li><i class="fa-solid fa-link"></i><span><span class="dev-code">POST /api/help?action=ticket-create</span>: tạo ticket hỗ trợ.</span></li>
             <li><i class="fa-solid fa-link"></i><span><span class="dev-code">GET /api/content-asset?path=...</span>: proxy file đã lưu để xem/tải.</span></li>
           </ul>
         </div>
       </div>
 
       <div class="dev-card">
-        <h3><i class="fa-solid fa-shield-halved"></i> Yêu cầu phi chức năng và roadmap</h3>
+        <h3><i class="fa-solid fa-shield-halved"></i> Rule vận hành và yêu cầu kỹ thuật</h3>
         <ul class="dev-list">
           <li><i class="fa-solid fa-lock"></i><span>Tenant isolation là bắt buộc: API lấy tenant từ session server-side, không lấy từ query string hoặc localStorage.</span></li>
-          <li><i class="fa-solid fa-mobile-screen"></i><span>Responsive cho desktop/mobile; bảng, media và khung chat không được tràn ngang viewport.</span></li>
-          <li><i class="fa-solid fa-file-shield"></i><span>Giới hạn upload V1: ảnh 5MB, video 50MB, tài liệu 20MB; kiểm tra MIME và extension.</span></li>
+          <li><i class="fa-solid fa-tags"></i><span>Nội dung có thể tách theo tenant hoặc tag công ty; user chỉ thấy bài viết match quyền được cấp.</span></li>
+          <li><i class="fa-solid fa-mobile-screen"></i><span>Responsive cho desktop/mobile; search, bảng, media, chat và form ticket không được tràn ngang viewport.</span></li>
+          <li><i class="fa-solid fa-file-shield"></i><span>Giới hạn upload V1: ảnh 5MB, video 50MB, tài liệu 20MB; kiểm tra MIME, extension và tên file.</span></li>
           <li><i class="fa-solid fa-clock-rotate-left"></i><span>Nội dung/file sau khi lưu phải tồn tại trên server để người khác mở link vẫn xem được.</span></li>
-          <li><i class="fa-solid fa-forward"></i><span>Phase sau: wiring nút đăng nhập thật, SSO/ERP account, ticket thật, analytics tìm kiếm, versioning bài viết và phân quyền admin theo tenant.</span></li>
+          <li><i class="fa-solid fa-eye"></i><span>Bài viết cần có trạng thái draft/published/archived; người dùng thường chỉ xem published.</span></li>
+          <li><i class="fa-solid fa-forward"></i><span>Roadmap: ticket thật, AI trả lời theo knowledge base, analytics tìm kiếm, versioning bài viết, SSO/ERP account và phân quyền admin theo tenant.</span></li>
         </ul>
       </div>
     </div>

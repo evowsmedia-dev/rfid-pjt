@@ -1,0 +1,244 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Sitemap Web App - Tre360 Support</title>
+  <desc id="desc">Sơ đồ sitemap web app Tre Support tại support.tre360.vn gồm dashboard, articles, article detail, tickets, create ticket, assistant và admin.</desc>
+  <defs>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#1b2d4f" flood-opacity=".14"/>
+    </filter>
+    <linearGradient id="top" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#0b2f72"/>
+      <stop offset="1" stop-color="#214c91"/>
+    </linearGradient>
+    <linearGradient id="green" x1="0" x2="1">
+      <stop offset="0" stop-color="#f4fff5"/>
+      <stop offset="1" stop-color="#eef9ef"/>
+    </linearGradient>
+    <linearGradient id="purple" x1="0" x2="1">
+      <stop offset="0" stop-color="#fbf8ff"/>
+      <stop offset="1" stop-color="#f5efff"/>
+    </linearGradient>
+    <linearGradient id="amber" x1="0" x2="1">
+      <stop offset="0" stop-color="#fffaf0"/>
+      <stop offset="1" stop-color="#fff4d7"/>
+    </linearGradient>
+    <linearGradient id="blue" x1="0" x2="1">
+      <stop offset="0" stop-color="#f4f9ff"/>
+      <stop offset="1" stop-color="#eaf4ff"/>
+    </linearGradient>
+    <linearGradient id="teal" x1="0" x2="1">
+      <stop offset="0" stop-color="#f3fffb"/>
+      <stop offset="1" stop-color="#eafaf7"/>
+    </linearGradient>
+    <linearGradient id="red" x1="0" x2="1">
+      <stop offset="0" stop-color="#fff6f4"/>
+      <stop offset="1" stop-color="#fff0ed"/>
+    </linearGradient>
+    <style>
+      .title{font:800 38px Arial,Helvetica,sans-serif;letter-spacing:1px;fill:#0b1835}
+      .node-title{font:800 21px Arial,Helvetica,sans-serif;fill:#0b1835}
+      .node-sub{font:700 18px Arial,Helvetica,sans-serif;fill:#fff}
+      .node-body{font:500 16px Arial,Helvetica,sans-serif;fill:#0b1835}
+      .small-title{font:800 15px Arial,Helvetica,sans-serif;fill:#111827}
+      .small-body{font:500 13px Arial,Helvetica,sans-serif;fill:#111827}
+      .line{fill:none;stroke:#183a85;stroke-width:3}
+      .branch-green{fill:none;stroke:#2c8b42;stroke-width:2.5}
+      .branch-purple{fill:none;stroke:#8257bf;stroke-width:2.5}
+      .branch-amber{fill:none;stroke:#f2a20a;stroke-width:2.5}
+      .branch-blue{fill:none;stroke:#4d9cef;stroke-width:2.5}
+      .branch-teal{fill:none;stroke:#32aaa5;stroke-width:2.5}
+      .branch-red{fill:none;stroke:#ef5a5a;stroke-width:2.5}
+      .white{fill:#fff}
+    </style>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#183a85"/>
+    </marker>
+  </defs>
+
+  <rect width="1600" height="1000" fill="#ffffff"/>
+  <text x="800" y="56" text-anchor="middle" class="title">SITEMAP WEB APP - TRE360 SUPPORT</text>
+
+  <g filter="url(#shadow)">
+    <rect x="528" y="86" width="492" height="154" rx="12" fill="url(#top)" stroke="#092661" stroke-width="2"/>
+    <circle cx="575" cy="130" r="20" fill="none" stroke="#fff" stroke-width="4"/>
+    <path d="M555 130h40M575 110c10 12 10 28 0 40M575 110c-10 12-10 28 0 40" stroke="#fff" stroke-width="3" fill="none"/>
+    <text x="612" y="133" class="node-title white">https://support.tre360.vn/</text>
+    <text x="800" y="162" text-anchor="middle" class="node-sub">Dashboard</text>
+    <text x="800" y="194" text-anchor="middle" class="node-body white">Hỗ trợ sau khi vào app: tìm kiếm nhanh,</text>
+    <text x="800" y="218" text-anchor="middle" class="node-body white">module thường dùng và bài viết nổi bật.</text>
+  </g>
+
+  <path class="line" d="M774 240v34H166v44" marker-end="url(#arrow)"/>
+  <path class="line" d="M774 274h-300v44" marker-end="url(#arrow)"/>
+  <path class="line" d="M774 274h-62v44" marker-end="url(#arrow)"/>
+  <path class="line" d="M774 274h176v44" marker-end="url(#arrow)"/>
+  <path class="line" d="M774 274h414v44" marker-end="url(#arrow)"/>
+  <path class="line" d="M774 274h660v44" marker-end="url(#arrow)"/>
+
+  <g>
+    <rect x="38" y="322" width="260" height="150" rx="10" fill="url(#green)" stroke="#2c8b42" stroke-width="2"/>
+    <text x="84" y="367" class="node-title">/articles</text>
+    <text x="62" y="405" class="node-body">Danh sách hướng dẫn sử dụng</text>
+    <text x="62" y="430" class="node-body">theo module, nền tảng,</text>
+    <text x="62" y="455" class="node-body">tag công ty và từ khóa.</text>
+    <text x="60" y="372" font-size="34" fill="#2c8b42">▰</text>
+
+    <path class="branch-green" d="M50 472v442h28"/>
+    <path class="branch-green" d="M50 560h28"/>
+    <path class="branch-green" d="M50 682h28"/>
+    <path class="branch-green" d="M50 804h28"/>
+    <path class="branch-green" d="M50 914h28"/>
+    <rect x="78" y="515" width="215" height="96" rx="8" fill="url(#green)" stroke="#2c8b42"/>
+    <text x="104" y="553" font-size="28" fill="#2c8b42">▽</text>
+    <text x="136" y="552" class="small-title">Lọc theo Module</text>
+    <text x="136" y="581" class="small-body">Danh sách bài viết theo</text>
+    <text x="136" y="604" class="small-body">module.</text>
+    <rect x="78" y="638" width="215" height="96" rx="8" fill="url(#green)" stroke="#2c8b42"/>
+    <text x="104" y="676" font-size="28" fill="#2c8b42">▱</text>
+    <text x="136" y="675" class="small-title">Lọc theo Nền tảng</text>
+    <text x="136" y="704" class="small-body">Danh sách bài viết theo</text>
+    <text x="136" y="727" class="small-body">nền tảng.</text>
+    <rect x="78" y="760" width="215" height="96" rx="8" fill="url(#green)" stroke="#2c8b42"/>
+    <text x="102" y="798" font-size="28" fill="#2c8b42">◆</text>
+    <text x="136" y="797" class="small-title">Lọc theo Tag công ty</text>
+    <text x="136" y="826" class="small-body">Danh sách bài viết theo</text>
+    <text x="136" y="849" class="small-body">tag công ty.</text>
+    <rect x="78" y="880" width="215" height="76" rx="8" fill="url(#green)" stroke="#2c8b42"/>
+    <text x="100" y="926" font-size="32" fill="#2c8b42">○</text>
+    <text x="136" y="912" class="small-title">Tìm kiếm</text>
+    <text x="136" y="941" class="small-body">Tìm bài viết theo từ khóa.</text>
+  </g>
+
+  <g>
+    <rect x="348" y="322" width="238" height="150" rx="10" fill="url(#purple)" stroke="#8257bf" stroke-width="2"/>
+    <text x="417" y="367" class="node-title" fill="#5b389a">/articles/:slug</text>
+    <text x="370" y="405" class="node-body">Chi tiết bài hướng dẫn:</text>
+    <text x="370" y="430" class="node-body">step-by-step, media và</text>
+    <text x="370" y="455" class="node-body">file đính kèm.</text>
+    <text x="370" y="372" font-size="34" fill="#8257bf">▣</text>
+    <path class="branch-purple" d="M330 392h18M330 392v400h26"/>
+    <path class="branch-purple" d="M330 585h26"/>
+    <path class="branch-purple" d="M330 710h26"/>
+    <path class="branch-purple" d="M330 792h26"/>
+    <rect x="356" y="515" width="230" height="96" rx="8" fill="url(#purple)" stroke="#8257bf"/>
+    <text x="374" y="553" font-size="28" fill="#8257bf">☷</text>
+    <text x="416" y="552" class="small-title">Nội dung hướng dẫn</text>
+    <text x="416" y="581" class="small-body">Các bước hướng dẫn</text>
+    <text x="416" y="604" class="small-body">chi tiết.</text>
+    <rect x="356" y="638" width="230" height="96" rx="8" fill="url(#purple)" stroke="#8257bf"/>
+    <text x="374" y="676" font-size="28" fill="#8257bf">▧</text>
+    <text x="416" y="675" class="small-title">Media</text>
+    <text x="416" y="704" class="small-body">Hình ảnh, video minh họa.</text>
+    <rect x="356" y="760" width="230" height="96" rx="8" fill="url(#purple)" stroke="#8257bf"/>
+    <text x="374" y="800" font-size="34" fill="#8257bf">⌇</text>
+    <text x="416" y="797" class="small-title">File đính kèm</text>
+    <text x="416" y="826" class="small-body">Tài liệu, file tải xuống</text>
+    <text x="416" y="849" class="small-body">liên quan.</text>
+  </g>
+
+  <g>
+    <rect x="612" y="322" width="225" height="150" rx="10" fill="url(#amber)" stroke="#f2a20a" stroke-width="2"/>
+    <text x="688" y="367" class="node-title">/tickets</text>
+    <text x="636" y="405" class="node-body">Danh sách ticket của user</text>
+    <text x="636" y="430" class="node-body">hoặc của tenant, tùy quyền.</text>
+    <text x="635" y="372" font-size="34" fill="#f2a20a">◼</text>
+    <path class="branch-amber" d="M624 472v246h20"/>
+    <path class="branch-amber" d="M624 562h20"/>
+    <path class="branch-amber" d="M624 704h20"/>
+    <rect x="642" y="515" width="196" height="96" rx="8" fill="url(#amber)" stroke="#f2a20a"/>
+    <text x="664" y="553" font-size="28" fill="#f2a20a">☷</text>
+    <text x="704" y="552" class="small-title">Danh sách ticket</text>
+    <text x="704" y="581" class="small-body">Xem và quản lý các ticket</text>
+    <text x="704" y="604" class="small-body">theo trạng thái.</text>
+    <rect x="642" y="638" width="196" height="96" rx="8" fill="url(#amber)" stroke="#f2a20a"/>
+    <text x="664" y="676" font-size="28" fill="#f2a20a">◉</text>
+    <text x="704" y="675" class="small-title">Chi tiết ticket</text>
+    <text x="704" y="704" class="small-body">Xem thông tin và lịch sử</text>
+    <text x="704" y="727" class="small-body">trao đổi của ticket.</text>
+  </g>
+
+  <g>
+    <rect x="862" y="322" width="208" height="150" rx="10" fill="url(#blue)" stroke="#4d9cef" stroke-width="2"/>
+    <text x="930" y="367" class="node-title">/tickets/new</text>
+    <text x="884" y="405" class="node-body">Tạo yêu cầu hỗ trợ kèm</text>
+    <text x="884" y="430" class="node-body">mô tả lỗi, ảnh, video,</text>
+    <text x="884" y="455" class="node-body">file chứng từ.</text>
+    <text x="884" y="372" font-size="34" fill="#4d9cef">✚</text>
+    <path class="branch-blue" d="M874 472v320h20"/>
+    <path class="branch-blue" d="M874 562h20"/>
+    <path class="branch-blue" d="M874 684h20"/>
+    <path class="branch-blue" d="M874 792h20"/>
+    <rect x="890" y="515" width="186" height="96" rx="8" fill="url(#blue)" stroke="#4d9cef"/>
+    <text x="910" y="553" font-size="26" fill="#4d9cef">▤</text>
+    <text x="944" y="552" class="small-title">Thông tin yêu cầu</text>
+    <text x="944" y="581" class="small-body">Nhập tiêu đề, module,</text>
+    <text x="944" y="604" class="small-body">mô tả vấn đề.</text>
+    <rect x="890" y="638" width="186" height="96" rx="8" fill="url(#blue)" stroke="#4d9cef"/>
+    <text x="910" y="676" font-size="26" fill="#4d9cef">▣</text>
+    <text x="944" y="675" class="small-title">Đính kèm media</text>
+    <text x="944" y="704" class="small-body">Ảnh, video mô tả lỗi.</text>
+    <rect x="890" y="760" width="186" height="96" rx="8" fill="url(#blue)" stroke="#4d9cef"/>
+    <text x="910" y="800" font-size="34" fill="#4d9cef">⌇</text>
+    <text x="944" y="797" class="small-title">Đính kèm file</text>
+    <text x="944" y="826" class="small-body">File chứng từ, tài liệu</text>
+    <text x="944" y="849" class="small-body">liên quan.</text>
+  </g>
+
+  <g>
+    <rect x="1100" y="322" width="210" height="150" rx="10" fill="url(#teal)" stroke="#32aaa5" stroke-width="2"/>
+    <text x="1172" y="367" class="node-title">/assistant</text>
+    <text x="1122" y="405" class="node-body">Trợ lý hỗ trợ gợi ý bài viết</text>
+    <text x="1122" y="430" class="node-body">và hướng dẫn thao tác.</text>
+    <text x="1120" y="372" font-size="34" fill="#32aaa5">☷</text>
+    <path class="branch-teal" d="M1112 472v246h20"/>
+    <path class="branch-teal" d="M1112 562h20"/>
+    <path class="branch-teal" d="M1112 704h20"/>
+    <rect x="1130" y="515" width="186" height="96" rx="8" fill="url(#teal)" stroke="#32aaa5"/>
+    <text x="1150" y="553" font-size="28" fill="#32aaa5">●</text>
+    <text x="1188" y="552" class="small-title">Gợi ý bài viết</text>
+    <text x="1188" y="581" class="small-body">Đề xuất bài viết phù hợp</text>
+    <text x="1188" y="604" class="small-body">theo câu hỏi.</text>
+    <rect x="1130" y="638" width="186" height="96" rx="8" fill="url(#teal)" stroke="#32aaa5"/>
+    <text x="1150" y="676" font-size="28" fill="#32aaa5">✣</text>
+    <text x="1188" y="675" class="small-title">Hướng dẫn thao tác</text>
+    <text x="1188" y="704" class="small-body">Hướng dẫn nhanh các</text>
+    <text x="1188" y="727" class="small-body">thao tác thường gặp.</text>
+  </g>
+
+  <g>
+    <rect x="1338" y="322" width="222" height="150" rx="10" fill="url(#red)" stroke="#ef5a5a" stroke-width="2"/>
+    <text x="1410" y="367" class="node-title">/admin</text>
+    <text x="1360" y="405" class="node-body">Quản trị tenant, user,</text>
+    <text x="1360" y="430" class="node-body">bài viết, file hướng dẫn</text>
+    <text x="1360" y="455" class="node-body">và phân quyền.</text>
+    <text x="1360" y="372" font-size="34" fill="#ef5a5a">⬟</text>
+    <path class="branch-red" d="M1350 472v486h20"/>
+    <path class="branch-red" d="M1350 562h20"/>
+    <path class="branch-red" d="M1350 684h20"/>
+    <path class="branch-red" d="M1350 792h20"/>
+    <path class="branch-red" d="M1350 880h20"/>
+    <path class="branch-red" d="M1350 958h20"/>
+    <rect x="1370" y="515" width="196" height="90" rx="8" fill="url(#red)" stroke="#ef5a5a"/>
+    <text x="1388" y="552" font-size="26" fill="#ef5a5a">▥</text>
+    <text x="1428" y="552" class="small-title">Quản lý Tenant</text>
+    <text x="1428" y="581" class="small-body">Thông tin và cấu hình</text>
+    <text x="1428" y="602" class="small-body">tenant.</text>
+    <rect x="1370" y="625" width="196" height="90" rx="8" fill="url(#red)" stroke="#ef5a5a"/>
+    <text x="1388" y="662" font-size="26" fill="#ef5a5a">●</text>
+    <text x="1428" y="662" class="small-title">Quản lý User</text>
+    <text x="1428" y="691" class="small-body">Quản lý người dùng và</text>
+    <text x="1428" y="712" class="small-body">phân quyền.</text>
+    <rect x="1370" y="735" width="196" height="90" rx="8" fill="url(#red)" stroke="#ef5a5a"/>
+    <text x="1388" y="772" font-size="26" fill="#ef5a5a">▰</text>
+    <text x="1428" y="772" class="small-title">Quản lý bài viết</text>
+    <text x="1428" y="801" class="small-body">Tạo, sửa, đăng bài viết</text>
+    <text x="1428" y="822" class="small-body">hướng dẫn.</text>
+    <rect x="1370" y="845" width="196" height="90" rx="8" fill="url(#red)" stroke="#ef5a5a"/>
+    <text x="1388" y="886" font-size="34" fill="#ef5a5a">⌇</text>
+    <text x="1428" y="882" class="small-title">Quản lý file</text>
+    <text x="1428" y="911" class="small-body">Quản lý file hướng dẫn,</text>
+    <text x="1428" y="932" class="small-body">tài liệu đính kèm.</text>
+    <rect x="1370" y="955" width="196" height="36" rx="8" fill="url(#red)" stroke="#ef5a5a"/>
+    <text x="1388" y="980" font-size="22" fill="#ef5a5a">⬟</text>
+    <text x="1428" y="979" class="small-title">Phân quyền</text>
+  </g>
+</svg>

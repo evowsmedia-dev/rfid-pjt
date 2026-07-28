@@ -138,19 +138,6 @@
     if(shell) shell.remove();
   }
 
-  function updateSolutionLoginButton(){
-    var desktop = $('#helpLoginOpen');
-    var mobile = $('#helpLoginOpenMobile');
-    if(desktop) {
-      desktop.hidden = isAuthenticated;
-      desktop.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Đăng nhập';
-    }
-    if(mobile) {
-      mobile.hidden = isAuthenticated;
-      mobile.textContent = 'Đăng nhập';
-    }
-  }
-
   function removeTenantBar(){
     var bar = $('#helpTenantBar');
     if(bar) bar.remove();
@@ -197,7 +184,6 @@
       isAuthenticated = false;
       modules = [];
       articles = [];
-      updateSolutionLoginButton();
       showPage('benefits');
     });
   }
@@ -313,7 +299,6 @@
     articles = payload.articles || [];
     unlock();
     updateTenantBar();
-    updateSolutionLoginButton();
     renderHome();
     if(options.stayOnBenefits) showPage('benefits');
     else showPage(options.targetPage || 'home');
@@ -325,7 +310,6 @@
     articles = DEMO_ARTICLES.slice();
     currentTenant = null;
     removeTenantBar();
-    updateSolutionLoginButton();
     renderHome();
     showPage(name);
     return true;
@@ -356,17 +340,8 @@
         var page = el.dataset.page;
         if(page === 'benefits') showPage('benefits');
         else if(page === 'home' && (el.closest('#solutionHeader') || el.closest('#page-benefits'))) openDemoPage('home');
-        else openCurrentPage(page).catch(function(error){ toast(error.message); showLogin(); });
+        else openCurrentPage(page).catch(function(error){ toast(error.message); });
       });
-    });
-    if($('#helpLoginOpen')) $('#helpLoginOpen').addEventListener('click', function(){
-      if(isAuthenticated) openTenantPage('home').catch(function(error){ toast(error.message); });
-      else showLogin();
-    });
-    if($('#helpLoginOpenMobile')) $('#helpLoginOpenMobile').addEventListener('click', function(event){
-      event.preventDefault();
-      if(isAuthenticated) openTenantPage('home').catch(function(error){ toast(error.message); });
-      else showLogin();
     });
     if($('#menuBtn')) $('#menuBtn').addEventListener('click', function(){ $('#mobileMenu').classList.toggle('hidden'); });
     ['kbSearch','platformFilter','moduleFilter'].forEach(function(id){
@@ -515,17 +490,6 @@
     bindBaseUi();
     bindChat();
     bindTicket();
-    try{
-      var session = await requestJson('/api/help?action=session');
-      if(session.authenticated){
-        currentUser = session.user;
-        currentTenant = session.tenant;
-        isAuthenticated = true;
-      }
-      updateSolutionLoginButton();
-    }catch(error){
-      updateSolutionLoginButton();
-    }
   }
 
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);

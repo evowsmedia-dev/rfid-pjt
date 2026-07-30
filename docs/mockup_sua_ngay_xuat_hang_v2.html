@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Mockup - Sửa ngày xuất hàng</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 <style>
   :root{
     --title-blue:#5EB332;
@@ -70,6 +71,7 @@
     user-select:none;
   }
   .tab .plat{ font-size:9.5px; font-weight:700; color:#8a9aa8; margin-left:5px; }
+  .tab .plat i,.platform-tag i{ margin-right:3px; }
   .tab.active{
     background:#fff;
     color:var(--title-blue-dark);
@@ -368,6 +370,9 @@
   .status-pill.approved{ background:#dff0dc; color:#2e7d32; }
   .status-pill.reject{ background:#f8dcd8; color:#a13327; }
   .open-arrow{ color:var(--title-blue-dark); font-size:14px; font-weight:700; text-align:center; }
+  .open-arrow i{ font-size:12px; }
+  .inline-icon{ color:var(--title-blue-dark); margin:0 3px; font-size:.95em; }
+  .inline-icon.warn{ color:var(--warn-orange); }
 
   .approval-detail-view{
     display:none; height:100%; overflow-y:auto; padding:10px;
@@ -426,7 +431,7 @@
 
 <div class="app">
   <div class="app-title">
-    <span>ERP - Phương án kinh doanh &nbsp;|&nbsp; Bảng theo dõi PAKD <span class="platform-tag">🖥️ WinForm</span></span>
+    <span>ERP - Phương án kinh doanh &nbsp;|&nbsp; Bảng theo dõi PAKD <span class="platform-tag"><i class="fa-solid fa-desktop" aria-hidden="true"></i>WinForm</span></span>
     <span class="win-controls"><span>–</span><span>▢</span><span>✕</span></span>
   </div>
 
@@ -439,7 +444,7 @@
   <!-- SCREEN 1 -->
   <div class="screen active" id="screen1">
     <div class="filter-bar">
-      <div><label>Ngày XH dự kiến</label><input type="date" value="2026-01-01"> → <input type="date" value="2026-12-31"></div>
+      <div><label>Ngày XH dự kiến</label><input type="date" value="2026-01-01"> <i class="fa-solid fa-arrow-right inline-icon" aria-hidden="true"></i> <input type="date" value="2026-12-31"></div>
       <div><label>Khách hàng</label><select><option>Tất cả</option><option>ACE LAB</option><option>ASICS</option><option>Asmara</option></select></div>
       <div><label>Mã hàng</label><input type="text" placeholder="Nhập mã hàng..." style="width:110px;"></div>
       <div><label>Chi nhánh</label><select><option>Tất cả</option><option>VĐ</option><option>TN2</option><option>SC1</option><option>SC2</option><option>SC3</option></select></div>
@@ -512,7 +517,7 @@
           <td class="link-cell wrap">24.10.2025-Buy Summary</td>
           <td>15/11/2025</td>
           <td class="expected-date">15/11/2025</td>
-          <td class="adj-date"><span class="adj-empty">—</span><span class="adj-pending" title="Đang có yêu cầu chờ duyệt">⏳</span></td>
+          <td class="adj-date"><span class="adj-empty">—</span><span class="adj-pending" title="Đang có yêu cầu chờ duyệt"><i class="fa-solid fa-hourglass-half" aria-label="Đang chờ xử lý"></i></span></td>
           <td>10/01/2026</td>
           <td>Phê duyệt</td>
           <td>27/12/2025</td>
@@ -595,8 +600,8 @@
     </div>
 
     <div class="hint-note">
-      💡 Right-click vào 1 dòng để mở menu thao tác — mục <b>"Sửa ngày xuất hàng"</b> là chức năng mới bổ sung theo yêu cầu.<br>
-      💡 Cột <b>"Ngày XH điều chỉnh"</b> mặc định <b>để trống</b> (—). Giá trị chỉ được điền vào ô này sau khi yêu cầu điều chỉnh được duyệt đủ <b>2 cấp</b> (TPKD Công ty → TGĐ) trên App Phê duyệt (di động). Trong lúc chờ duyệt, ô vẫn để trống, chỉ có icon ⏳ báo đang có đề xuất xử lý.
+      <i class="fa-solid fa-lightbulb inline-icon warn" aria-hidden="true"></i> Right-click vào 1 dòng để mở menu thao tác — mục <b>"Sửa ngày xuất hàng"</b> là chức năng mới bổ sung theo yêu cầu.<br>
+      <i class="fa-solid fa-lightbulb inline-icon warn" aria-hidden="true"></i> Cột <b>"Ngày XH điều chỉnh"</b> mặc định <b>để trống</b> (—). Giá trị chỉ được điền vào ô này sau khi yêu cầu điều chỉnh được duyệt đủ <b>2 cấp</b> (TPKD Công ty <i class="fa-solid fa-arrow-right inline-icon" aria-hidden="true"></i> TGĐ) trên App Phê duyệt (di động). Trong lúc chờ duyệt, ô vẫn để trống, chỉ có icon <i class="fa-solid fa-hourglass-half inline-icon warn" aria-label="Đang chờ xử lý"></i> báo đang có đề xuất xử lý.
     </div>
   </div>
 
@@ -644,7 +649,7 @@
               <div class="ma-sub">Danh sách điều chỉnh ngày kết thúc mã hàng</div>
             </div>
             <div class="mbell-wrap">
-              <button class="mbell-btn" id="mBellBtn">🔔<span class="mbell-badge" id="mBellCount">3</span></button>
+              <button class="mbell-btn" id="mBellBtn"><i class="fa-solid fa-bell" aria-label="Thông báo"></i><span class="mbell-badge" id="mBellCount">3</span></button>
               <div class="mbell-panel" id="mBellPanel">
                 <div class="mbp-head">Thông báo đến lượt bạn duyệt</div>
                 <div id="mBellList">
@@ -674,7 +679,7 @@
 
           <div class="mobile-body" id="mobileBody">
             <div class="mobile-list-view" id="mobileListView">
-              <div class="list-summary"><span><b>8</b> yêu cầu gần nhất</span><span>Chạm một dòng để xem chi tiết ›</span></div>
+              <div class="list-summary"><span><b>8</b> yêu cầu gần nhất</span><span>Chạm một dòng để xem chi tiết <i class="fa-solid fa-chevron-right inline-icon" aria-hidden="true"></i></span></div>
               <div class="approval-table-wrap">
                 <table class="approval-table">
                   <thead>
@@ -694,7 +699,7 @@
                       <td class="plan-date-cell">15/11/2025</td>
                       <td class="adjust-date-cell">10/02/2026</td>
                       <td><span class="status-pill wait">Chờ TPKD</span></td>
-                      <td class="open-arrow">›</td>
+                      <td class="open-arrow"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></td>
                     </tr>
                     <tr data-request-id="req-abc" data-user="Nguyễn Văn A" data-code="Costing_142601/49 final" data-branch="VĐ" data-old-date="13/07/2026" data-new-date="13/08/2026" data-reason="Khách hàng dời lịch nhận hàng do thay đổi kế hoạch nhập kho." data-tpkd="Đã duyệt" data-tgd="Chờ duyệt" data-state="Chờ TGĐ duyệt" data-status-class="wait" data-actionable="1">
                       <td class="user-cell"><strong>Nguyễn Văn A</strong><span>NV Kinh doanh</span></td>
@@ -702,7 +707,7 @@
                       <td class="plan-date-cell">13/07/2026</td>
                       <td class="adjust-date-cell">13/08/2026</td>
                       <td><span class="status-pill wait">Chờ TGĐ</span></td>
-                      <td class="open-arrow">›</td>
+                      <td class="open-arrow"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></td>
                     </tr>
                     <tr data-request-id="req-479458" data-user="Phạm Thu Hằng" data-code="LT_Ch01/2025-COSTING" data-branch="SC1" data-old-date="26/10/2024" data-new-date="18/01/2026" data-reason="Khách hàng cập nhật lại lịch giao nhận cuối cùng" data-tpkd="Chờ duyệt" data-tgd="—" data-state="Chờ TPKD duyệt" data-status-class="wait" data-actionable="1">
                       <td class="user-cell"><strong>Phạm Thu Hằng</strong><span>NV Kinh doanh</span></td>
@@ -710,7 +715,7 @@
                       <td class="plan-date-cell">26/10/2024</td>
                       <td class="adjust-date-cell">18/01/2026</td>
                       <td><span class="status-pill wait">Chờ TPKD</span></td>
-                      <td class="open-arrow">›</td>
+                      <td class="open-arrow"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></td>
                     </tr>
                     <tr data-request-id="req-142099" data-user="Lê Văn C" data-code="Costing 142099 BCafé" data-branch="TN2" data-old-date="30/09/2025" data-new-date="15/12/2025" data-reason="Đối tác vận chuyển thay đổi lịch tàu" data-tpkd="Từ chối" data-tgd="—" data-state="Từ chối" data-status-class="reject" data-actionable="0">
                       <td class="user-cell"><strong>Lê Văn C</strong><span>NV Kinh doanh</span></td>
@@ -718,7 +723,7 @@
                       <td class="plan-date-cell">30/09/2025</td>
                       <td class="adjust-date-cell">15/12/2025</td>
                       <td><span class="status-pill reject">Từ chối</span></td>
-                      <td class="open-arrow">›</td>
+                      <td class="open-arrow"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></td>
                     </tr>
                     <tr data-request-id="req-142629" data-user="Hoàng Minh" data-code="Costing 142629.xlsx" data-branch="TN2" data-old-date="25/09/2025" data-new-date="20/10/2025" data-reason="Điều chỉnh theo lịch xuất hàng đã xác nhận với khách" data-tpkd="Đã duyệt" data-tgd="Đã duyệt" data-state="Đã duyệt" data-status-class="approved" data-actionable="0">
                       <td class="user-cell"><strong>Hoàng Minh</strong><span>NV Kinh doanh</span></td>
@@ -726,7 +731,7 @@
                       <td class="plan-date-cell">25/09/2025</td>
                       <td class="adjust-date-cell">20/10/2025</td>
                       <td><span class="status-pill approved">Đã duyệt</span></td>
-                      <td class="open-arrow">›</td>
+                      <td class="open-arrow"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></td>
                     </tr>
                     <tr data-request-id="req-gia7248" data-user="Bùi Ngọc Mai" data-code="GIÀ TB 7248-BUY" data-branch="SC2" data-old-date="13/11/2025" data-new-date="22/11/2025" data-reason="Bổ sung thời gian hoàn thiện kiểm định chất lượng" data-tpkd="Chờ duyệt" data-tgd="—" data-state="Chờ TPKD duyệt" data-status-class="wait" data-actionable="1">
                       <td class="user-cell"><strong>Bùi Ngọc Mai</strong><span>NV Kinh doanh</span></td>
@@ -734,7 +739,7 @@
                       <td class="plan-date-cell">13/11/2025</td>
                       <td class="adjust-date-cell">22/11/2025</td>
                       <td><span class="status-pill wait">Chờ TPKD</span></td>
-                      <td class="open-arrow">›</td>
+                      <td class="open-arrow"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></td>
                     </tr>
                     <tr data-request-id="req-142007" data-user="Đỗ Hải Yến" data-code="Costing 142007 95.xlsx" data-branch="SC3" data-old-date="30/09/2025" data-new-date="05/02/2026" data-reason="Kế hoạch vận chuyển được xác nhận lại" data-tpkd="Đã duyệt" data-tgd="Đã duyệt" data-state="Đã duyệt" data-status-class="approved" data-actionable="0">
                       <td class="user-cell"><strong>Đỗ Hải Yến</strong><span>NV Kinh doanh</span></td>
@@ -742,7 +747,7 @@
                       <td class="plan-date-cell">30/09/2025</td>
                       <td class="adjust-date-cell">05/02/2026</td>
                       <td><span class="status-pill approved">Đã duyệt</span></td>
-                      <td class="open-arrow">›</td>
+                      <td class="open-arrow"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></td>
                     </tr>
                     <tr data-request-id="req-ltch01" data-user="Vũ Thanh Nam" data-code="LT_Ch01/2025-COSTING TN2" data-branch="VĐ" data-old-date="26/10/2024" data-new-date="07/03/2026" data-reason="Chờ khách hàng hoàn tất thủ tục nhập kho" data-tpkd="Đã duyệt" data-tgd="Chờ duyệt" data-state="Chờ TGĐ duyệt" data-status-class="wait" data-actionable="1">
                       <td class="user-cell"><strong>Vũ Thanh Nam</strong><span>NV Kinh doanh</span></td>
@@ -750,7 +755,7 @@
                       <td class="plan-date-cell">26/10/2024</td>
                       <td class="adjust-date-cell">07/03/2026</td>
                       <td><span class="status-pill wait">Chờ TGĐ</span></td>
-                      <td class="open-arrow">›</td>
+                      <td class="open-arrow"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></td>
                     </tr>
                   </tbody>
                 </table>
@@ -759,7 +764,7 @@
 
             <div class="approval-detail-view" id="approvalDetailView">
               <div class="detail-topbar">
-                <button class="detail-back" id="mBackBtn" aria-label="Quay lại danh sách">←</button>
+                <button class="detail-back" id="mBackBtn" aria-label="Quay lại danh sách"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i></button>
                 <div><div class="dt-title">Chi tiết phê duyệt</div><div class="dt-sub">Mở đúng yêu cầu của người gửi được chọn</div></div>
               </div>
               <div class="detail-card">
@@ -790,29 +795,29 @@
         <div class="home-bar"></div>
       </div>
     </div>
-    <div class="mobile-caption">📱 Mô phỏng App Phê duyệt: danh sách dạng bảng hiển thị nhiều yêu cầu; chọn một dòng hoặc thông báo trên chuông 🔔 để mở thẳng chi tiết phê duyệt của người trình tương ứng.</div>
+    <div class="mobile-caption"><i class="fa-solid fa-mobile-screen-button inline-icon" aria-hidden="true"></i> Mô phỏng App Phê duyệt: danh sách dạng bảng hiển thị nhiều yêu cầu; chọn một dòng hoặc thông báo trên chuông <i class="fa-solid fa-bell inline-icon" aria-hidden="true"></i> để mở thẳng chi tiết phê duyệt của người trình tương ứng.</div>
 
     <div class="hint-note">
-      💡 Danh sách phê duyệt hiển thị dạng bảng để lãnh đạo xem được nhiều hồ sơ cùng lúc. Khi bấm một thông báo trên chuông, app <b>mở trực tiếp màn hình chi tiết của đúng người trình/yêu cầu đó</b>, không chỉ cuộn hoặc đánh dấu trong danh sách.<br>
-      💡 2 cấp duyệt tuần tự: <b>TPKD Công ty</b> duyệt trước → sau đó mới đến <b>TGĐ</b>. Nếu 1 trong 2 cấp từ chối, yêu cầu kết thúc luồng. Sau khi <b>TGĐ duyệt xong</b>, hệ thống mới điền giá trị vào ô "Ngày XH điều chỉnh" tại Bảng theo dõi PAKD.
+      <i class="fa-solid fa-lightbulb inline-icon warn" aria-hidden="true"></i> Danh sách phê duyệt hiển thị dạng bảng để lãnh đạo xem được nhiều hồ sơ cùng lúc. Khi bấm một thông báo trên chuông, app <b>mở trực tiếp màn hình chi tiết của đúng người trình/yêu cầu đó</b>, không chỉ cuộn hoặc đánh dấu trong danh sách.<br>
+      <i class="fa-solid fa-lightbulb inline-icon warn" aria-hidden="true"></i> 2 cấp duyệt tuần tự: <b>TPKD Công ty</b> duyệt trước <i class="fa-solid fa-arrow-right inline-icon" aria-hidden="true"></i> sau đó mới đến <b>TGĐ</b>. Nếu 1 trong 2 cấp từ chối, yêu cầu kết thúc luồng. Sau khi <b>TGĐ duyệt xong</b>, hệ thống mới điền giá trị vào ô "Ngày XH điều chỉnh" tại Bảng theo dõi PAKD.
     </div>
   </div>
 </div>
 
 <!-- context menu -->
 <div class="ctxmenu" id="ctxMenu">
-  <div class="item"><span class="icon">▤</span> Chèn cột</div>
-  <div class="item"><span class="icon">▥</span> Bỏ chọn cột</div>
-  <div class="item"><span class="icon">▦</span> Ẩn cột</div>
-  <div class="item"><span class="icon">☰</span> Danh sách cột ẩn</div>
+  <div class="item"><span class="icon"><i class="fa-solid fa-table-columns" aria-hidden="true"></i></span> Chèn cột</div>
+  <div class="item"><span class="icon"><i class="fa-regular fa-square-check" aria-hidden="true"></i></span> Bỏ chọn cột</div>
+  <div class="item"><span class="icon"><i class="fa-solid fa-eye-slash" aria-hidden="true"></i></span> Ẩn cột</div>
+  <div class="item"><span class="icon"><i class="fa-solid fa-list" aria-hidden="true"></i></span> Danh sách cột ẩn</div>
   <div class="sep"></div>
-  <div class="item"><span class="icon">⇩</span> Xuất Excel</div>
-  <div class="item"><span class="icon">👁</span> Hiển thị Excel</div>
+  <div class="item"><span class="icon"><i class="fa-solid fa-file-arrow-down" aria-hidden="true"></i></span> Xuất Excel</div>
+  <div class="item"><span class="icon"><i class="fa-solid fa-eye" aria-hidden="true"></i></span> Hiển thị Excel</div>
   <div class="sep"></div>
-  <div class="item"><span class="icon">📄</span> Tạo yêu cầu duyệt mẫu</div>
-  <div class="item"><span class="icon">📋</span> Danh sách yêu cầu duyệt mẫu</div>
+  <div class="item"><span class="icon"><i class="fa-regular fa-file-lines" aria-hidden="true"></i></span> Tạo yêu cầu duyệt mẫu</div>
+  <div class="item"><span class="icon"><i class="fa-solid fa-clipboard-list" aria-hidden="true"></i></span> Danh sách yêu cầu duyệt mẫu</div>
   <div class="sep"></div>
-  <div class="item new" id="ctxEditDate"><span class="icon">📅</span> Sửa ngày xuất hàng</div>
+  <div class="item new" id="ctxEditDate"><span class="icon"><i class="fa-solid fa-calendar-days" aria-hidden="true"></i></span> Sửa ngày xuất hàng</div>
 </div>
 
 <!-- live modal -->
@@ -1012,13 +1017,13 @@
     document.getElementById('overlay').style.display='none';
     if(currentRow){
       // BR-06: ô "Ngày XH điều chỉnh" vẫn để TRỐNG khi đang chờ duyệt,
-      // chỉ thêm icon ⏳ báo có đề xuất — value chỉ được điền khi duyệt đủ 2 cấp (mô phỏng ở App di động).
+      // Chỉ thêm icon Font Awesome báo có đề xuất; value chỉ được điền khi duyệt đủ 2 cấp.
       const adjCell = currentRow.querySelector('.adj-date');
       if(!adjCell.querySelector('.adj-pending')){
         const pend = document.createElement('span');
         pend.className='adj-pending';
         pend.title='Đang có yêu cầu chờ duyệt';
-        pend.textContent='⏳';
+        pend.innerHTML='<i class="fa-solid fa-hourglass-half" aria-label="Đang chờ xử lý"></i>';
         adjCell.appendChild(pend);
       }
       currentRow.classList.remove('ctx-open');
@@ -1057,7 +1062,7 @@
         '<td class="code-cell"><strong>'+escapeHtml(codeText)+'</strong><span>'+escapeHtml(currentRow.dataset.branch)+'</span></td>'+
         '<td class="plan-date-cell">'+escapeHtml(row.dataset.oldDate)+'</td>'+
         '<td class="adjust-date-cell">'+newDateText+'</td>'+
-        '<td><span class="status-pill wait">Chờ TPKD</span></td><td class="open-arrow">›</td>';
+        '<td><span class="status-pill wait">Chờ TPKD</span></td><td class="open-arrow"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></td>';
       document.getElementById('approvalTableBody').prepend(row);
     }
     const toast = document.getElementById('toast');

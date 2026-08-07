@@ -15,8 +15,8 @@
     ['Review đồng nghiệp', 'SRS_Employee_Rating_System_v3.html', 'erp-lvl-2'],
     ['Kho', 'docs/02-process-flow.html', 'erp-lvl-1'],
     ['Tre Support', 'Tre_smart_help_center.html', 'erp-lvl-1'],
-    ['Mẫu tài liệu dự án', 'mau-tai-lieu-du-an.html', 'erp-lvl-1'],
-    ['QT phối hợp dự án', 'QT-phoi-hop-QLDA.html', 'erp-lvl-1']
+    ['QT phối hợp dự án', 'QT-phoi-hop-QLDA.html', 'erp-lvl-1'],
+    ['Mẫu tài liệu dự án', 'mau-tai-lieu-du-an.html', 'erp-lvl-1']
   ];
   var warehouseLinks = [
     ['Quy trình RFID', '02-process-flow.html'],

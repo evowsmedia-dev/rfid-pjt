@@ -13,6 +13,7 @@
     ['QLCL', 'index.html#dm-qlcl', 'erp-lvl-1'],
     ['App TNGoffice', 'index.html#dm-tngoffice', 'erp-lvl-1'],
     ['Review đồng nghiệp', 'SRS_Employee_Rating_System_v3.html', 'erp-lvl-2'],
+    ['QT phối hợp dự án', 'QT-phoi-hop-QLDA.html', 'erp-lvl-1'],
     ['Kho', 'docs/02-process-flow.html', 'erp-lvl-1'],
     ['Tre Support', 'Tre_smart_help_center.html', 'erp-lvl-1']
   ];

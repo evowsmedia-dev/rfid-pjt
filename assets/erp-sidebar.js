@@ -11,6 +11,8 @@
     ['KHSX', 'index.html#dm-khsx', 'erp-lvl-1'],
     ['Công nghệ', 'index.html#dm-congnghe', 'erp-lvl-1'],
     ['QLCL', 'index.html#dm-qlcl', 'erp-lvl-1'],
+    ['App TNGoffice', 'index.html#dm-tngoffice', 'erp-lvl-1'],
+    ['Review đồng nghiệp', 'SRS_Employee_Rating_System_v3.html', 'erp-lvl-2'],
     ['Kho', 'docs/02-process-flow.html', 'erp-lvl-1'],
     ['Tre Support', 'Tre_smart_help_center.html', 'erp-lvl-1']
   ];
@@ -28,7 +30,8 @@
     'pda-mockup-kho-PL.html'
   ];
   function hrefFor(href){
-    return href.indexOf('docs/') === 0 || href.indexOf('Di_hoc_hoi') === 0 || href.indexOf('Tre_smart_help_center') === 0 || href.indexOf('index') === 0 ? prefix + href : href;
+    if(href.indexOf('#') === 0 || href.indexOf('http') === 0 || href.indexOf('/') === 0) return href;
+    return prefix + href;
   }
   function render(){
     if(document.querySelector('.erp-global-sidebar')) return;

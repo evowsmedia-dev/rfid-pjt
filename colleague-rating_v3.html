@@ -1,0 +1,1425 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TNG App - UI Mạng xã hội nội bộ</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="assets/erp-sidebar.css">
+<style>
+  :root{
+    --green:#2FA84F;
+    --green-dark:#22803A;
+    --green-soft:#E9F7EE;
+    --blue:#1877F2;
+    --gold:#F0A93C;
+    --bg:#F0F2F5;
+    --card:#FFFFFF;
+    --border:#E4E6EB;
+    --text:#050505;
+    --text2:#65676B;
+    --text3:#8A8D91;
+    --radius:14px;
+    --radius-sm:8px;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:#dfe3e8;
+    display:flex; align-items:flex-start; justify-content:center;
+    min-height:100vh; padding:30px 10px;
+    color:var(--text);
+  }
+  .page-note{
+    position:fixed; top:8px; left:50%; transform:translateX(-50%);
+    font-size:12px; color:#9aa1a8; text-align:center; width:100%;
+  }
+
+  /* PHONE FRAME */
+  .phone{
+    width:390px; height:844px;
+    background:#000;
+    border-radius:46px;
+    padding:12px;
+    box-shadow:0 30px 60px rgba(0,0,0,0.35), 0 0 0 2px #111;
+    position:relative;
+    flex-shrink:0;
+  }
+  .screen-clip{
+    width:100%; height:100%;
+    background:var(--bg);
+    border-radius:34px;
+    overflow:hidden;
+    position:relative;
+    display:flex; flex-direction:column;
+  }
+  .notch{
+    position:absolute; top:12px; left:50%; transform:translateX(-50%);
+    width:120px; height:26px; background:#000; border-radius:16px; z-index:50;
+  }
+  .status-bar{
+    height:44px; flex-shrink:0; background:var(--card);
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0 26px; font-size:14px; font-weight:600; color:#000;
+    position:relative; z-index:5;
+  }
+  .status-bar .icons{display:flex; align-items:center; gap:5px;}
+
+  /* APP SHELL */
+  .app{flex:1; display:flex; flex-direction:column; min-height:0; position:relative;}
+  .screen{flex:1; display:flex; flex-direction:column; min-height:0; overflow:hidden;}
+  .screen.hidden{display:none;}
+
+  /* HEADER */
+  .app-header{
+    background:var(--card); border-bottom:1px solid var(--border);
+    height:50px; flex-shrink:0;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0 14px; position:relative;
+  }
+  .app-header .title{
+    font-size:19px; font-weight:800; color:var(--green);
+    position:absolute; left:50%; transform:translateX(-50%);
+  }
+  .app-header .icon-btn{
+    width:34px; height:34px; border-radius:50%; background:#F0F2F5;
+    display:flex; align-items:center; justify-content:center;
+    position:relative; cursor:pointer; border:none;
+  }
+  .badge-dot{
+    position:absolute; top:-2px; right:-2px; background:#FA383E; color:#fff;
+    font-size:10px; font-weight:700; min-width:16px; height:16px; border-radius:8px;
+    display:flex; align-items:center; justify-content:center; padding:0 3px;
+    border:2px solid var(--card);
+  }
+
+  /* NOTIFICATION DROPDOWN */
+  .notif-panel{
+    position:absolute; top:52px; right:10px; width:270px; background:var(--card);
+    border-radius:var(--radius); box-shadow:0 6px 24px rgba(0,0,0,0.18); border:1px solid var(--border);
+    z-index:60; overflow:hidden; opacity:0; transform:translateY(-8px) scale(0.97);
+    pointer-events:none; transition:all .18s ease;
+  }
+  .notif-panel.open{opacity:1; transform:translateY(0) scale(1); pointer-events:auto;}
+  .notif-panel h4{margin:0; padding:12px 14px; font-size:14px; border-bottom:1px solid var(--border);}
+  .notif-item{
+    display:flex; gap:10px; padding:10px 14px; border-bottom:1px solid #F2F2F2; cursor:pointer;
+  }
+  .notif-item:last-child{border-bottom:none;}
+  .notif-item:active{background:#F7F7F7;}
+  .notif-ico{
+    width:32px; height:32px; border-radius:50%; background:var(--green-soft); color:var(--green);
+    display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:15px;
+  }
+  .notif-item p{margin:0; font-size:12.5px; line-height:1.4; color:var(--text);}
+  .notif-item span{font-size:11px; color:var(--text3);}
+
+  /* SCROLL AREA */
+  .scroll-area{flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; position:relative;}
+  .scroll-area::-webkit-scrollbar{display:none;}
+
+  /* PULL TO REFRESH */
+  .refresh-indicator{
+    height:0; overflow:hidden; display:flex; align-items:center; justify-content:center;
+    transition:height .15s ease; background:var(--bg);
+  }
+  .spinner{
+    width:20px; height:20px; border-radius:50%;
+    border:2.5px solid #d5d9de; border-top-color:var(--green);
+    animation:spin .7s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  /* COMPOSER */
+  .composer-bar{
+    background:var(--card); margin:8px 8px 0; border-radius:var(--radius);
+    padding:10px 12px; display:flex; align-items:center; gap:10px;
+    border:1px solid var(--border); cursor:pointer;
+  }
+  .avatar{
+    width:38px; height:38px; border-radius:50%; background:var(--green);
+    color:#fff; display:flex; align-items:center; justify-content:center;
+    font-size:12px; font-weight:700; flex-shrink:0;
+  }
+  .avatar.sm{width:30px; height:30px; font-size:10px;}
+  .composer-bar .fake-input{
+    flex:1; background:var(--bg); border-radius:20px; padding:9px 14px;
+    color:var(--text3); font-size:14px;
+  }
+
+  /* POST CARD */
+  .post{
+    background:var(--card); margin:10px 8px 0; border-radius:var(--radius);
+    border:1px solid var(--border); overflow:hidden;
+  }
+  .post.new{animation:dropIn .35s ease;}
+  @keyframes dropIn{from{opacity:0; transform:translateY(-14px);} to{opacity:1; transform:translateY(0);}}
+  .post-head{display:flex; align-items:flex-start; gap:10px; padding:12px 12px 6px;}
+  .post-head .who{flex:1; min-width:0;}
+  .post-head .name{font-size:14px; font-weight:700; color:var(--text); display:flex; align-items:center; gap:6px;}
+  .role-tag{font-size:11px; font-weight:400; color:var(--text2);}
+  .post-head .meta{font-size:12px; color:var(--text3); display:flex; align-items:center; gap:5px; margin-top:1px;}
+  .idea-badge{
+    background:#FFF6E5; color:var(--gold); font-size:10.5px; font-weight:700;
+    padding:1px 7px; border-radius:8px; border:1px solid #FCE3AE;
+  }
+  .more-btn{background:none; border:none; color:var(--text3); font-size:18px; cursor:pointer; padding:4px 8px;}
+  .post-text{padding:2px 12px 10px; font-size:13.5px; line-height:1.5; color:var(--text); white-space:pre-line;}
+  .post-media{display:grid; grid-template-columns:1fr 1fr; gap:2px;}
+  .swatch{
+    height:130px; position:relative; overflow:hidden;
+    display:flex; align-items:flex-end; justify-content:flex-start;
+  }
+  .swatch span{
+    font-size:10px; color:#fff; background:rgba(0,0,0,0.35); padding:2px 6px; margin:6px; border-radius:6px;
+  }
+  .swatch.fabric{background:linear-gradient(135deg,#1b2a52 0%,#1b2a52 48%,#c8102e 52%,#c8102e 100%);}
+  .swatch.sketch{background:#f4f5f0;}
+  .swatch.sketch svg{width:100%; height:100%;}
+  .post-media img.zoomable, .swatch.zoomable{cursor:zoom-in;}
+
+  .post-stats{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:8px 12px; font-size:12px; color:var(--text3);
+  }
+  .stats-left{display:flex; align-items:center; gap:4px;}
+  .like-dot{
+    width:16px; height:16px; border-radius:50%; background:var(--blue);
+    color:#fff; display:flex; align-items:center; justify-content:center; font-size:9px;
+  }
+  .post-actions{
+    display:flex; border-top:1px solid var(--border);
+  }
+  .act-btn{
+    flex:1; border:none; background:none; padding:9px 0; font-size:13px; font-weight:600;
+    color:var(--text2); display:flex; align-items:center; justify-content:center; gap:6px; cursor:pointer;
+  }
+  .act-btn:active{background:#F5F5F5;}
+  .act-btn.liked{color:var(--blue);}
+  .act-btn .pop{display:inline-block;}
+  .act-btn.pop-anim .pop{animation:popLike .3s ease;}
+  @keyframes popLike{0%{transform:scale(1);} 40%{transform:scale(1.5);} 100%{transform:scale(1);}}
+
+  /* toast */
+  .toast{
+    position:absolute; bottom:90px; left:50%; transform:translateX(-50%) translateY(10px);
+    background:rgba(20,20,20,0.9); color:#fff; padding:9px 16px; border-radius:20px;
+    font-size:12.5px; opacity:0; pointer-events:none; transition:all .25s ease; z-index:200; white-space:nowrap;
+  }
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+
+  /* double tap heart */
+  .heart-pop{
+    position:absolute; font-size:70px; color:#fff; opacity:0; z-index:20;
+    text-shadow:0 2px 10px rgba(0,0,0,0.3); pointer-events:none;
+    top:50%; left:50%; transform:translate(-50%,-50%) scale(0.5);
+  }
+  .heart-pop.go{animation:heartPop .8s ease forwards;}
+  @keyframes heartPop{
+    0%{opacity:0; transform:translate(-50%,-50%) scale(0.4);}
+    25%{opacity:1; transform:translate(-50%,-50%) scale(1.15);}
+    40%{transform:translate(-50%,-50%) scale(1);}
+    100%{opacity:0; transform:translate(-50%,-50%) scale(1);}
+  }
+
+  /* BOTTOM NAV */
+  .bottom-nav{
+    height:58px; background:var(--card); border-top:1px solid var(--border);
+    display:flex; flex-shrink:0; padding-bottom:2px;
+  }
+  .nav-item{
+    flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:3px; cursor:pointer; color:var(--text3); font-size:10.5px; font-weight:600; border:none; background:none;
+    position:relative;
+  }
+  .nav-item.active{color:var(--blue);}
+  .nav-item .ico{font-size:20px;}
+  .nav-badge{
+    position:absolute; top:2px; right:26%; background:#FA383E; color:#fff; font-size:9px; font-weight:700;
+    min-width:14px; height:14px; border-radius:7px; display:flex; align-items:center; justify-content:center; padding:0 3px;
+  }
+
+  /* OVERLAYS (sheets) */
+  .overlay-backdrop{
+    position:absolute; inset:0; background:rgba(0,0,0,0.4); z-index:100;
+    opacity:0; pointer-events:none; transition:opacity .2s ease;
+  }
+  .overlay-backdrop.open{opacity:1; pointer-events:auto;}
+  .sheet{
+    position:absolute; left:0; right:0; bottom:0; background:var(--card);
+    border-radius:20px 20px 0 0; z-index:101; max-height:80%; display:flex; flex-direction:column;
+    transform:translateY(100%); transition:transform .28s cubic-bezier(.32,.72,0,1);
+  }
+  .sheet.open{transform:translateY(0);}
+  .sheet.full{max-height:none; top:0; border-radius:0;}
+  .sheet.full.open{transform:translateY(0);}
+  .sheet-handle{width:36px; height:4px; background:#D8DADE; border-radius:2px; margin:8px auto;}
+  .sheet-header{
+    display:flex; align-items:center; justify-content:space-between; padding:4px 14px 10px;
+    border-bottom:1px solid var(--border); font-weight:700; font-size:15px;
+  }
+  .sheet-header button{background:none; border:none; font-size:14px; color:var(--blue); font-weight:700; cursor:pointer;}
+  .sheet-header .close-x{color:var(--text2); font-size:20px; font-weight:400;}
+
+  /* comments */
+  .comments-list{flex:1; overflow-y:auto; padding:10px 14px;}
+  .comment{display:flex; gap:8px; margin-bottom:12px;}
+  .bubble{background:var(--bg); border-radius:14px; padding:8px 12px; flex:1;}
+  .bubble .cname{font-size:12.5px; font-weight:700;}
+  .bubble .ctext{font-size:13px; margin-top:1px; line-height:1.4;}
+  .comment-input-row{
+    display:flex; align-items:center; gap:8px; padding:10px 12px;
+    border-top:1px solid var(--border); background:var(--card);
+  }
+  .comment-input-row input{
+    flex:1; border:1px solid var(--border); background:var(--bg); border-radius:20px;
+    padding:9px 14px; font-size:13.5px; outline:none;
+  }
+  .send-btn{
+    width:34px; height:34px; border-radius:50%; background:var(--blue); color:#fff; border:none;
+    display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0;
+  }
+
+  /* composer full */
+  .composer-body{padding:12px 14px; flex:1; display:flex; flex-direction:column;}
+  .composer-who{display:flex; align-items:center; gap:8px; margin-bottom:10px;}
+  .composer-who .name{font-size:14px; font-weight:700;}
+  .composer-who .vis{font-size:11px; color:var(--text2); background:var(--bg); border-radius:6px; padding:1px 6px; display:inline-flex; align-items:center; gap:3px; margin-top:2px;}
+  textarea#postText{
+    border:none; outline:none; resize:none; font-size:16px; font-family:inherit; flex:1; min-height:120px; color:var(--text);
+  }
+  .composer-toolbar{
+    display:flex; gap:14px; padding:10px 0; border-top:1px solid var(--border); color:var(--text2); font-size:13px;
+  }
+  .composer-toolbar span{display:flex; align-items:center; gap:5px; cursor:pointer;}
+
+  /* PROFILE SCREEN */
+  .profile-cover{height:90px; background:linear-gradient(120deg,var(--green),#59C97F);}
+  .profile-card{background:var(--card); margin:-40px 12px 0; border-radius:var(--radius); padding:16px; text-align:center; box-shadow:0 2px 10px rgba(0,0,0,0.05);}
+  .profile-avatar{
+    width:82px; height:82px; border-radius:50%; background:#EDEFF1; border:4px solid var(--card);
+    margin:-56px auto 8px; display:flex; align-items:center; justify-content:center; position:relative; color:var(--text3); font-size:26px;
+  }
+  .cam-btn{
+    position:absolute; bottom:2px; right:2px; width:26px; height:26px; border-radius:50%; background:var(--green);
+    color:#fff; display:flex; align-items:center; justify-content:center; border:2px solid var(--card); font-size:12px; cursor:pointer;
+  }
+  .profile-card h2{margin:4px 0 0; font-size:17px;}
+  .profile-card .code{font-size:12px; color:var(--text2); margin-bottom:4px;}
+  .info-list{background:var(--card); margin:10px 12px 0; border-radius:var(--radius); overflow:hidden; border:1px solid var(--border);}
+  .info-row{display:flex; align-items:center; gap:10px; padding:12px 14px; border-bottom:1px solid #F2F2F2; font-size:13px;}
+  .info-row:last-child{border-bottom:none;}
+  .info-row .ico{width:20px; text-align:center; color:var(--text2);}
+  .info-row b{font-weight:600;}
+  .quick-actions{display:flex; gap:8px; margin:12px 12px 0;}
+  .qa-btn{
+    flex:1; background:var(--card); border:1px solid var(--border); border-radius:12px; padding:12px 6px;
+    text-align:center; font-size:11.5px; font-weight:600; color:var(--text); cursor:pointer;
+  }
+  .qa-btn:active{background:var(--green-soft);}
+  .qa-btn .ico{font-size:20px; display:block; margin-bottom:4px;}
+
+  /* SURVEY SCREEN */
+  .survey-tabs{display:flex; background:var(--card); border-bottom:1px solid var(--border);}
+  .survey-tab{
+    flex:1; text-align:center; padding:12px 0; font-size:13.5px; font-weight:600; color:var(--text2);
+    border-bottom:2px solid transparent; cursor:pointer;
+  }
+  .survey-tab.active{color:var(--green); border-color:var(--green);}
+  .survey-card{
+    background:var(--card); margin:12px; border-radius:var(--radius); border:1px solid var(--border); padding:14px; cursor:pointer;
+    position:relative;
+  }
+  .survey-card .new-flag{
+    position:absolute; top:0; right:14px; background:#FA383E; color:#fff; font-size:9px; font-weight:700;
+    padding:3px 8px; border-radius:0 0 6px 6px;
+  }
+  .survey-card h4{margin:0 0 8px; font-size:14.5px; line-height:1.4; padding-right:40px;}
+  .survey-card .scope{font-size:12px; color:var(--text2); margin-bottom:10px;}
+  .survey-meta{display:flex; justify-content:space-between; font-size:12px; color:var(--text3); margin-bottom:6px;}
+  .progress-track{height:6px; background:#EDEFF1; border-radius:4px; overflow:hidden;}
+  .progress-fill{height:100%; background:var(--green); width:0%; border-radius:4px; transition:width .8s ease;}
+  .empty-state{padding:60px 30px; text-align:center; color:var(--text3); font-size:13px;}
+  .empty-state .ico{font-size:34px; display:block; margin-bottom:10px;}
+
+  /* FEED ENTRY POINTS (Đánh giá nhân viên - Newsfeed entry) */
+  .feed-entry-row{display:flex; gap:8px; margin:10px 8px 0;}
+  .entry-card{
+    flex:1; background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+    padding:12px 10px; display:flex; align-items:center; gap:10px; cursor:pointer;
+  }
+  .entry-card:active{background:#F7F7F7;}
+  .entry-ico{
+    width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center;
+    font-size:16px; flex-shrink:0;
+  }
+  .entry-ico.gold{background:#FFF6E5; color:var(--gold);}
+  .entry-ico.blue{background:#E8F1FE; color:var(--blue);}
+  .entry-text .t1{font-size:12.5px; font-weight:700; color:var(--text);}
+  .entry-text .t2{font-size:10.5px; color:var(--text3); margin-top:1px;}
+
+  /* CONTACT LIST */
+  .contact-item{
+    display:flex; align-items:center; gap:10px; padding:11px 14px; background:var(--card);
+    border-bottom:1px solid #F2F2F2; cursor:pointer;
+  }
+  .contact-item:active{background:#F7F7F7;}
+  .contact-item .who{flex:1; min-width:0;}
+  .contact-item .name{font-size:13.5px; font-weight:700; color:var(--text);}
+  .contact-item .sub{font-size:11.5px; color:var(--text3); margin-top:1px;}
+  .contact-item .chev{color:var(--text3); font-size:13px;}
+  .contact-dept-label{padding:10px 14px 4px; font-size:11.5px; font-weight:700; color:var(--text3); letter-spacing:.3px;}
+
+  /* GENERIC SUB-HEADER WITH BACK BUTTON */
+  .app-header .back-btn{
+    width:34px; height:34px; border-radius:50%; background:none; border:none; color:var(--text);
+    display:flex; align-items:center; justify-content:center; font-size:17px; cursor:pointer;
+  }
+
+  /* RATING SUMMARY (profile / colleague profile) — Google Maps style */
+  .rating-section{background:var(--card); margin:10px 12px 0; border-radius:var(--radius); border:1px solid var(--border); padding:14px;}
+  .rating-section .sec-title{font-size:13px; font-weight:700; color:var(--text); margin-bottom:10px; display:flex; align-items:center; gap:6px;}
+  .rating-section .sec-title i{color:var(--gold);}
+  .rs-top{display:flex; gap:14px; align-items:center; margin-bottom:12px;}
+  .rs-score{text-align:center; flex-shrink:0; width:78px;}
+  .rs-number{font-size:30px; font-weight:800; color:var(--text); line-height:1;}
+  .rs-stars{color:var(--gold); font-size:13px; margin:4px 0 2px; letter-spacing:1px;}
+  .rs-stars .fa-regular{color:#DADDE1;}
+  .rs-total{font-size:10.5px; color:var(--text3);}
+  .rs-empty{font-size:12px; color:var(--text3); padding:6px 0;}
+  .rs-bars{flex:1; display:flex; flex-direction:column; gap:4px;}
+  .rs-bar-row{display:flex; align-items:center; gap:6px; font-size:10px; color:var(--text3);}
+  .rs-bar-row .lbl{width:10px; flex-shrink:0;}
+  .rs-bar{flex:1; height:6px; background:#EDEFF1; border-radius:4px; overflow:hidden;}
+  .rs-fill{height:100%; background:var(--gold); border-radius:4px; transition:width .5s ease;}
+
+  .rs-trend-title{font-size:11.5px; font-weight:700; color:var(--text2); margin:2px 0 8px;}
+  .rs-trend-scroll{overflow-x:auto; -webkit-overflow-scrolling:touch;}
+  .rs-trend-scroll::-webkit-scrollbar{display:none;}
+  .rs-trend-scroll svg{display:block;}
+
+  .rs-rate-btn{
+    width:100%; margin-top:12px; background:var(--green); color:#fff; border:none; border-radius:10px;
+    padding:11px; font-size:13.5px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:7px;
+  }
+  .rs-rate-btn:active{background:var(--green-dark);}
+  .rs-rate-btn.disabled{background:#E4E6EB; color:var(--text3); cursor:default;}
+  .rs-note{font-size:11px; color:var(--text3); text-align:center; margin-top:7px;}
+
+  /* skeleton */
+  .skeleton-block{background:linear-gradient(90deg,#EDEFF1 25%,#F6F7F8 37%,#EDEFF1 63%); background-size:400% 100%; animation:skeletonWave 1.3s ease infinite; border-radius:8px;}
+  @keyframes skeletonWave{0%{background-position:100% 0;} 100%{background-position:0 0;}}
+  .rating-skel .sk-row{height:12px; margin-bottom:8px;}
+  .rating-skel .sk-num{width:70px; height:34px; margin:0 auto 6px;}
+
+  /* LEADERBOARD */
+  .lb-filter-bar{display:flex; gap:8px; padding:10px 12px; background:var(--card); border-bottom:1px solid var(--border);}
+  .lb-select{
+    flex:1; border:1px solid var(--border); border-radius:8px; padding:8px 10px; font-size:12.5px; color:var(--text);
+    background:var(--bg); font-family:inherit;
+  }
+  .lb-threshold-note{font-size:10.5px; color:var(--text3); padding:8px 14px 0; line-height:1.4;}
+  .lb-list{padding:8px 0 14px;}
+  .lb-row{display:flex; align-items:center; gap:10px; padding:10px 14px; background:var(--card); border-bottom:1px solid #F2F2F2; cursor:pointer;}
+  .lb-row:active{background:#F7F7F7;}
+  .lb-rank{width:26px; text-align:center; font-size:13px; font-weight:800; color:var(--text3); flex-shrink:0;}
+  .lb-rank.gold{color:#E8A100;} .lb-rank.silver{color:#9AA1A8;} .lb-rank.bronze{color:#B5651D;}
+  .lb-who{flex:1; min-width:0;}
+  .lb-name{font-size:13px; font-weight:700; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .lb-sub{font-size:10.5px; color:var(--text3); margin-top:1px;}
+  .lb-score{text-align:right; flex-shrink:0;}
+  .lb-score .num{font-size:14px; font-weight:800; color:var(--text);}
+  .lb-score .cnt{font-size:10px; color:var(--text3);}
+
+  /* RATING BOTTOM SHEET */
+  .rate-sheet-body{padding:18px 20px 20px; text-align:center;}
+  .rate-target-avatar{
+    width:64px; height:64px; border-radius:50%; background:#EDEFF1; color:var(--text3);
+    display:flex; align-items:center; justify-content:center; font-size:24px; margin:0 auto 10px;
+  }
+  .rate-target-name{font-size:15px; font-weight:700; color:var(--text);}
+  .rate-target-sub{font-size:11.5px; color:var(--text3); margin-top:2px; margin-bottom:16px;}
+  .star-picker{display:flex; justify-content:center; gap:10px; margin-bottom:10px;}
+  .star-picker i{font-size:32px; color:#DADDE1; cursor:pointer; transition:transform .1s ease;}
+  .star-picker i.on{color:var(--gold);}
+  .star-picker i:active{transform:scale(1.15);}
+  .star-desc{font-size:12.5px; font-weight:600; color:var(--text2); min-height:18px; margin-bottom:14px;}
+  .anon-note{
+    display:flex; align-items:center; gap:8px; background:var(--green-soft); color:var(--green-dark);
+    border-radius:10px; padding:10px 12px; font-size:11.5px; text-align:left; line-height:1.4; margin-bottom:16px;
+  }
+  .anon-note i{font-size:15px; flex-shrink:0;}
+  .rate-submit-btn{
+    width:100%; background:var(--green); color:#fff; border:none; padding:12px; border-radius:10px;
+    font-size:14.5px; font-weight:700; cursor:pointer;
+  }
+  .rate-submit-btn:disabled{background:#E4E6EB; color:var(--text3);}
+  .criteria-list{display:flex;flex-direction:column;gap:12px;margin:4px 0 14px;text-align:left;}
+  .criterion-card{border:1px solid var(--border);border-radius:12px;padding:11px 12px;background:#fff;}
+  .criterion-title{font-size:12.5px;font-weight:700;margin-bottom:7px;color:var(--text);}
+  .criterion-picker{display:flex;gap:8px;align-items:center;}
+  .criterion-picker i{font-size:25px;color:#DADDE1;cursor:pointer;}
+  .criterion-picker i.on{color:var(--gold);}
+  .criterion-desc{font-size:10.5px;color:var(--text3);margin-top:5px;min-height:14px;}
+  .criteria-summary{display:grid;grid-template-columns:125px 1fr;gap:10px;align-items:center;margin:10px 0 12px;}
+  .radar-wrap{display:flex;align-items:center;justify-content:center;}
+  .criterion-score-row{display:flex;justify-content:space-between;gap:8px;font-size:11px;padding:5px 0;border-bottom:1px solid #F0F1F2;}
+  .criterion-score-row:last-child{border-bottom:none;}
+  .criterion-score-row b{color:var(--text);}
+  .weighted-note{font-size:10px;color:var(--text3);margin-top:2px;}
+  .pending-title{font-size:11px;font-weight:700;color:var(--text2);padding:12px 14px 6px;background:var(--bg);}
+  .lb-row.pending{cursor:default;opacity:.88;}
+  .pending-pill{display:inline-block;font-size:9.5px;background:#EEF1F4;color:var(--text2);padding:3px 7px;border-radius:10px;margin-top:3px;}
+  .rating-comment-box{margin:2px 0 12px;text-align:left;}
+  .rating-comment-label{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:700;color:var(--text);margin-bottom:6px;}
+  .rating-comment-label span{font-size:10px;font-weight:500;color:var(--text3);}
+  .rating-comment-box textarea{width:100%;min-height:76px;resize:none;border:1px solid var(--border);border-radius:10px;padding:10px 11px;font-family:inherit;font-size:12.5px;line-height:1.45;outline:none;background:#FAFBFC;color:var(--text);}
+  .rating-comment-box textarea:focus{border-color:var(--green);background:#fff;}
+  .char-count{text-align:right;font-size:10px;color:var(--text3);margin-top:3px;}
+  .peer-comments{margin-top:12px;border-top:1px solid var(--border);padding-top:10px;}
+  .peer-comments-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
+  .peer-comments-title{font-size:11.5px;font-weight:700;color:var(--text2);}
+  .peer-comments-count{font-size:10px;color:var(--text3);}
+  .peer-comment{background:#F7F8F9;border-radius:10px;padding:9px 10px;margin-bottom:7px;text-align:left;}
+  .peer-comment-meta{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px;font-size:10px;color:var(--text3);}
+  .peer-comment-meta b{color:var(--green-dark);font-weight:700;}
+  .peer-comment-text{font-size:11.5px;line-height:1.45;color:var(--text);}
+  .peer-comment-report{border:none;background:none;color:var(--text3);font-size:9.5px;padding:0;cursor:pointer;}
+  .peer-comment-report:hover{color:#C4473D;}
+  .show-more-comments{width:100%;border:1px solid var(--border);background:#fff;border-radius:9px;padding:8px;font-size:11px;font-weight:600;color:var(--text2);cursor:pointer;}
+
+  /* survey detail modal */
+  .q-block{padding:14px; border-bottom:8px solid var(--bg);}
+  .q-block p.qtext{font-size:13.5px; font-weight:600; margin:0 0 10px;}
+  .opt{
+    display:flex; align-items:center; gap:10px; padding:9px 10px; border:1px solid var(--border); border-radius:10px; margin-bottom:8px; cursor:pointer; font-size:13px;
+  }
+  .opt input{accent-color:var(--green);}
+  .opt.selected{border-color:var(--green); background:var(--green-soft);}
+  .submit-bar{padding:12px 14px; border-top:1px solid var(--border);}
+  .submit-btn{
+    width:100%; background:var(--green); color:#fff; border:none; padding:12px; border-radius:10px; font-size:14.5px; font-weight:700; cursor:pointer;
+  }
+  .submit-btn:active{background:var(--green-dark);}
+  .success-overlay{
+    position:absolute; inset:0; background:rgba(255,255,255,0.97); z-index:120; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity .2s ease;
+  }
+  .success-overlay.show{opacity:1; pointer-events:auto;}
+  .check-circle{
+    width:64px; height:64px; border-radius:50%; background:var(--green); color:#fff; display:flex; align-items:center;
+    justify-content:center; font-size:30px; margin-bottom:14px; transform:scale(0); 
+  }
+  .success-overlay.show .check-circle{animation:checkPop .4s cubic-bezier(.34,1.56,.64,1) forwards;}
+  @keyframes checkPop{to{transform:scale(1);}}
+
+  /* image viewer */
+  .img-viewer{position:absolute; inset:0; background:#000; z-index:150; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity .2s;}
+  .img-viewer.open{opacity:1; pointer-events:auto;}
+  .img-viewer .big{width:80%; height:280px; border-radius:8px;}
+  .img-viewer .close-x{position:absolute; top:16px; right:16px; color:#fff; font-size:26px; cursor:pointer;}
+
+  /* simple screens */
+  .simple-screen{flex:1; display:flex; align-items:center; justify-content:center; flex-direction:column; color:var(--text3); gap:8px;}
+  .simple-screen .ico{font-size:40px;}
+
+  /* Font Awesome icon alignment */
+  .icon-btn i, .nav-item .ico, .act-btn i, .qa-btn .ico, .info-row .ico,
+  .notif-ico i, .composer-toolbar i, .like-dot i, .send-btn i, .cam-btn i,
+  .more-btn i, .close-x i, .check-circle i, .status-bar .icons i,
+  .profile-avatar i, .empty-state .ico, .simple-screen .ico {
+    line-height:1; vertical-align:middle;
+  }
+  .status-bar .icons i{font-size:13px; margin-left:4px;}
+  .heart-pop i{font-size:inherit;}
+</style>
+</head>
+<body>
+<div class="page-note">Mockup UI mạng xã hội nội bộ TNG — chạm / vuốt để trải nghiệm tương tác như app thật</div>
+
+<div class="phone">
+  <div class="notch"></div>
+  <div class="screen-clip">
+    <div class="status-bar">
+      <span id="clock">9:41</span>
+      <div class="icons">
+        <i class="fa-solid fa-signal"></i><i class="fa-solid fa-wifi"></i><i class="fa-solid fa-battery-full"></i>
+      </div>
+    </div>
+
+    <div class="app">
+
+      <!-- ===================== FEED SCREEN ===================== -->
+      <div class="screen" id="screen-feed">
+        <div class="app-header">
+          <div style="width:34px;"></div>
+          <div class="title">Nhật ký</div>
+          <button class="icon-btn" onclick="toggleNotif()">
+            <i class="fa-solid fa-bell"></i><span class="badge-dot" id="notifBadge">2</span>
+          </button>
+          <div class="notif-panel" id="notifPanel">
+            <h4>Thông báo</h4>
+            <div class="notif-item" onclick="notifClick(this,'feed')">
+              <div class="notif-ico"><i class="fa-solid fa-thumbs-up"></i></div>
+              <div><p><b>Nguyễn Văn A</b> đã thích bài viết của bạn</p><span>15 phút trước</span></div>
+            </div>
+            <div class="notif-item" onclick="notifClick(this,'survey')">
+              <div class="notif-ico"><i class="fa-solid fa-clipboard-list"></i></div>
+              <div><p>Khảo sát mới: <b>Mức độ hài lòng phần mềm kiểm soát vào chuyền</b></p><span>1 giờ trước</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="scroll-area" id="feedScroll">
+          <div class="refresh-indicator" id="refreshBar"><div class="spinner"></div></div>
+
+          <div class="composer-bar" onclick="openComposer()">
+            <div class="avatar">TNG</div>
+            <div class="fake-input">Bạn đang nghĩ gì?</div>
+          </div>
+
+          <!-- Entry Point: Đánh giá nhân viên & Khảo sát (Màn hình 4) -->
+          <div class="feed-entry-row">
+            <div class="entry-card" onclick="switchTab('leaderboard')">
+              <span class="entry-ico gold"><i class="fa-solid fa-trophy"></i></span>
+              <div class="entry-text"><div class="t1">Xếp hạng</div><div class="t2">Đánh giá đồng nghiệp</div></div>
+            </div>
+            <div class="entry-card" onclick="switchTab('survey')">
+              <span class="entry-ico blue"><i class="fa-solid fa-clipboard-list"></i></span>
+              <div class="entry-text"><div class="t1">Khảo sát</div><div class="t2">1 khảo sát đang mở</div></div>
+            </div>
+          </div>
+
+          <div id="feedList">
+            <!-- Post 1 -->
+            <div class="post" data-comments="3" data-liked="0" data-likes="8">
+              <div class="post-head">
+                <div class="avatar">TNG</div>
+                <div class="who">
+                  <div class="name">Đỗ Thị Hằng Mai <span class="role-tag">· Công nhân Tổ may mẫu PB3</span></div>
+                  <div class="meta">2 ngày <span class="idea-badge">Ý tưởng vàng</span></div>
+                </div>
+                <button class="more-btn" onclick="toggleMore(this)"><i class="fa-solid fa-ellipsis"></i></button>
+              </div>
+              <div class="post-text">Mã hàng 150301 công đoạn giữa mũ
+Trước cải tiến: Đáp cửa mũ ngoài và đáp cửa mũ trong bằng nhau - khi diễu mũ đường diễu mũ ngoài và đường diễu mũ trong phải bằng nhau - dày - đòi hỏi độ chính xác cao - năng suất thấp
+Sau cải tiến: Xin đáp cửa mũ trong cao hơn - diễu mũ - lộn lót mũ - vừa mềm - đẹp - tăng năng suất - khách hàng đã duyệt và sản xuất</div>
+              <div class="post-media">
+                <div class="swatch fabric zoomable" ondblclick="doubleTapLike(this)" onclick="openImage(this,'fabric')"><span>Mẫu vải</span></div>
+                <div class="swatch sketch zoomable" ondblclick="doubleTapLike(this)" onclick="openImage(this,'sketch')">
+                  <svg viewBox="0 0 200 130"><g fill="none" stroke="#334" stroke-width="1.3">
+                    <ellipse cx="55" cy="55" rx="30" ry="38"/>
+                    <path d="M30 40 Q55 20 80 40"/>
+                    <ellipse cx="150" cy="60" rx="26" ry="34"/>
+                    <path d="M128 48 Q150 30 172 48"/>
+                    <line x1="90" y1="55" x2="118" y2="58" stroke-dasharray="3,3"/>
+                    <text x="52" y="95" font-size="9" fill="#334">TM1</text>
+                  </g></svg>
+                </div>
+                <div class="heart-pop" id="heart-0"><i class="fa-solid fa-heart"></i></div>
+              </div>
+              <div class="post-stats">
+                <div class="stats-left"><span class="like-dot"><i class="fa-solid fa-thumbs-up"></i></span> <span class="likeCount">8</span></div>
+                <div class="commentCountLabel">3 bình luận</div>
+              </div>
+              <div class="post-actions">
+                <button class="act-btn" onclick="toggleLike(this)"><span class="pop"><i class="fa-solid fa-thumbs-up"></i></span> <span class="actLabel">Thích</span></button>
+                <button class="act-btn" onclick="openComments(this,0)"><i class="fa-solid fa-comment"></i> Bình luận</button>
+              </div>
+            </div>
+
+            <!-- Post 2 -->
+            <div class="post" data-comments="1" data-liked="0" data-likes="5">
+              <div class="post-head">
+                <div class="avatar">TNG</div>
+                <div class="who">
+                  <div class="name">Nguyễn Thị Bảo Ngọc <span class="role-tag">· Trưởng nhóm P. Quản lý dự án TRE</span></div>
+                  <div class="meta">6 giờ trước</div>
+                </div>
+                <button class="more-btn" onclick="toggleMore(this)"><i class="fa-solid fa-ellipsis"></i></button>
+              </div>
+              <div class="post-text">Nhắc cả nhà: khảo sát "Mức độ hài lòng khi sử dụng phần mềm kiểm soát số lần vào chuyền" đang mở đến hết tháng 7. Mọi người dành 2 phút góp ý giúp mình nhé 🙏</div>
+              <div class="post-stats">
+                <div class="stats-left"><span class="like-dot"><i class="fa-solid fa-thumbs-up"></i></span> <span class="likeCount">5</span></div>
+                <div class="commentCountLabel">1 bình luận</div>
+              </div>
+              <div class="post-actions">
+                <button class="act-btn" onclick="toggleLike(this)"><span class="pop"><i class="fa-solid fa-thumbs-up"></i></span> <span class="actLabel">Thích</span></button>
+                <button class="act-btn" onclick="openComments(this,1)"><i class="fa-solid fa-comment"></i> Bình luận</button>
+              </div>
+            </div>
+          </div>
+          <div style="height:14px;"></div>
+        </div>
+      </div>
+
+      <!-- ===================== CONTACTS SCREEN ===================== -->
+      <div class="screen hidden" id="screen-contacts">
+        <div class="app-header"><div class="title" style="position:static; margin:0 auto;">Danh bạ</div></div>
+        <div class="scroll-area">
+          <div id="contactList"></div>
+          <div style="height:14px;"></div>
+        </div>
+      </div>
+
+      <!-- ===================== PROFILE SCREEN ===================== -->
+      <div class="screen hidden" id="screen-profile">
+        <div class="app-header"><div class="title" style="position:static; margin:0 auto;">Trang cá nhân</div></div>
+        <div class="scroll-area">
+          <div class="profile-cover"></div>
+          <div class="profile-card">
+            <div class="profile-avatar"><i class="fa-solid fa-user"></i><div class="cam-btn" onclick="showToast('Đã mở thư viện ảnh (giả lập)')"><i class="fa-solid fa-camera"></i></div></div>
+            <h2>Nguyễn Thị Bảo Ngọc</h2>
+            <div class="code">TNG091058</div>
+          </div>
+          <div class="info-list">
+            <div class="info-row"><span class="ico"><i class="fa-solid fa-briefcase"></i></span> Làm việc tại <b>&nbsp;P. Quản lý dự án - TRE</b></div>
+            <div class="info-row"><span class="ico"><i class="fa-solid fa-tag"></i></span> Chức danh <b>&nbsp;Trưởng nhóm P. Quản lý dự án TRE</b></div>
+            <div class="info-row"><span class="ico"><i class="fa-solid fa-phone"></i></span> <b>0769256659</b></div>
+            <div class="info-row"><span class="ico"><i class="fa-solid fa-cake-candles"></i></span> Sinh nhật <b>&nbsp;06/09/1990</b></div>
+          </div>
+          <div class="quick-actions">
+            <div class="qa-btn" onclick="switchTab('survey')"><span class="ico"><i class="fa-solid fa-clipboard-list"></i></span>Khảo sát ý kiến</div>
+            <div class="qa-btn" onclick="showToast('Đang mở phiếu lương (giả lập)')"><span class="ico"><i class="fa-solid fa-sack-dollar"></i></span>Lương</div>
+            <div class="qa-btn" onclick="showToast('Đang mở chấm công online (giả lập)')"><span class="ico"><i class="fa-solid fa-clock"></i></span>Chấm công</div>
+          </div>
+
+          <!-- Rating Section — Màn hình 1 (Trang cá nhân chính mình → không hiện nút Đánh giá theo BR01) -->
+          <div class="rating-section">
+            <div class="sec-title"><i class="fa-solid fa-star"></i>Đánh giá từ đồng nghiệp</div>
+            <div id="selfRatingSummary"></div>
+            <div class="rs-note">Đây là trang cá nhân của bạn nên không thể tự đánh giá bản thân.</div>
+          </div>
+          <div style="height:16px;"></div>
+        </div>
+      </div>
+
+      <!-- ===================== SURVEY SCREEN ===================== -->
+      <div class="screen hidden" id="screen-survey">
+        <div class="app-header"><div class="title" style="position:static; margin:0 auto;">Danh sách khảo sát</div></div>
+        <div class="survey-tabs">
+          <div class="survey-tab active" id="tabRunning" onclick="switchSurveyTab('running')">Đang chạy</div>
+          <div class="survey-tab" id="tabDone" onclick="switchSurveyTab('done')">Chưa chạy/Đã dừng</div>
+        </div>
+        <div class="scroll-area">
+          <div id="surveyRunning">
+            <div class="survey-card" onclick="openSurvey()">
+              <div class="new-flag">NEW</div>
+              <h4>1. Khảo sát về mức độ hài lòng khi sử dụng phần mềm kiểm soát số lần vào chuyền</h4>
+              <div class="scope">Phạm vi: Phú Bình 1, Phú Bình 2, Phú Bình 3, Sông Công 2, Sông Công 3...</div>
+              <div class="survey-meta"><span>Số câu hỏi: 5</span><span>⏱ 7-2026</span></div>
+              <div class="survey-meta"><span id="respLabel" style="color:var(--green); font-weight:700;">14 / 115 đã trả lời</span></div>
+              <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+            </div>
+          </div>
+          <div id="surveyDone" class="hidden">
+            <div class="empty-state"><span class="ico"><i class="fa-solid fa-folder-open"></i></span>Chưa có khảo sát nào đã dừng</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== COLLEAGUE PROFILE SCREEN (Màn hình 1 — xem người khác) ===================== -->
+      <div class="screen hidden" id="screen-colleague-profile">
+        <div class="app-header">
+          <button class="back-btn" onclick="switchTab(colleagueOrigin)"><i class="fa-solid fa-arrow-left"></i></button>
+          <div class="title" style="position:static; margin:0 auto;">Trang cá nhân</div>
+          <div style="width:34px;"></div>
+        </div>
+        <div class="scroll-area">
+          <div class="profile-cover"></div>
+          <div class="profile-card">
+            <div class="profile-avatar"><i class="fa-solid fa-user"></i></div>
+            <h2 id="colName">—</h2>
+            <div class="code" id="colTitle">—</div>
+          </div>
+          <div class="info-list">
+            <div class="info-row"><span class="ico"><i class="fa-solid fa-briefcase"></i></span> Làm việc tại <b>&nbsp;<span id="colDept">—</span></b></div>
+          </div>
+
+          <!-- Rating Section — Màn hình 1 (xem đồng nghiệp) -->
+          <div class="rating-section">
+            <div class="sec-title"><i class="fa-solid fa-star"></i>Đánh giá từ đồng nghiệp</div>
+            <div id="colRatingSummary"></div>
+            <button class="rs-rate-btn" id="colRateBtn" onclick="openRatingSheet()">
+              <i class="fa-solid fa-star"></i><span id="colRateBtnLabel">Đánh giá</span>
+            </button>
+            <div class="rs-note">Đánh giá của bạn sẽ hoàn toàn ẩn danh.</div>
+          </div>
+          <div style="height:16px;"></div>
+        </div>
+      </div>
+
+      <!-- ===================== LEADERBOARD SCREEN (Màn hình 3) ===================== -->
+      <div class="screen hidden" id="screen-leaderboard">
+        <div class="app-header">
+          <button class="back-btn" onclick="switchTab('feed')"><i class="fa-solid fa-arrow-left"></i></button>
+          <div class="title" style="position:static; margin:0 auto;">Bảng xếp hạng</div>
+          <div style="width:34px;"></div>
+        </div>
+        <div class="lb-filter-bar">
+          <select class="lb-select" id="lbDeptFilter" onchange="renderLeaderboard()">
+            <option value="all">Tất cả bộ phận</option>
+            <option value="PB1">Phú Bình 1</option>
+            <option value="PB3">Phú Bình 3</option>
+            <option value="SC2">Sông Công 2</option>
+          </select>
+          <select class="lb-select" id="lbMonthFilter" onchange="renderLeaderboard()">
+            <option value="7">Tháng 7/2026</option>
+            <option value="6">Tháng 6/2026</option>
+            <option value="5">Tháng 5/2026</option>
+          </select>
+        </div>
+        <div class="lb-threshold-note"><i class="fa-solid fa-circle-info"></i> Xếp hạng dùng điểm có trọng số. Nhân viên cần tối thiểu 5 lượt; dưới ngưỡng sẽ hiển thị “Đang thu thập dữ liệu”.</div>
+        <div class="scroll-area">
+          <div class="lb-list" id="lbList"></div>
+          <div style="height:14px;"></div>
+        </div>
+      </div>
+
+      <!-- ===================== CHAT SCREEN (placeholder) ===================== -->
+      <div class="screen hidden" id="screen-chat">
+        <div class="app-header"><div class="title" style="position:static; margin:0 auto;">Tin nhắn</div></div>
+        <div class="simple-screen"><span class="ico"><i class="fa-solid fa-comment"></i></span>Trò chuyện nội bộ với đồng nghiệp</div>
+      </div>
+
+      <!-- ===================== BOTTOM NAV ===================== -->
+      <div class="bottom-nav">
+        <button class="nav-item active" id="nav-feed" onclick="switchTab('feed')"><span class="ico"><i class="fa-solid fa-house"></i></span>Nhật ký</button>
+        <button class="nav-item" id="nav-contacts" onclick="switchTab('contacts')"><span class="ico"><i class="fa-solid fa-address-book"></i></span>Danh bạ</button>
+        <button class="nav-item" id="nav-profile" onclick="switchTab('profile')"><span class="ico"><i class="fa-solid fa-user"></i></span>Tôi</button>
+        <button class="nav-item" id="nav-chat" onclick="switchTab('chat')"><span class="ico"><i class="fa-solid fa-comment"></i></span>Chat
+          <span class="nav-badge">3</span>
+        </button>
+      </div>
+
+      <!-- ===================== OVERLAYS ===================== -->
+      <div class="overlay-backdrop" id="backdrop" onclick="closeAllSheets()"></div>
+
+      <!-- Comment sheet -->
+      <div class="sheet" id="commentSheet">
+        <div class="sheet-handle"></div>
+        <div class="sheet-header"><span></span><span>Bình luận</span><span class="close-x" onclick="closeAllSheets()"><i class="fa-solid fa-xmark"></i></span></div>
+        <div class="comments-list" id="commentsList"></div>
+        <div class="comment-input-row">
+          <div class="avatar sm">Bạn</div>
+          <input type="text" id="commentInput" placeholder="Viết bình luận..." onkeydown="if(event.key==='Enter')sendComment()">
+          <button class="send-btn" onclick="sendComment()"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+      </div>
+
+      <!-- Create post sheet -->
+      <div class="sheet full" id="composerSheet">
+        <div class="sheet-header">
+          <span class="close-x" onclick="closeAllSheets()"><i class="fa-solid fa-xmark"></i></span>
+          <span>Tạo bài viết</span>
+          <button id="postBtn" onclick="publishPost()" disabled style="opacity:.4;">Đăng</button>
+        </div>
+        <div class="composer-body">
+          <div class="composer-who">
+            <div class="avatar">TNG</div>
+            <div><div class="name">Nguyễn Thị Bảo Ngọc</div><div class="vis"><i class="fa-solid fa-globe"></i> Công khai nội bộ</div></div>
+          </div>
+          <textarea id="postText" placeholder="Bạn đang nghĩ gì?" oninput="onPostTextInput()"></textarea>
+          <div class="composer-toolbar">
+            <span onclick="showToast('Đã chọn ảnh (giả lập)')"><i class="fa-solid fa-image"></i> Ảnh</span>
+            <span onclick="showToast('Đã gắn thẻ Ý tưởng vàng')"><i class="fa-solid fa-medal"></i> Ý tưởng vàng</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Survey detail sheet -->
+      <div class="sheet" id="surveySheet" style="max-height:90%;">
+        <div class="sheet-handle"></div>
+        <div class="sheet-header"><span></span><span>Khảo sát</span><span class="close-x" onclick="closeAllSheets()"><i class="fa-solid fa-xmark"></i></span></div>
+        <div class="scroll-area">
+          <div class="q-block">
+            <p class="qtext">1. Bạn đánh giá thế nào về tốc độ xử lý của phần mềm?</p>
+            <label class="opt"><input type="radio" name="q1">Rất nhanh</label>
+            <label class="opt"><input type="radio" name="q1">Bình thường</label>
+            <label class="opt"><input type="radio" name="q1">Chậm, cần cải thiện</label>
+          </div>
+          <div class="q-block">
+            <p class="qtext">2. Giao diện có dễ sử dụng không?</p>
+            <label class="opt"><input type="radio" name="q2">Dễ dùng</label>
+            <label class="opt"><input type="radio" name="q2">Tạm ổn</label>
+            <label class="opt"><input type="radio" name="q2">Khó dùng</label>
+          </div>
+          <div class="q-block">
+            <p class="qtext">3. Bạn có gặp lỗi khi kiểm soát số lần vào chuyền không?</p>
+            <label class="opt"><input type="radio" name="q3">Không bao giờ</label>
+            <label class="opt"><input type="radio" name="q3">Thỉnh thoảng</label>
+            <label class="opt"><input type="radio" name="q3">Thường xuyên</label>
+          </div>
+          <div class="submit-bar">
+            <button class="submit-btn" onclick="submitSurvey()">Gửi khảo sát</button>
+          </div>
+        </div>
+        <div class="success-overlay" id="surveySuccess">
+          <div class="check-circle"><i class="fa-solid fa-check"></i></div>
+          <div style="font-weight:700; font-size:15px;">Cảm ơn bạn đã phản hồi!</div>
+        </div>
+      </div>
+
+      <!-- Rating sheet — Màn hình 2: Bottom Sheet Đánh giá -->
+      <div class="sheet" id="ratingSheet">
+        <div class="sheet-handle"></div>
+        <div class="sheet-header"><span></span><span>Đánh giá đồng nghiệp</span><span class="close-x" onclick="closeAllSheets()"><i class="fa-solid fa-xmark"></i></span></div>
+        <div class="rate-sheet-body">
+          <div class="rate-target-avatar"><i class="fa-solid fa-user"></i></div>
+          <div class="rate-target-name" id="rateTargetName">—</div>
+          <div class="rate-target-sub" id="rateTargetSub">—</div>
+          <div class="criteria-list" id="criteriaList">
+            <div class="criterion-card">
+              <div class="criterion-title"><i class="fa-solid fa-handshake-angle" style="color:var(--green);margin-right:6px;"></i>Tinh thần hỗ trợ đồng nghiệp</div>
+              <div class="criterion-picker" data-key="support">
+                <i class="fa-solid fa-star" data-v="1" onclick="pickCriterion('support',1)"></i><i class="fa-solid fa-star" data-v="2" onclick="pickCriterion('support',2)"></i><i class="fa-solid fa-star" data-v="3" onclick="pickCriterion('support',3)"></i><i class="fa-solid fa-star" data-v="4" onclick="pickCriterion('support',4)"></i><i class="fa-solid fa-star" data-v="5" onclick="pickCriterion('support',5)"></i>
+              </div><div class="criterion-desc" id="desc-support">Chưa chấm</div>
+            </div>
+            <div class="criterion-card">
+              <div class="criterion-title"><i class="fa-solid fa-screwdriver-wrench" style="color:var(--green);margin-right:6px;"></i>Chất lượng chuyên môn</div>
+              <div class="criterion-picker" data-key="quality">
+                <i class="fa-solid fa-star" data-v="1" onclick="pickCriterion('quality',1)"></i><i class="fa-solid fa-star" data-v="2" onclick="pickCriterion('quality',2)"></i><i class="fa-solid fa-star" data-v="3" onclick="pickCriterion('quality',3)"></i><i class="fa-solid fa-star" data-v="4" onclick="pickCriterion('quality',4)"></i><i class="fa-solid fa-star" data-v="5" onclick="pickCriterion('quality',5)"></i>
+              </div><div class="criterion-desc" id="desc-quality">Chưa chấm</div>
+            </div>
+            <div class="criterion-card">
+              <div class="criterion-title"><i class="fa-solid fa-clock" style="color:var(--green);margin-right:6px;"></i>Đúng giờ / Tác phong</div>
+              <div class="criterion-picker" data-key="discipline">
+                <i class="fa-solid fa-star" data-v="1" onclick="pickCriterion('discipline',1)"></i><i class="fa-solid fa-star" data-v="2" onclick="pickCriterion('discipline',2)"></i><i class="fa-solid fa-star" data-v="3" onclick="pickCriterion('discipline',3)"></i><i class="fa-solid fa-star" data-v="4" onclick="pickCriterion('discipline',4)"></i><i class="fa-solid fa-star" data-v="5" onclick="pickCriterion('discipline',5)"></i>
+              </div><div class="criterion-desc" id="desc-discipline">Chưa chấm</div>
+            </div>
+          </div>
+          <div class="rating-comment-box">
+            <div class="rating-comment-label">Nhận xét thêm về đồng nghiệp <span>Không bắt buộc</span></div>
+            <textarea id="ratingComment" maxlength="500" placeholder="Chia sẻ điểm bạn đánh giá cao hoặc góp ý để đồng nghiệp cải thiện…" oninput="updateRatingCommentCount()"></textarea>
+            <div class="char-count"><span id="ratingCommentCount">0</span>/500</div>
+          </div>
+          <div class="anon-note"><i class="fa-solid fa-user-secret"></i>Cả điểm đánh giá và nhận xét của bạn đều ẩn danh. Nhận xét không ảnh hưởng điểm xếp hạng.</div>
+          <button class="rate-submit-btn" id="rateSubmitBtn" onclick="submitRating()" disabled>Gửi đánh giá</button>
+        </div>
+        <div class="success-overlay" id="ratingSuccess">
+          <div class="check-circle"><i class="fa-solid fa-check"></i></div>
+          <div style="font-weight:700; font-size:15px;">Đã ghi nhận đánh giá!</div>
+        </div>
+      </div>
+
+      <!-- Image viewer -->
+      <div class="img-viewer" id="imgViewer">
+        <span class="close-x" onclick="closeImage()"><i class="fa-solid fa-xmark"></i></span>
+        <div class="big" id="imgViewerContent"></div>
+      </div>
+
+      <div class="toast" id="toast"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* clock */
+function tick(){
+  const d=new Date();
+  document.getElementById('clock').textContent = d.toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit',hour12:false});
+}
+tick(); setInterval(tick,10000);
+
+/* toast */
+let toastTimer;
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),1800);
+}
+
+/* tabs */
+function switchTab(name){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden'));
+  document.getElementById('screen-'+name).classList.remove('hidden');
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const navMap={feed:'nav-feed',contacts:'nav-contacts',profile:'nav-profile',survey:'nav-profile',chat:'nav-chat'};
+  const id = document.getElementById('nav-'+name);
+  if(id) id.classList.add('active');
+  closeAllSheets();
+}
+
+/* notifications */
+function toggleNotif(){
+  document.getElementById('notifPanel').classList.toggle('open');
+}
+function notifClick(el,target){
+  document.getElementById('notifPanel').classList.remove('open');
+  document.getElementById('notifBadge').style.display='none';
+  if(target==='survey') switchTab('survey');
+}
+
+/* like */
+function toggleLike(btn){
+  const post = btn.closest('.post');
+  const countEl = post.querySelector('.likeCount');
+  let likes = parseInt(post.dataset.likes,10);
+  const liked = post.dataset.liked === '1';
+  if(liked){
+    post.dataset.liked='0'; likes-=1; btn.classList.remove('liked'); btn.querySelector('.actLabel').textContent='Thích';
+  } else {
+    post.dataset.liked='1'; likes+=1; btn.classList.add('liked'); btn.querySelector('.actLabel').textContent='Đã thích';
+  }
+  post.dataset.likes=likes;
+  countEl.textContent=likes;
+  btn.classList.add('pop-anim');
+  setTimeout(()=>btn.classList.remove('pop-anim'),300);
+}
+function doubleTapLike(el){
+  const post = el.closest('.post');
+  const heart = post.querySelector('.heart-pop');
+  heart.classList.remove('go'); void heart.offsetWidth; heart.classList.add('go');
+  if(post.dataset.liked!=='1'){
+    toggleLike(post.querySelector('.act-btn'));
+  }
+}
+
+/* more menu */
+function toggleMore(btn){
+  showToast('Tùy chọn: Ẩn bài viết / Báo cáo');
+}
+
+/* comments */
+const commentData = {
+  0:[{n:'Trần Văn Kiên',t:'Cải tiến hay quá, đề nghị nhân rộng cho các tổ khác!'},
+     {n:'Lê Thị Hoa',t:'Mình thấy năng suất tăng rõ rệt sau khi áp dụng.'},
+     {n:'Phạm Quốc Huy',t:'Đã báo cáo lên phòng kỹ thuật để cập nhật tài liệu.'}],
+  1:[{n:'Đỗ Thị Hằng Mai',t:'Mình làm khảo sát rồi nhé, form dễ hiểu lắm.'}]
+};
+let currentPostIdx=null;
+function openComments(btn, idx){
+  currentPostIdx = idx;
+  const list = document.getElementById('commentsList');
+  list.innerHTML='';
+  (commentData[idx]||[]).forEach(c=>addCommentEl(c.n,c.t));
+  openSheet('commentSheet');
+}
+function addCommentEl(name,text){
+  const list = document.getElementById('commentsList');
+  const div = document.createElement('div');
+  div.className='comment';
+  div.innerHTML = `<div class="avatar sm">${name.split(' ').slice(-1)[0][0]}</div>
+    <div class="bubble"><div class="cname">${name}</div><div class="ctext">${text}</div></div>`;
+  list.appendChild(div);
+  list.scrollTop = list.scrollHeight;
+}
+function sendComment(){
+  const input = document.getElementById('commentInput');
+  const val = input.value.trim();
+  if(!val) return;
+  addCommentEl('Bạn', val);
+  input.value='';
+  if(currentPostIdx!==null){
+    const posts = document.querySelectorAll('.post');
+    const post = posts[currentPostIdx];
+    let c = parseInt(post.dataset.comments,10)+1;
+    post.dataset.comments=c;
+    post.querySelector('.commentCountLabel').textContent = c+' bình luận';
+  }
+}
+
+/* composer */
+function openComposer(){
+  openSheet('composerSheet');
+  setTimeout(()=>document.getElementById('postText').focus(),200);
+}
+function onPostTextInput(){
+  const val = document.getElementById('postText').value.trim();
+  const btn = document.getElementById('postBtn');
+  btn.disabled = val.length===0;
+  btn.style.opacity = val.length===0 ? '.4':'1';
+}
+function publishPost(){
+  const val = document.getElementById('postText').value.trim();
+  if(!val) return;
+  const feed = document.getElementById('feedList');
+  const div = document.createElement('div');
+  div.className='post new';
+  div.dataset.comments='0'; div.dataset.liked='0'; div.dataset.likes='0';
+  div.innerHTML = `
+    <div class="post-head">
+      <div class="avatar">TNG</div>
+      <div class="who">
+        <div class="name">Nguyễn Thị Bảo Ngọc <span class="role-tag">· Trưởng nhóm P. Quản lý dự án TRE</span></div>
+        <div class="meta">Vừa xong</div>
+      </div>
+      <button class="more-btn" onclick="toggleMore(this)"><i class="fa-solid fa-ellipsis"></i></button>
+    </div>
+    <div class="post-text">${val.replace(/</g,'&lt;')}</div>
+    <div class="post-stats">
+      <div class="stats-left"><span class="like-dot"><i class="fa-solid fa-thumbs-up"></i></span> <span class="likeCount">0</span></div>
+      <div class="commentCountLabel">0 bình luận</div>
+    </div>
+    <div class="post-actions">
+      <button class="act-btn" onclick="toggleLike(this)"><span class="pop"><i class="fa-solid fa-thumbs-up"></i></span> <span class="actLabel">Thích</span></button>
+      <button class="act-btn" onclick="openComments(this,99)"><i class="fa-solid fa-comment"></i> Bình luận</button>
+    </div>`;
+  feed.insertBefore(div, feed.firstChild);
+  document.getElementById('postText').value='';
+  onPostTextInput();
+  closeAllSheets();
+  document.getElementById('feedScroll').scrollTop=0;
+  showToast('Đã đăng bài viết');
+}
+
+/* sheets */
+function openSheet(id){
+  document.getElementById('backdrop').classList.add('open');
+  document.getElementById(id).classList.add('open');
+}
+function closeAllSheets(){
+  document.getElementById('backdrop').classList.remove('open');
+  document.querySelectorAll('.sheet').forEach(s=>s.classList.remove('open'));
+  document.getElementById('notifPanel').classList.remove('open');
+}
+
+/* survey tabs */
+function switchSurveyTab(which){
+  document.getElementById('tabRunning').classList.toggle('active', which==='running');
+  document.getElementById('tabDone').classList.toggle('active', which==='done');
+  document.getElementById('surveyRunning').classList.toggle('hidden', which!=='running');
+  document.getElementById('surveyDone').classList.toggle('hidden', which!=='done');
+}
+window.addEventListener('load', ()=> setTimeout(()=>{document.getElementById('progressFill').style.width='12.2%';},300));
+
+let respAnswered = 14, respTotal = 115;
+function openSurvey(){
+  openSheet('surveySheet');
+}
+function submitSurvey(){
+  respAnswered++;
+  document.getElementById('respLabel').textContent = respAnswered+' / '+respTotal+' đã trả lời';
+  document.getElementById('progressFill').style.width = ((respAnswered/respTotal)*100).toFixed(1)+'%';
+  document.getElementById('surveySuccess').classList.add('show');
+  setTimeout(()=>{
+    document.getElementById('surveySuccess').classList.remove('show');
+    closeAllSheets();
+  },1300);
+}
+
+/* ===================== EMPLOYEE RATING SYSTEM (Feature spec: Employee_Rating_System) ===================== */
+
+/* Mock data — nhân viên & lịch sử đánh giá */
+const employees = {
+  mai:  {name:'Đỗ Thị Hằng Mai',   title:'Công nhân Tổ may mẫu PB3',        dept:'PB3', deptLabel:'Phú Bình 3',   avg:4.8, total:132, dist:[100,22,7,2,1], trend:[4.6,4.7,4.7,4.8,4.8,4.8], criteria:{support:4.9,quality:4.8,discipline:4.7}, comments:['Luôn chủ động hỗ trợ khi tổ gặp vấn đề và phối hợp rất nhanh.','Chuyên môn tốt, hướng dẫn đồng nghiệp dễ hiểu.','Tác phong nghiêm túc, có trách nhiệm với công việc.'], rated:false},
+  kien: {name:'Trần Văn Kiên',      title:'Kỹ thuật viên Phú Bình 3',         dept:'PB3', deptLabel:'Phú Bình 3',   avg:4.6, total:98,  dist:[62,24,8,3,1],  trend:[4.3,4.4,4.5,4.5,4.6,4.6], criteria:{support:4.7,quality:4.8,discipline:4.3}, comments:['Xử lý kỹ thuật chắc, hỗ trợ đồng nghiệp nhiệt tình.','Nên phản hồi công việc nhanh hơn vào giờ cao điểm.'], rated:false},
+  hoa:  {name:'Lê Thị Hoa',         title:'Tổ trưởng Tổ may Sông Công 2',     dept:'SC2', deptLabel:'Sông Công 2',  avg:4.9, total:156, dist:[135,15,4,1,1], trend:[4.7,4.8,4.8,4.9,4.9,4.9], criteria:{support:5.0,quality:4.9,discipline:4.8}, comments:['Rất chủ động hỗ trợ tổ và chia sẻ kinh nghiệm.','Quản lý công việc rõ ràng, phối hợp tốt.'], rated:true},
+  huy:  {name:'Phạm Quốc Huy',      title:'Nhân viên kỹ thuật Sông Công 2',   dept:'SC2', deptLabel:'Sông Công 2',  avg:4.3, total:41,  dist:[20,12,6,2,1],  trend:[4.0,4.1,4.2,4.2,4.3,4.3], criteria:{support:4.5,quality:4.4,discipline:4.0}, comments:['Chuyên môn ổn, cần cải thiện thêm việc đúng giờ trong các buổi phối hợp.'], rated:false},
+  vana: {name:'Nguyễn Văn A',       title:'Công nhân Phú Bình 1',             dept:'PB1', deptLabel:'Phú Bình 1',   avg:5.0, total:3,   dist:[3,0,0,0,0],    trend:[null,null,null,5.0,5.0,5.0], criteria:{support:5.0,quality:5.0,discipline:5.0}, comments:['Ấn tượng ban đầu rất tích cực.'], rated:false},
+  lan:  {name:'Nguyễn Thị Lan',     title:'Nhân viên mới Phú Bình 1',         dept:'PB1', deptLabel:'Phú Bình 1',   avg:null,total:0,   dist:[0,0,0,0,0],    trend:[null,null,null,null,null,null], criteria:{support:null,quality:null,discipline:null}, comments:[], rated:false},
+};
+const selfEmployee = {name:'Nguyễn Thị Bảo Ngọc', avg:4.7, total:87, dist:[58,20,6,2,1], trend:[4.5,4.5,4.6,4.6,4.7,4.7], criteria:{support:4.8,quality:4.7,discipline:4.6}, comments:['Luôn sẵn sàng hỗ trợ khi đồng nghiệp cần.','Làm việc chắc chắn và có trách nhiệm.','Có thể chủ động trao đổi sớm hơn khi có vướng mắc.']};
+const monthLabels = ['T2','T3','T4','T5','T6','T7'];
+const starDescMap = {1:'Cần cải thiện nhiều',2:'Cần cố gắng hơn',3:'Bình thường',4:'Tốt, đáng ghi nhận',5:'Xuất sắc, rất đáng khen'};
+
+function initials(name){ const parts=name.trim().split(' '); return parts[parts.length-1][0].toUpperCase(); }
+
+const criteriaMeta = [
+  ['support','Hỗ trợ'], ['quality','Chuyên môn'], ['discipline','Tác phong']
+];
+function renderRadarSvg(criteria){
+  const vals=criteriaMeta.map(([k])=>criteria?.[k] ?? 0);
+  const cx=62,cy=60,r=45;
+  const angle=i=>-Math.PI/2+i*2*Math.PI/3;
+  const pt=(i,scale)=>[cx+Math.cos(angle(i))*r*scale,cy+Math.sin(angle(i))*r*scale];
+  let grids='';
+  [0.2,0.4,0.6,0.8,1].forEach(sc=>{ grids += `<polygon points="${[0,1,2].map(i=>pt(i,sc).join(',')).join(' ')}" fill="none" stroke="#E4E6EB" stroke-width="1"/>`; });
+  const axes=[0,1,2].map(i=>{const [x,y]=pt(i,1);return `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#E4E6EB"/>`;}).join('');
+  const poly=vals.map((v,i)=>pt(i,Math.max(0,Math.min(5,v))/5).join(',')).join(' ');
+  return `<svg viewBox="0 0 124 120" width="124" height="120">${grids}${axes}<polygon points="${poly}" fill="rgba(47,168,79,.18)" stroke="#2FA84F" stroke-width="2"/></svg>`;
+}
+function weightedRating(avg,total,baseline,minVotes=5){
+  if(avg===null || total<minVotes) return null;
+  return (total/(total+minVotes))*avg + (minVotes/(total+minVotes))*baseline;
+}
+
+function escapeHtml(text){
+  return String(text).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+}
+function renderPeerComments(data, showAll=false){
+  const comments=(data.comments||[]).filter(Boolean);
+  if(!comments.length) return `<div class="peer-comments"><div class="peer-comments-head"><div class="peer-comments-title"><i class="fa-regular fa-comments"></i> Nhận xét từ đồng nghiệp</div><div class="peer-comments-count">0 nhận xét</div></div><div class="rs-empty" style="padding:4px 0;">Chưa có nhận xét</div></div>`;
+  const shown=showAll?comments:comments.slice(0,2);
+  const rows=shown.map((t,i)=>`<div class="peer-comment"><div class="peer-comment-meta"><b><i class="fa-solid fa-user-secret"></i> Đồng nghiệp ẩn danh</b><button class="peer-comment-report" onclick="reportPeerComment(event)"><i class="fa-regular fa-flag"></i> Báo cáo</button></div><div class="peer-comment-text">${escapeHtml(t)}</div></div>`).join('');
+  const more=comments.length>2 && !showAll ? `<button class="show-more-comments" onclick="showAllPeerComments()">Xem tất cả ${comments.length} nhận xét</button>` : '';
+  return `<div class="peer-comments"><div class="peer-comments-head"><div class="peer-comments-title"><i class="fa-regular fa-comments"></i> Nhận xét từ đồng nghiệp</div><div class="peer-comments-count">${comments.length} nhận xét</div></div>${rows}${more}</div>`;
+}
+function showAllPeerComments(){
+  const data=currentColleagueId?employees[currentColleagueId]:selfEmployee;
+  const containerId=currentColleagueId?'colRatingSummary':'selfRatingSummary';
+  renderRatingSummary(containerId,data,true);
+}
+function reportPeerComment(ev){
+  ev.stopPropagation();
+  showToast('Đã ghi nhận báo cáo nhận xét');
+}
+
+/* Render Google-Maps-style rating summary block (dùng chung Profile / Colleague Profile) */
+function renderRatingSummary(containerId, data, showAllComments=false){
+  const el = document.getElementById(containerId);
+  if(data.total===0 || data.avg===null){
+    el.innerHTML = `<div class="rs-empty"><i class="fa-regular fa-star" style="margin-right:6px;color:var(--text3);"></i>Chưa có đánh giá</div>`;
+    return;
+  }
+  const rounded = Math.round(data.avg);
+  let starsHtml='';
+  for(let i=1;i<=5;i++) starsHtml += i<=rounded ? '<i class="fa-solid fa-star"></i>' : '<i class="fa-regular fa-star"></i>';
+  const criterionRows = criteriaMeta.map(([k,label])=>`<div class="criterion-score-row"><span>${label}</span><b>${data.criteria?.[k]?.toFixed ? data.criteria[k].toFixed(1) : '—'} ★</b></div>`).join('');
+  el.innerHTML = `
+    <div class="rs-top">
+      <div class="rs-score">
+        <div class="rs-number">${data.avg.toFixed(1)}</div>
+        <div class="rs-stars">${starsHtml}</div>
+        <div class="rs-total">${data.total} đánh giá</div>
+      </div>
+      <div style="flex:1;font-size:11px;color:var(--text2);line-height:1.45;">Điểm tổng hợp = trung bình của 3 tiêu chí. Xem chi tiết bên dưới để biết điểm mạnh và nội dung cần cải thiện.</div>
+    </div>
+    <div class="rs-trend-title"><i class="fa-solid fa-bullseye"></i> Điểm theo tiêu chí</div>
+    <div class="criteria-summary"><div class="radar-wrap">${renderRadarSvg(data.criteria)}</div><div>${criterionRows}</div></div>
+    <div class="rs-trend-title"><i class="fa-solid fa-chart-line"></i> Xu hướng điểm tổng hợp 6 tháng gần nhất</div>
+    <div class="rs-trend-scroll">${renderTrendSvg(data.trend)}</div>
+    ${renderPeerComments(data, showAllComments)}`;
+}
+
+/* Simple horizontally-scrollable SVG line chart, vuốt ngang được (BR07) */
+function renderTrendSvg(trend){
+  const w=480, h=110, pad=26;
+  const vals = trend.filter(v=>v!==null && v!==undefined);
+  const min = vals.length ? Math.min(...vals)-0.2 : 0;
+  const max = vals.length ? Math.max(...vals)+0.2 : 5;
+  const stepX = (w-pad*2)/(trend.length-1);
+  const y = v => h-pad - ((v-min)/(max-min))*(h-pad*2);
+  let points=[]; let dots=''; let labels='';
+  trend.forEach((v,i)=>{
+    const x = pad + stepX*i;
+    labels += `<text x="${x}" y="${h-6}" font-size="10" fill="#8A8D91" text-anchor="middle">${monthLabels[i]}</text>`;
+    if(v!==null && v!==undefined){
+      points.push(`${x},${y(v)}`);
+      dots += `<circle cx="${x}" cy="${y(v)}" r="3.2" fill="#2FA84F"/>`;
+    }
+  });
+  const line = points.length>1 ? `<polyline points="${points.join(' ')}" fill="none" stroke="#2FA84F" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>` : '';
+  return `<svg viewBox="0 0 ${w} ${h}" width="${w}" height="${h}">${line}${dots}${labels}</svg>`;
+}
+
+/* skeleton loader helper — spec section 12: nếu API chậm dùng Skeleton, không dùng Spinner toàn màn hình */
+function showRatingSkeleton(containerId){
+  document.getElementById(containerId).innerHTML = `
+    <div class="rating-skel">
+      <div class="skeleton-block sk-num"></div>
+      <div class="skeleton-block sk-row" style="width:60%;margin:0 auto 14px;"></div>
+      <div class="skeleton-block sk-row"></div>
+      <div class="skeleton-block sk-row"></div>
+      <div class="skeleton-block sk-row" style="width:70%;"></div>
+    </div>`;
+}
+
+/* ---- Self profile (Màn hình 1 — chính mình, không hiện nút theo BR01) ---- */
+function renderSelfProfile(){
+  currentColleagueId = null;
+  showRatingSkeleton('selfRatingSummary');
+  setTimeout(()=>renderRatingSummary('selfRatingSummary', selfEmployee), 450);
+}
+
+/* ---- Contacts list ---- */
+function renderContactList(){
+  const groups = {PB1:'PHÚ BÌNH 1', PB3:'PHÚ BÌNH 3', SC2:'SÔNG CÔNG 2'};
+  let html='';
+  Object.keys(groups).forEach(dept=>{
+    const list = Object.entries(employees).filter(([id,e])=>e.dept===dept);
+    if(!list.length) return;
+    html += `<div class="contact-dept-label">${groups[dept]}</div>`;
+    list.forEach(([id,e])=>{
+      html += `<div class="contact-item" onclick="openColleagueProfile('${id}','contacts')">
+        <div class="avatar sm">${initials(e.name)}</div>
+        <div class="who"><div class="name">${e.name}</div><div class="sub">${e.title}</div></div>
+        <i class="fa-solid fa-chevron-right chev"></i>
+      </div>`;
+    });
+  });
+  document.getElementById('contactList').innerHTML = html;
+}
+
+/* ---- Colleague profile (Màn hình 1 — xem người khác) ---- */
+let colleagueOrigin = 'contacts';
+let currentColleagueId = null;
+function openColleagueProfile(id, origin){
+  currentColleagueId = id;
+  colleagueOrigin = origin || 'contacts';
+  const e = employees[id];
+  document.getElementById('colName').textContent = e.name;
+  document.getElementById('colTitle').textContent = e.title;
+  document.getElementById('colDept').textContent = e.deptLabel;
+  updateColRateButton();
+  showRatingSkeleton('colRatingSummary');
+  switchTab('colleague-profile');
+  setTimeout(()=>renderRatingSummary('colRatingSummary', e), 450);
+}
+function updateColRateButton(){
+  const e = employees[currentColleagueId];
+  const btn = document.getElementById('colRateBtn');
+  const label = document.getElementById('colRateBtnLabel');
+  if(e.rated){
+    btn.classList.add('disabled'); btn.disabled = true; label.textContent='Đã đánh giá tháng này';
+  } else {
+    btn.classList.remove('disabled'); btn.disabled = false; label.textContent='Đánh giá';
+  }
+}
+
+/* ---- Rating bottom sheet (Màn hình 2) ---- */
+let selectedCriteria = {support:0, quality:0, discipline:0};
+function openRatingSheet(){
+  const e = employees[currentColleagueId];
+  if(e.rated) return;
+  selectedCriteria = {support:0, quality:0, discipline:0};
+  document.getElementById('rateTargetName').textContent = e.name;
+  document.getElementById('rateTargetSub').textContent = e.title;
+  document.getElementById('rateSubmitBtn').disabled = true;
+  document.getElementById('ratingComment').value = '';
+  document.getElementById('ratingCommentCount').textContent = '0';
+  document.querySelectorAll('.criterion-picker i').forEach(s=>s.classList.remove('on'));
+  Object.keys(selectedCriteria).forEach(k=>document.getElementById('desc-'+k).textContent='Chưa chấm');
+  openSheet('ratingSheet');
+}
+function pickCriterion(key,v){
+  selectedCriteria[key]=v;
+  document.querySelectorAll(`.criterion-picker[data-key="${key}"] i`).forEach(s=>{
+    s.classList.toggle('on', parseInt(s.dataset.v,10)<=v);
+  });
+  document.getElementById('desc-'+key).textContent = `${v}/5 · ${starDescMap[v]}`;
+  document.getElementById('rateSubmitBtn').disabled = !Object.values(selectedCriteria).every(x=>x>0);
+}
+function updateRatingCommentCount(){
+  const el=document.getElementById('ratingComment');
+  document.getElementById('ratingCommentCount').textContent=el.value.length;
+}
+function submitRating(){
+  if(!currentColleagueId || !Object.values(selectedCriteria).every(x=>x>0)) return;
+  const e = employees[currentColleagueId];
+  const oldTotal=e.total;
+  const comment=(document.getElementById('ratingComment').value||'').trim();
+  const overall=(selectedCriteria.support+selectedCriteria.quality+selectedCriteria.discipline)/3;
+  e.total++;
+  e.avg = ((e.avg||0)*oldTotal + overall)/e.total;
+  ['support','quality','discipline'].forEach(k=>{
+    const old=e.criteria[k]||0;
+    e.criteria[k]=(old*oldTotal+selectedCriteria[k])/e.total;
+  });
+  const rounded=Math.max(1,Math.min(5,Math.round(overall)));
+  e.dist[5-rounded]++;
+  if(comment){
+    if(!Array.isArray(e.comments)) e.comments=[];
+    e.comments.unshift(comment);
+  }
+  e.rated = true;
+
+  document.getElementById('ratingSuccess').classList.add('show');
+  setTimeout(()=>{
+    document.getElementById('ratingSuccess').classList.remove('show');
+    closeAllSheets();
+    updateColRateButton();
+    renderRatingSummary('colRatingSummary', e);
+    renderLeaderboard();
+    showToast(comment ? 'Đã gửi đánh giá và nhận xét ẩn danh' : 'Đã gửi đánh giá ẩn danh theo 3 tiêu chí');
+  },1200);
+}
+
+/* ---- Leaderboard (Màn hình 3) ---- */
+function renderLeaderboard(){
+  const listEl = document.getElementById('lbList');
+  listEl.innerHTML = `<div style="padding:14px;"><div class="skeleton-block" style="height:52px;margin-bottom:8px;"></div><div class="skeleton-block" style="height:52px;margin-bottom:8px;"></div><div class="skeleton-block" style="height:52px;"></div></div>`;
+  setTimeout(()=>{
+    const deptFilter = document.getElementById('lbDeptFilter').value;
+    const scoped = Object.entries(employees).filter(([id,e])=>deptFilter==='all' || e.dept===deptFilter);
+    const eligible = scoped.filter(([id,e])=>e.total>=5 && e.avg!==null);
+    const baseline = eligible.length ? eligible.reduce((s,[id,e])=>s+e.avg,0)/eligible.length : 0;
+    eligible.forEach(([id,e])=>e.weighted=weightedRating(e.avg,e.total,baseline,5));
+    eligible.sort((a,b)=> (b[1].weighted-a[1].weighted) || (b[1].total-a[1].total) || (b[1].avg-a[1].avg));
+    const pending=scoped.filter(([id,e])=>e.total<5);
+    let html='';
+    if(eligible.length){
+      eligible.forEach(([id,e],idx)=>{
+        const rankCls = idx===0?'gold':idx===1?'silver':idx===2?'bronze':'';
+        html += `<div class="lb-row" onclick="openColleagueProfile('${id}','leaderboard')">
+          <div class="lb-rank ${rankCls}">${idx+1}</div>
+          <div class="avatar sm">${initials(e.name)}</div>
+          <div class="lb-who"><div class="lb-name">${e.name}</div><div class="lb-sub">${e.deptLabel}</div></div>
+          <div class="lb-score"><div class="num">${e.weighted.toFixed(2)}</div><div class="cnt">TB ${e.avg.toFixed(1)} ★ · ${e.total} lượt</div><div class="weighted-note">Điểm xếp hạng</div></div>
+        </div>`;
+      });
+    } else {
+      html += `<div class="empty-state"><span class="ico"><i class="fa-solid fa-trophy"></i></span>Chưa có nhân viên đủ dữ liệu để xếp hạng</div>`;
+    }
+    if(pending.length){
+      html += `<div class="pending-title">ĐANG THU THẬP DỮ LIỆU</div>`;
+      pending.forEach(([id,e])=>{
+        html += `<div class="lb-row pending">
+          <div class="lb-rank">—</div><div class="avatar sm">${initials(e.name)}</div>
+          <div class="lb-who"><div class="lb-name">${e.name}</div><div class="lb-sub">${e.deptLabel}</div><span class="pending-pill">${e.total}/5 lượt</span></div>
+          <div class="lb-score"><div class="num">${e.avg===null?'—':e.avg.toFixed(1)+' ★'}</div><div class="cnt">Chưa xếp hạng</div></div>
+        </div>`;
+      });
+    }
+    listEl.innerHTML = html;
+  }, 400);
+}
+
+/* Initialize rating system UI on load */
+renderContactList();
+renderSelfProfile();
+renderLeaderboard();
+
+/* image viewer */
+function openImage(el,type){
+  const content = document.getElementById('imgViewerContent');
+  content.style.background = type==='fabric'
+    ? 'linear-gradient(135deg,#1b2a52 0%,#1b2a52 48%,#c8102e 52%,#c8102e 100%)'
+    : '#f4f5f0';
+  document.getElementById('imgViewer').classList.add('open');
+}
+function closeImage(){
+  document.getElementById('imgViewer').classList.remove('open');
+}
+
+/* pull to refresh */
+(function(){
+  const scroller = document.getElementById('feedScroll');
+  const bar = document.getElementById('refreshBar');
+  let startY=null, pulling=false;
+  function start(y){ if(scroller.scrollTop<=0){ startY=y; pulling=true; } }
+  function move(y){
+    if(!pulling || startY===null) return;
+    const diff = y-startY;
+    if(diff>0){ bar.style.height = Math.min(diff*0.5,50)+'px'; }
+  }
+  function end(){
+    if(!pulling) return;
+    const h = parseInt(bar.style.height||'0',10);
+    pulling=false; startY=null;
+    if(h>40){
+      bar.style.height='44px';
+      setTimeout(()=>{
+        bar.style.height='0px';
+        showToast('Đã cập nhật bảng tin');
+      },800);
+    } else {
+      bar.style.height='0px';
+    }
+  }
+  scroller.addEventListener('touchstart', e=>start(e.touches[0].clientY), {passive:true});
+  scroller.addEventListener('touchmove', e=>move(e.touches[0].clientY), {passive:true});
+  scroller.addEventListener('touchend', end);
+  scroller.addEventListener('mousedown', e=>start(e.clientY));
+  scroller.addEventListener('mousemove', e=>{ if(pulling) move(e.clientY); });
+  scroller.addEventListener('mouseup', end);
+  scroller.addEventListener('mouseleave', ()=>{ if(pulling) end(); });
+})();
+</script>
+<script src="assets/erp-sidebar.js"></script>
+<script src="assets/admin-editor.js"></script>
+</body>
+</html>

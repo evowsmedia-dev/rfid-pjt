@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SRS — Employee Rating System | App VPS</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/erp-sidebar.css">
+<style>
+  :root{
+    --green:#98C941;
+    --green-dark:#6E9A2A;
+    --green-soft:#EFF7E1;
+    --green-softer:#F6FAEF;
+    --gold:#F0A93C;
+    --gold-soft:#FDF3E2;
+    --red:#E4574C;
+    --red-soft:#FCEBE9;
+    --ink:#1B2414;
+    --ink2:#54604A;
+    --ink3:#8E9884;
+    --line:#E6EBDD;
+    --bg:#F6F8F1;
+    --card:#FFFFFF;
+    --radius:14px;
+    --radius-sm:9px;
+    --mono:'JetBrains Mono', monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,h4{font-family:'Manrope',sans-serif; margin:0;}
+
+  /* ===== LAYOUT ===== */
+  .app{ display:flex; min-height:100vh; }
+
+  /* ===== SIDEBAR ===== */
+  .sidebar{
+    width:278px; flex-shrink:0;
+    background:linear-gradient(180deg,#213318 0%,#152410 100%);
+    color:#fff;
+    position:fixed; top:0; left:0; bottom:0;
+    display:flex; flex-direction:column;
+    z-index:10;
+  }
+  .sidebar-brand{
+    padding:26px 24px 18px;
+    border-bottom:1px solid rgba(255,255,255,0.08);
+  }
+  .sidebar-brand .tag{
+    display:inline-flex; align-items:center; gap:6px;
+    font-size:11px; font-weight:700; letter-spacing:.08em;
+    color:var(--green); background:rgba(152,201,65,0.15);
+    padding:4px 9px; border-radius:20px; margin-bottom:12px;
+    text-transform:uppercase;
+  }
+  .sidebar-brand h1{
+    font-size:17px; font-weight:800; color:#fff; line-height:1.35;
+  }
+  .sidebar-brand p{
+    margin:6px 0 0; font-size:12.5px; color:#9DACA3; line-height:1.5;
+  }
+
+  .sidebar-nav{ flex:1; overflow-y:auto; padding:14px 12px 10px; }
+  .nav-group-label{
+    font-size:10.5px; font-weight:700; letter-spacing:.09em; text-transform:uppercase;
+    color:#6B7A72; padding:14px 12px 6px;
+  }
+  .nav-item{
+    display:flex; align-items:center; gap:11px;
+    padding:10px 12px; margin:2px 0;
+    border-radius:10px; cursor:pointer;
+    font-size:13.6px; font-weight:600; color:#C4CFC8;
+    border:1px solid transparent;
+    transition:background .15s, color .15s;
+    position:relative;
+  }
+  .nav-item .num{
+    font-family:var(--mono); font-size:11px; color:#5E6E65; width:16px; flex-shrink:0;
+  }
+  .nav-item i{ width:16px; text-align:center; font-size:13px; color:#7C8B82; flex-shrink:0;}
+  .nav-item:hover{ background:rgba(255,255,255,0.05); color:#fff; }
+  .nav-item.active{
+    background:rgba(152,201,65,0.16); color:#fff;
+  }
+  .nav-item.active i, .nav-item.active .num{ color:var(--green); }
+  .nav-item.active::before{
+    content:''; position:absolute; left:-12px; top:6px; bottom:6px; width:3px;
+    background:var(--green); border-radius:3px;
+  }
+  .nav-item.flag{ }
+  .nav-item.flag i{ color:var(--gold); }
+  .nav-item.flag.active i{ color:var(--gold); }
+  .nav-item.flag.active{ background:rgba(240,169,60,0.15); }
+  .nav-item.flag.active::before{ background:var(--gold); }
+
+  .sidebar-footer{
+    padding:14px 12px 18px; border-top:1px solid rgba(255,255,255,0.08);
+  }
+  .demo-link{
+    display:flex; align-items:center; gap:11px;
+    padding:12px 13px; border-radius:10px;
+    background:linear-gradient(135deg,var(--green),var(--green-dark));
+    color:#fff; text-decoration:none;
+    font-size:13.4px; font-weight:700;
+    box-shadow:0 8px 18px -6px rgba(152,201,65,0.55);
+    transition:transform .15s, box-shadow .15s;
+  }
+  .demo-link:hover{ transform:translateY(-1px); box-shadow:0 10px 22px -6px rgba(152,201,65,0.7); }
+  .demo-link i.fa-mobile-screen-button{ font-size:15px; }
+  .demo-link .arrow{ margin-left:auto; opacity:.85; font-size:11px;}
+  .sidebar-footer .meta{ margin-top:10px; font-size:10.8px; color:#5E6E65; text-align:center; line-height:1.6;}
+
+  /* ===== MAIN ===== */
+  .main{ margin-left:278px; flex:1; min-width:0; }
+  .topbar{
+    position:sticky; top:0; z-index:5;
+    background:rgba(245,247,245,0.88); backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+    padding:16px 40px; display:flex; align-items:center; justify-content:space-between;
+  }
+  .topbar .crumb{ font-size:13px; color:var(--ink3); font-weight:500; }
+  .topbar .crumb b{ color:var(--ink); font-weight:700; }
+  .status-pill{
+    display:inline-flex; align-items:center; gap:6px;
+    font-size:12px; font-weight:700; color:var(--green-dark);
+    background:var(--green-soft); padding:5px 12px; border-radius:20px;
+  }
+  .status-pill i{ font-size:8px; }
+
+  .content{ padding:40px 48px 90px; max-width:none; width:100%; }
+  .panel{ display:none; animation:fadeIn .35s ease; }
+  .panel.active{ display:block; }
+  @keyframes fadeIn{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+
+  .panel-head{ margin-bottom:28px; }
+  .panel-eyebrow{
+    font-size:12px; font-weight:700; color:var(--green-dark); text-transform:uppercase; letter-spacing:.08em;
+    display:flex; align-items:center; gap:8px; margin-bottom:8px;
+  }
+  .panel-eyebrow .dot{ width:5px; height:5px; border-radius:50%; background:var(--green);}
+  .panel-head h2{ font-size:27px; font-weight:800; letter-spacing:-.01em; }
+  .panel-head .desc{ margin-top:8px; font-size:14.5px; color:var(--ink2); line-height:1.65; max-width:680px;}
+
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    padding:22px 24px; margin-bottom:18px;
+  }
+  .card h3{ font-size:15px; font-weight:700; margin-bottom:12px; display:flex; align-items:center; gap:9px;}
+  .card h3 i{ color:var(--green); font-size:13px; width:20px; height:20px; display:flex; align-items:center; justify-content:center; background:var(--green-soft); border-radius:6px;}
+  .card p{ font-size:14px; line-height:1.7; color:var(--ink2); margin:0 0 10px;}
+  .card ul{ margin:0; padding-left:20px; }
+  .card li{ font-size:14px; line-height:1.85; color:var(--ink2); }
+  .card li b, .card li strong{ color:var(--ink); }
+  .card li::marker{ color:var(--green); }
+
+  .grid2{ display:grid; grid-template-columns:repeat(auto-fit, minmax(300px,1fr)); gap:16px; }
+  @media (max-width:760px){ .grid2{ grid-template-columns:1fr; } }
+
+  .badge{ display:inline-flex; align-items:center; gap:5px; font-size:11.5px; font-weight:700; padding:3px 9px; border-radius:20px; }
+  .badge.green{ background:var(--green-soft); color:var(--green-dark); }
+  .badge.gold{ background:var(--gold-soft); color:#9C6A16; }
+  .badge.red{ background:var(--red-soft); color:#B23A31; }
+  .badge.gray{ background:#EEF1EF; color:var(--ink2); }
+
+  .tag-row{ display:flex; flex-wrap:wrap; gap:8px; margin-top:4px;}
+
+  table{ width:100%; border-collapse:collapse; font-size:13.6px; }
+  thead th{
+    text-align:left; font-size:11.5px; text-transform:uppercase; letter-spacing:.04em;
+    color:var(--ink3); font-weight:700; padding:0 12px 10px; border-bottom:1px solid var(--line);
+  }
+  tbody td{ padding:12px; border-bottom:1px solid var(--line); color:var(--ink2); vertical-align:top; line-height:1.55;}
+  tbody tr:last-child td{ border-bottom:none; }
+  tbody td:first-child{ color:var(--ink); font-weight:700; font-family:var(--mono); font-size:12.5px; white-space:nowrap;}
+
+  /* flow diagram */
+  .flow{ display:flex; align-items:stretch; flex-wrap:wrap; gap:0; margin:6px 0 4px; }
+  .flow-step{
+    background:var(--green-softer); border:1px solid var(--line); border-radius:10px;
+    padding:12px 15px; font-size:13px; font-weight:600; color:var(--ink);
+    display:flex; align-items:center; gap:8px; min-width:150px;
+  }
+  .flow-step i{ color:var(--green); font-size:12px;}
+  .flow-arrow{ display:flex; align-items:center; justify-content:center; padding:0 10px; color:var(--ink3);}
+  .flow-branch{
+    margin-top:10px; padding:14px 16px; border-left:3px solid var(--gold);
+    background:var(--gold-soft); border-radius:0 10px 10px 0; font-size:13.5px; color:#5C4110; line-height:1.7;
+  }
+
+  .stars{ color:var(--gold); letter-spacing:2px; font-size:14px;}
+  .rating-bar-row{ display:flex; align-items:center; gap:10px; font-size:12.5px; color:var(--ink2); margin-bottom:6px;}
+  .rating-bar-row .label{ width:26px; font-weight:700; color:var(--ink);}
+  .rating-bar-track{ flex:1; height:8px; background:#EEF1EF; border-radius:6px; overflow:hidden;}
+  .rating-bar-fill{ height:100%; background:linear-gradient(90deg,var(--gold),#F5C065); border-radius:6px;}
+
+  .decision-card{
+    border:1px solid #F3DFAE; background:linear-gradient(180deg,#FFFDF7,#FEF9EE);
+    border-radius:var(--radius); padding:20px 22px; margin-bottom:16px;
+  }
+  .decision-card .qnum{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:24px; height:24px; border-radius:7px; background:var(--gold); color:#fff;
+    font-size:12px; font-weight:800; margin-right:8px;
+  }
+  .decision-card h4{ font-size:14.5px; font-weight:700; display:flex; align-items:center; margin-bottom:10px;}
+  .option{
+    border:1px solid var(--line); background:#fff; border-radius:10px; padding:11px 14px; margin-top:8px; font-size:13.4px; color:var(--ink2); line-height:1.6;
+  }
+  .option.recommend{ border-color:var(--green); background:var(--green-soft); }
+  .option .opt-label{ font-weight:700; color:var(--ink); margin-right:4px;}
+  .option.recommend .opt-label{ color:var(--green-dark); }
+  .option .rec-pill{ float:right; font-size:10.5px; font-weight:800; color:#fff; background:var(--green); padding:2px 8px; border-radius:20px;}
+
+  .timeline{ position:relative; padding-left:26px; }
+  .timeline::before{ content:''; position:absolute; left:8px; top:6px; bottom:6px; width:2px; background:var(--line);}
+  .t-item{ position:relative; padding-bottom:22px; }
+  .t-item:last-child{ padding-bottom:0; }
+  .t-item::before{
+    content:''; position:absolute; left:-26px; top:2px; width:11px; height:11px; border-radius:50%;
+    background:var(--card); border:2.5px solid var(--green);
+  }
+  .t-item .t-head{ display:flex; align-items:baseline; gap:10px; margin-bottom:4px;}
+  .t-item .t-head b{ font-size:14.5px; }
+  .t-item .t-head span{ font-size:12px; color:var(--ink3); font-family:var(--mono);}
+  .t-item p{ margin:0; font-size:13.5px; color:var(--ink2); line-height:1.6;}
+
+  .exclude-note{
+    display:flex; gap:12px; align-items:flex-start; background:#F3F4F2; border:1px dashed #C9D0CA;
+    border-radius:12px; padding:14px 16px; margin-top:22px; font-size:13px; color:var(--ink3); line-height:1.65;
+  }
+  .exclude-note i{ color:var(--ink3); margin-top:2px;}
+  .exclude-note b{ color:var(--ink2); }
+
+  .footer-note{
+    margin-top:40px; padding-top:20px; border-top:1px solid var(--line);
+    font-size:12.5px; color:var(--ink3); display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;
+  }
+
+  @media (max-width:900px){
+    .sidebar{ display:none; }
+    .main{ margin-left:0; }
+    .content{ padding:24px; }
+  }
+  body.has-erp-global .app > .sidebar{ left:var(--erp-sidebar-w); }
+  body.erp-sidebar-collapsed .app > .sidebar{ left:var(--erp-sidebar-collapsed-w); }
+  @media (max-width:900px){
+    body.has-erp-global .app > .sidebar,
+    body.erp-sidebar-collapsed .app > .sidebar{ left:0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <span class="tag"><i class="fa-solid fa-layer-group"></i> App VPS · Module Mạng xã hội</span>
+    </div>
+
+    <nav class="sidebar-nav" id="nav">
+      <div class="nav-group-label">Nội dung</div>
+      <div class="nav-item active" data-tab="overview"><span class="num">01</span><i class="fa-solid fa-house"></i>Tổng quan dự án</div>
+      <div class="nav-item" data-tab="business"><span class="num">02</span><i class="fa-solid fa-scale-balanced"></i>Nghiệp vụ &amp; Quy tắc</div>
+      <div class="nav-item" data-tab="screens"><span class="num">03</span><i class="fa-solid fa-mobile-screen"></i>Màn hình &amp; UI</div>
+      <div class="nav-item" data-tab="ac"><span class="num">04</span><i class="fa-solid fa-list-check"></i>Acceptance Criteria</div>
+      <div class="nav-item" data-tab="plan"><span class="num">05</span><i class="fa-solid fa-timeline"></i>Kế hoạch triển khai</div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a class="demo-link" href="colleague-rating_v3.html" target="_blank" rel="noopener">
+        <i class="fa-solid fa-mobile-screen-button"></i> Xem Demo mô phỏng UI <span class="arrow"><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
+      </a>
+      <div class="meta">Prototype tương tác · Không phải sản phẩm thật</div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="topbar">
+      <div class="crumb">SRS · Employee Rating System / <b id="crumbCurrent">Tổng quan &amp; Bối cảnh</b></div>
+      <span class="status-pill"><i class="fa-solid fa-circle"></i> Phase 1 — Đang xác nhận yêu cầu</span>
+    </div>
+
+    <div class="content">
+
+      <!-- 01 OVERVIEW (gộp Tổng quan + Phạm vi + Business Goal) -->
+      <section class="panel active" id="overview">
+        <div class="panel-head">
+          <div class="panel-eyebrow"><span class="dot"></span>01 · Tổng quan</div>
+          <h2>Tổng quan dự án</h2>
+          <div class="desc">Bổ sung chức năng <b>Đánh giá nhân viên</b> vào module Mạng xã hội của App VPS, theo yêu cầu của Ban lãnh đạo.</div>
+        </div>
+
+        <div class="card">
+          <h3><i class="fa-solid fa-circle-info"></i>Bối cảnh</h3>
+          <p>Ban lãnh đạo mong muốn bổ sung chức năng <b>Đánh giá nhân viên</b> vào module <b>Mạng xã hội</b> của App VPS, nhằm tạo môi trường ghi nhận tích cực giữa các nhân viên trong công ty.</p>
+          <div class="tag-row">
+            <span class="badge green"><i class="fa-solid fa-check"></i> Mang tính ghi nhận (Recognition)</span>
+            <span class="badge red"><i class="fa-solid fa-xmark"></i> Không phải KPI / đánh giá năng lực</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3><i class="fa-solid fa-bullseye"></i>Mục tiêu chức năng</h3>
+          <ul>
+            <li>Nhân viên đánh giá đồng nghiệp theo thang <b>1–5 sao</b>.</li>
+            <li>Mỗi người chỉ được đánh giá <b>cùng một người 01 lần / tháng</b>.</li>
+            <li>Đánh giá <b>hoàn toàn ẩn danh</b>.</li>
+            <li>Xem điểm đánh giá trung bình của từng nhân viên.</li>
+            <li>Theo dõi <b>xu hướng đánh giá</b> qua các tháng.</li>
+            <li>Xem <b>bảng xếp hạng</b> theo từng bộ phận.</li>
+          </ul>
+        </div>
+
+        <div class="grid2">
+          <div class="card">
+            <h3><i class="fa-solid fa-users"></i>Đối tượng liên quan</h3>
+            <div class="tag-row">
+              <span class="badge gray">BA</span><span class="badge gray">Mobile</span><span class="badge gray">QA</span>
+            </div>
+            <p style="margin-top:12px;">Tài liệu này là bản trình bày dành cho <b>Ban lãnh đạo</b> — phần thiết kế API &amp; Database kỹ thuật do đội Dev biên soạn riêng.</p>
+          </div>
+          <div class="card">
+            <h3><i class="fa-solid fa-layer-group"></i>Vị trí trong hệ thống</h3>
+            <p>Module: <b>Mạng xã hội</b><br>Ứng dụng: <b>App VPS</b><br>Giai đoạn: <b>Phase 1</b></p>
+          </div>
+        </div>
+
+        <div class="grid2">
+          <div class="card">
+            <h3><i class="fa-solid fa-square-check"></i>Phạm vi — Bao gồm trong Phase 1</h3>
+            <ul>
+              <li>Trang cá nhân (hiển thị đánh giá tổng hợp và theo từng tiêu chí)</li>
+              <li>Popup đánh giá đa tiêu chí</li>
+              <li>Radar Chart thể hiện điểm mạnh / điểm cần cải thiện</li>
+              <li>Bảng xếp hạng có trọng số (Weighted Ranking)</li>
+              <li>Ngưỡng tối thiểu 5 lượt đánh giá trước khi được xếp hạng</li>
+              <li>Entry Point từ Newsfeed</li>
+              <li>Quy tắc nghiệp vụ (Business Rules)</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3 style="color:var(--ink2)"><i class="fa-solid fa-circle-minus" style="color:#B23A31; background:var(--red-soft)"></i>Phạm vi — Chưa bao gồm (Future)</h3>
+            <ul>
+              <li>AI phân tích đánh giá</li>
+              <li>Notification</li>
+              <li>Comment kèm đánh giá</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3><i class="fa-solid fa-chart-simple"></i>Business Goal — 3 tầng mục tiêu</h3>
+          <div class="timeline">
+            <div class="t-item">
+              <div class="t-head"><b>1. Recognition</b><span>Ghi nhận</span></div>
+              <p>Khuyến khích nhân viên ghi nhận đồng nghiệp. Không phải chấm điểm KPI.</p>
+            </div>
+            <div class="t-item">
+              <div class="t-head"><b>2. Analytics</b><span>Phân tích</span></div>
+              <p>Theo dõi điểm tổng hợp, điểm theo từng tiêu chí, radar chart và xu hướng theo thời gian.</p>
+            </div>
+            <div class="t-item">
+              <div class="t-head"><b>3. Leaderboard</b><span>Xếp hạng</span></div>
+              <p>Xây dựng bảng xếp hạng theo bộ phận trên cơ sở đủ mẫu và điểm xếp hạng có trọng số, hạn chế trường hợp ít lượt đánh giá nhưng đứng Top.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="exclude-note">
+          <i class="fa-solid fa-circle-info"></i>
+          <div><b>Lưu ý phạm vi tài liệu:</b> Bản trình bày này lược bỏ phần thiết kế API và cấu trúc Database — đây là tài liệu kỹ thuật dành cho đội Dev, sẽ được biên soạn riêng bởi Backend/Mobile khi bắt tay vào phát triển.</div>
+        </div>
+      </section>
+
+      <!-- 02 BUSINESS (gộp User Flow + Business Rules & Logic + Edge Cases + Permission) -->
+      <section class="panel" id="business">
+        <div class="panel-head">
+          <div class="panel-eyebrow"><span class="dot"></span>02 · Nghiệp vụ</div>
+          <h2>Nghiệp vụ &amp; Quy tắc</h2>
+          <div class="desc">Luồng thao tác, quy tắc nghiệp vụ, các trường hợp đặc biệt cần xử lý và ma trận phân quyền.</div>
+        </div>
+
+        <div class="card">
+          <h3><i class="fa-solid fa-diagram-next"></i>User Flow — Luồng đánh giá đồng nghiệp</h3>
+          <div class="flow">
+            <div class="flow-step"><i class="fa-solid fa-house"></i>Newsfeed</div>
+            <div class="flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="flow-step"><i class="fa-solid fa-user"></i>Trang cá nhân</div>
+            <div class="flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="flow-step"><i class="fa-solid fa-chart-simple"></i>Load Rating Summary</div>
+            <div class="flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="flow-step"><i class="fa-solid fa-key"></i>Kiểm tra quyền đánh giá</div>
+          </div>
+          <div class="flow-branch">
+            <b>Chưa đánh giá tháng này?</b> → Mở Bottom Sheet → Chấm đủ 3 tiêu chí → Nhập nhận xét thêm (không bắt buộc) → Hệ thống tính điểm tổng hợp → Gửi đánh giá → Cập nhật điểm từng tiêu chí / Radar Chart / Nhận xét → Tính lại Weighted Score → Làm mới Leaderboard
+          </div>
+        </div>
+
+        <div class="card">
+          <h3><i class="fa-solid fa-scale-balanced"></i>Business Rules</h3>
+          <table>
+            <thead><tr><th style="width:70px;">ID</th><th>Nội dung quy tắc</th></tr></thead>
+            <tbody>
+              <tr><td>BR01</td><td>Không được tự đánh giá bản thân</td></tr>
+              <tr><td>BR02</td><td>Một người chỉ được đánh giá cùng một người 01 lần / tháng</td></tr>
+              <tr><td>BR03</td><td>Đánh giá hoàn toàn ẩn danh</td></tr>
+              <tr><td>BR04</td><td>Chỉ hiện nút Đánh giá khi chưa đánh giá trong tháng</td></tr>
+              <tr><td>BR05</td><td>Admin vẫn có thể truy xuất dữ liệu khi cần điều tra</td></tr>
+              <tr><td>BR06</td><td>Mỗi lượt đánh giá gồm 03 tiêu chí: <b>Tinh thần hỗ trợ đồng nghiệp</b>, <b>Chất lượng chuyên môn</b>, <b>Đúng giờ / Tác phong</b>; mỗi tiêu chí chấm từ 1–5 sao.</td></tr>
+              <tr><td>BR07</td><td>Điểm tổng hợp của một lượt đánh giá = trung bình cộng điểm của 03 tiêu chí. Điểm hiển thị làm tròn 1 chữ số thập phân.</td></tr>
+              <tr><td>BR08</td><td>Trang cá nhân hiển thị điểm trung bình theo từng tiêu chí bằng Radar Chart và xu hướng điểm tổng hợp theo từng tháng.</td></tr>
+              <tr><td>BR09</td><td>Nhân viên có dưới <b>05 lượt đánh giá</b> trong kỳ không được gán thứ hạng; hiển thị trạng thái <b>“Đang thu thập dữ liệu (x/5)”</b>.</td></tr>
+              <tr><td>BR10</td><td>Nhân viên đủ 05 lượt được xếp hạng bằng <b>Weighted Rating</b>: WR = (v/(v+m))×R + (m/(v+m))×C; trong đó R = điểm trung bình cá nhân, v = số lượt đánh giá, m = 5, C = điểm trung bình toàn bộ nhân viên đủ điều kiện trong phạm vi lọc.</td></tr>
+              <tr><td>BR11</td><td>Leaderboard sắp xếp giảm dần theo Weighted Rating; nếu bằng điểm, ưu tiên người có nhiều lượt đánh giá hơn, sau đó mới so điểm trung bình thô.</td></tr>
+              <tr><td>BR12</td><td>Mỗi lượt đánh giá cho phép nhập thêm <b>01 nhận xét tự do</b> về đồng nghiệp. Nhận xét là <b>không bắt buộc</b>; người dùng vẫn có thể gửi đánh giá khi để trống.</td></tr>
+              <tr><td>BR13</td><td>Nhận xét gắn với cùng một lượt đánh giá, không tồn tại như một comment độc lập. Nội dung tối đa <b>500 ký tự</b>.</td></tr>
+              <tr><td>BR14</td><td>Nhận xét <b>không tham gia tính</b> điểm tổng hợp, điểm từng tiêu chí hoặc Weighted Rating.</td></tr>
+              <tr><td>BR15</td><td>Nhận xét hiển thị <b>ẩn danh</b> đối với Employee. Admin có thể truy xuất người gửi khi cần điều tra theo cùng nguyên tắc của BR05.</td></tr>
+              <tr><td>BR16</td><td>Trong Phase 1, người đánh giá <b>không sửa/xóa</b> nhận xét sau khi gửi nhằm giữ tính toàn vẹn của lượt đánh giá.</td></tr>
+              <tr><td>BR17</td><td>Người xem có thể <b>Báo cáo</b> nhận xét không phù hợp. Admin có quyền ẩn nội dung khỏi giao diện người dùng nhưng vẫn giữ dữ liệu phục vụ kiểm tra.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="grid2">
+          <div class="card">
+            <h3><i class="fa-solid fa-code-branch"></i>Logic đánh giá</h3>
+            <p style="font-size:13.5px;">User A mở Profile User B → hệ thống kiểm tra: đã đánh giá trong tháng này chưa?</p>
+            <ul>
+              <li><b>Có</b> → Disable nút Đánh giá</li>
+              <li><b>Chưa</b> → Mở Bottom Sheet → Chấm đủ 03 tiêu chí → Có thể nhập nhận xét thêm → Gửi đánh giá → Ghi nhận → Làm mới Summary / Radar / Nhận xét / Leaderboard</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3><i class="fa-solid fa-eye"></i>Logic hiển thị</h3>
+            <p style="font-size:13.5px;">Trang cá nhân hiển thị Điểm tổng hợp, tổng lượt đánh giá, điểm từng tiêu chí qua Radar Chart, Xu hướng điểm tổng hợp và khu vực <b>Nhận xét từ đồng nghiệp</b>. Nhận xét chỉ hiển thị dưới dạng ẩn danh. Riêng nút Đánh giá tùy thuộc vào quyền/trạng thái của người xem.</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3><i class="fa-solid fa-triangle-exclamation"></i>Edge Cases — Trường hợp đặc biệt</h3>
+          <div class="grid2">
+            <div class="card" style="margin-bottom:0;"><h3 style="font-size:14px;"><i class="fa-solid fa-user-plus"></i>Người mới / ít dữ liệu</h3><p>0 lượt: hiển thị “Chưa có đánh giá”. Từ 1–4 lượt: vẫn hiển thị điểm cá nhân nhưng trên Leaderboard ghi “Đang thu thập dữ liệu (x/5)” và không có thứ hạng.</p></div>
+            <div class="card" style="margin-bottom:0;"><h3 style="font-size:14px;"><i class="fa-solid fa-user-lock"></i>Đánh giá bản thân</h3><p>Ẩn nút hoàn toàn ở giao diện, đồng thời hệ thống kiểm tra chặn ở phía xử lý.</p></div>
+            <div class="card" style="margin-bottom:0;"><h3 style="font-size:14px;"><i class="fa-solid fa-hand"></i>Spam / Double Click</h3><p>Disable nút ngay sau khi gửi; hệ thống đảm bảo không tạo 2 lượt đánh giá trùng.</p></div>
+            <div class="card" style="margin-bottom:0;"><h3 style="font-size:14px;"><i class="fa-solid fa-user-slash"></i>Nhân viên nghỉ việc</h3><p>Không hiển thị trên Leaderboard, nhưng lịch sử đánh giá vẫn được giữ lại.</p></div>
+            <div class="card" style="margin-bottom:0;"><h3 style="font-size:14px;"><i class="fa-solid fa-people-arrows"></i>Chuyển phòng ban</h3><p>Ghi nhận phòng ban tại thời điểm đánh giá, để thống kê đúng theo thời điểm đó.</p></div>
+            <div class="card" style="margin-bottom:0;"><h3 style="font-size:14px;"><i class="fa-solid fa-comment-slash"></i>Nhận xét không phù hợp</h3><p>Người dùng có thể Báo cáo nhận xét. Admin được phép ẩn nội dung khỏi giao diện nhưng vẫn giữ bản ghi gốc để phục vụ kiểm tra.</p></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3><i class="fa-solid fa-user-shield"></i>Phân quyền</h3>
+          <table>
+            <thead><tr><th>Vai trò</th><th>Đánh giá &amp; nhận xét</th><th>Xem Leaderboard</th><th>Xem người đánh giá (ẩn danh)</th><th>Ẩn nhận xét bị báo cáo</th></tr></thead>
+            <tbody>
+              <tr><td style="font-family:'Inter'; font-weight:700; color:var(--ink);">Employee</td><td><i class="fa-solid fa-check" style="color:var(--green)"></i></td><td><i class="fa-solid fa-check" style="color:var(--green)"></i></td><td><i class="fa-solid fa-xmark" style="color:#B23A31"></i></td><td><i class="fa-solid fa-xmark" style="color:#B23A31"></i></td></tr>
+              <tr><td style="font-family:'Inter'; font-weight:700; color:var(--ink);">Admin</td><td><i class="fa-solid fa-check" style="color:var(--green)"></i></td><td><i class="fa-solid fa-check" style="color:var(--green)"></i></td><td><i class="fa-solid fa-check" style="color:var(--green)"></i></td><td><i class="fa-solid fa-check" style="color:var(--green)"></i></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 03 SCREENS -->
+      <section class="panel" id="screens">
+        <div class="panel-head">
+          <div class="panel-eyebrow"><span class="dot"></span>03 · Màn hình</div>
+          <h2>Các màn hình chính &amp; UI Guideline</h2>
+          <div class="desc">4 màn hình cấu thành chức năng, cùng phong cách hiển thị điểm đánh giá tham khảo theo Google Maps.</div>
+        </div>
+
+        <div class="card">
+          <h3><i class="fa-solid fa-id-card"></i>Màn hình 1 — Trang cá nhân</h3>
+          <p>Bổ sung section Đánh giá, hiển thị: <b>điểm tổng hợp</b>, tổng lượt đánh giá, <b>Radar Chart 03 tiêu chí</b>, điểm trung bình từng tiêu chí, biểu đồ xu hướng điểm tổng hợp (Trend Chart), khu vực <b>Nhận xét từ đồng nghiệp</b> và nút Đánh giá.</p>
+          <div class="tag-row">
+            <span class="badge gray">Nếu xem chính mình → ẩn nút</span>
+            <span class="badge gray">Đã đánh giá trong tháng → disable nút</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3><i class="fa-solid fa-star"></i>Màn hình 2 — Bottom Sheet Đánh giá</h3>
+          <p>Hiển thị avatar, tên người được đánh giá, 03 dòng tiêu chí và ô <b>Nhận xét thêm về đồng nghiệp</b> (không bắt buộc, tối đa 500 ký tự). Mỗi tiêu chí có bộ chọn 1–5 sao và mô tả mức điểm. Chỉ cho phép Gửi khi đã chấm đủ cả 03 tiêu chí; trạng thái ô nhận xét không ảnh hưởng điều kiện gửi. Sau khi gửi: tính điểm tổng hợp, lưu nhận xét nếu có, đóng popup, làm mới Rating Summary/Radar/Nhận xét/Leaderboard và hiện Toast thành công.</p>
+        </div>
+
+        <div class="card">
+          <h3><i class="fa-solid fa-comments"></i>Khu vực Nhận xét từ đồng nghiệp</h3>
+          <p>Hiển thị các nhận xét ẩn danh gắn với lượt đánh giá. Mặc định hiển thị một số nhận xét gần nhất, có thể mở <b>Xem tất cả nhận xét</b>. Mỗi nhận xét có thao tác <b>Báo cáo</b>; nội dung bị Admin ẩn không hiển thị cho Employee.</p>
+        </div>
+
+        <div class="card">
+          <h3><i class="fa-solid fa-ranking-star"></i>Màn hình 3 — Leaderboard</h3>
+          <p>Bộ lọc theo <b>Bộ phận</b> và <b>Tháng</b>. Nhóm đủ ≥5 lượt hiển thị: hạng, avatar, tên, <b>Weighted Score</b>, điểm trung bình thô và tổng lượt đánh giá. Nhóm &lt;5 lượt tách riêng dưới trạng thái <b>Đang thu thập dữ liệu (x/5)</b>, không có thứ hạng. Click vào một dòng → chuyển sang Trang cá nhân.</p>
+        </div>
+
+        <div class="card">
+          <h3><i class="fa-solid fa-newspaper"></i>Màn hình 4 — Entry Point từ Newsfeed</h3>
+          <p>Thêm điểm truy cập chức năng ngay trong luồng Newsfeed, đan xen giữa Bài viết, Xếp hạng và Khảo sát.</p>
+        </div>
+
+        <div class="grid2">
+          <div class="card">
+            <h3><i class="fa-solid fa-map-location-dot"></i>Phong cách hiển thị (Google Maps Style)</h3>
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
+              <span style="font-size:26px; font-weight:800;">4.8</span>
+              <span class="stars">★★★★★</span>
+              <span style="font-size:12.5px; color:var(--ink3);">(120 đánh giá)</span>
+            </div>
+            <div class="rating-bar-row"><span class="label">5★</span><div class="rating-bar-track"><div class="rating-bar-fill" style="width:88%"></div></div></div>
+            <div class="rating-bar-row"><span class="label">4★</span><div class="rating-bar-track"><div class="rating-bar-fill" style="width:60%"></div></div></div>
+            <div class="rating-bar-row"><span class="label">3★</span><div class="rating-bar-track"><div class="rating-bar-fill" style="width:25%"></div></div></div>
+            <div class="rating-bar-row"><span class="label">2★</span><div class="rating-bar-track"><div class="rating-bar-fill" style="width:8%"></div></div></div>
+            <div class="rating-bar-row"><span class="label">1★</span><div class="rating-bar-track"><div class="rating-bar-fill" style="width:4%"></div></div></div>
+          </div>
+          <div class="card">
+            <h3><i class="fa-solid fa-chart-line"></i>Trend Chart &amp; Trạng thái tải</h3>
+            <ul>
+              <li>Biểu đồ đường (Line Chart), hiển thị 6 tháng gần nhất.</li>
+              <li>Có thể vuốt ngang để xem thêm.</li>
+              <li>Khi API chậm → hiển thị Skeleton, <b>không</b> dùng Spinner toàn màn hình.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 04 AC -->
+      <section class="panel" id="ac">
+        <div class="panel-head">
+          <div class="panel-eyebrow"><span class="dot"></span>04 · Nghiệm thu</div>
+          <h2>Acceptance Criteria</h2>
+          <div class="desc">Tiêu chí nghiệm thu theo mô hình Given – When – Then, dùng để QA kiểm thử và Sếp đối chiếu khi UAT.</div>
+        </div>
+        <div class="card">
+          <table>
+            <thead><tr><th style="width:60px;">ID</th><th>Given</th><th>When</th><th>Then</th></tr></thead>
+            <tbody>
+              <tr><td>AC01</td><td>User A mở Profile User B</td><td>Profile load thành công</td><td>Hiển thị Rating Summary</td></tr>
+              <tr><td>AC02</td><td>User A chưa đánh giá</td><td>Bấm nút Đánh giá</td><td>Hiện Bottom Sheet với đủ 03 tiêu chí</td></tr>
+              <tr><td>AC03</td><td>Bottom Sheet đang mở</td><td>User chưa chấm đủ 03 tiêu chí</td><td>Nút Gửi bị Disable và không tạo đánh giá</td></tr>
+              <tr><td>AC04</td><td>User đã chấm đủ 03 tiêu chí</td><td>Bấm Gửi và hệ thống trả về thành công</td><td>Lưu 03 điểm tiêu chí, tính điểm tổng hợp, làm mới Rating Summary và Radar Chart</td></tr>
+              <tr><td>AC05</td><td>User A đã đánh giá tháng này</td><td>Mở Profile User B</td><td>Nút Đánh giá bị Disable</td></tr>
+              <tr><td>AC06</td><td>Nhân viên có 1–4 lượt đánh giá trong kỳ</td><td>Mở Leaderboard</td><td>Không có thứ hạng; hiển thị “Đang thu thập dữ liệu (x/5)”</td></tr>
+              <tr><td>AC07</td><td>Nhân viên có ≥5 lượt đánh giá</td><td>Mở Leaderboard</td><td>Hệ thống tính Weighted Rating và sắp xếp giảm dần theo điểm này</td></tr>
+              <tr><td>AC08</td><td>User mở Leaderboard</td><td>Đổi bộ lọc bộ phận hoặc tháng</td><td>Tính lại C (điểm trung bình phạm vi lọc), Weighted Rating và danh sách tương ứng</td></tr>
+              <tr><td>AC09</td><td>User đã chấm đủ 03 tiêu chí</td><td>Để trống ô nhận xét và bấm Gửi</td><td>Đánh giá được ghi nhận bình thường; không phát sinh bản ghi nhận xét</td></tr>
+              <tr><td>AC10</td><td>User đã chấm đủ 03 tiêu chí và nhập nhận xét hợp lệ</td><td>Bấm Gửi</td><td>Lưu nhận xét cùng lượt đánh giá và hiển thị ẩn danh tại Profile người được đánh giá</td></tr>
+              <tr><td>AC11</td><td>User nhập nhận xét</td><td>Đạt giới hạn 500 ký tự</td><td>Không cho nhập thêm ký tự; bộ đếm hiển thị 500/500</td></tr>
+              <tr><td>AC12</td><td>Profile có nhận xét</td><td>User bấm Báo cáo</td><td>Hệ thống ghi nhận yêu cầu báo cáo và thông báo thao tác thành công</td></tr>
+              <tr><td>AC13</td><td>Admin đã ẩn một nhận xét bị báo cáo</td><td>Employee mở Profile</td><td>Nhận xét đó không còn hiển thị nhưng dữ liệu gốc vẫn được lưu trong hệ thống</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 05 PLAN -->
+      <section class="panel" id="plan">
+        <div class="panel-head">
+          <div class="panel-eyebrow"><span class="dot"></span>05 · Lộ trình</div>
+          <h2>Kế hoạch triển khai</h2>
+          <div class="desc">Ước lượng thời gian theo từng giai đoạn (áp dụng cho đội thực thi, không đi sâu chi tiết kỹ thuật).</div>
+        </div>
+        <div class="card">
+          <div class="timeline">
+            <div class="t-item"><div class="t-head"><b>Phase 1 — Nền tảng dữ liệu</b><span>1 ngày</span></div><p>Chuẩn bị cấu trúc dữ liệu, ràng buộc và tối ưu truy vấn.</p></div>
+            <div class="t-item"><div class="t-head"><b>Phase 2 — Xử lý nghiệp vụ</b><span>2–3 ngày</span></div><p>Xây dựng xử lý nghiệp vụ, kiểm tra hợp lệ và tối ưu tốc độ phản hồi.</p></div>
+            <div class="t-item"><div class="t-head"><b>Phase 3 — Giao diện Mobile</b><span>4–5 ngày</span></div><p>Trang cá nhân + Radar Chart + Nhận xét ẩn danh, Bottom Sheet đa tiêu chí có ô nhận xét, Weighted Leaderboard, Entry Point Newsfeed.</p></div>
+            <div class="t-item"><div class="t-head"><b>Phase 4 — Kiểm thử</b><span>2 ngày</span></div><p>Kiểm thử chức năng, edge case, hiệu năng và phân quyền.</p></div>
+            <div class="t-item"><div class="t-head"><b>Phase 5 — UAT</b><span>2 ngày</span></div><p>Sửa lỗi, tinh chỉnh giao diện theo phản hồi và triển khai.</p></div>
+          </div>
+        </div>
+        <p style="font-size:12.5px; color:var(--ink3); margin-top:10px;">Tổng ước lượng: khoảng <b style="color:var(--ink2);">11–13 ngày làm việc</b> từ khi bắt đầu đến khi triển khai.</p>
+      </section>
+
+    </div>
+
+    <div class="content" style="padding-top:0;">
+      <div class="footer-note">
+        <span>SRS · Employee Rating System — App VPS · Module Mạng xã hội</span>
+        <span>Người soạn: BA · Phase 1</span>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+  const navItems = document.querySelectorAll('.nav-item[data-tab]');
+  const panels = document.querySelectorAll('.panel');
+  const crumb = document.getElementById('crumbCurrent');
+
+  navItems.forEach(item => {
+    item.addEventListener('click', () => {
+      const tab = item.getAttribute('data-tab');
+      navItems.forEach(n => n.classList.remove('active'));
+      panels.forEach(p => p.classList.remove('active'));
+      item.classList.add('active');
+      document.getElementById(tab).classList.add('active');
+      crumb.textContent = item.textContent.trim();
+      document.querySelector('.content').scrollTo({top:0});
+      window.scrollTo({top:0, behavior:'instant'});
+    });
+  });
+</script>
+<script src="assets/erp-sidebar.js"></script>
+<script src="assets/admin-editor.js"></script>
+
+</body>
+</html>

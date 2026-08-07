@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TRE ERP Documentation Template</title>
+<link rel="stylesheet" href="assets/erp-sidebar.css">
+<style>
+  :root{
+    --bg:#f7f9f3;--panel:#ffffff;--text:#20251b;--muted:#66705d;--line:#e2e8d9;
+    --brand:#98c941;--brand-soft:#f1f8e4;--brand-dark:#5f8618;--brand-ink:#2f4510;--code:#18200f;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.55}
+  .app{display:grid;grid-template-columns:280px minmax(0,1fr);min-height:100vh}
+  .app > aside{position:sticky;top:0;height:100vh;background:#18200f;color:#e5efd4;border-right:1px solid #33431e;padding:24px 18px;overflow:auto}
+  .brand{font-weight:800;font-size:20px;letter-spacing:.2px;color:#fff;margin-bottom:6px;display:flex;align-items:center;gap:10px}.brand img{width:76px;height:auto;display:block}
+  .sub{font-size:12px;color:#aebd96;margin-bottom:24px}
+  .app > aside nav a{display:block;color:#dce8c8;text-decoration:none;padding:10px 12px;border-radius:9px;margin:4px 0;font-size:14px}
+  .app > aside nav a:hover, .app > aside nav a.active{background:#2d3e18;color:#fff;box-shadow:inset 3px 0 0 var(--brand)}
+  .app > aside nav .group{margin:16px 10px 6px;color:#98c941;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+  main{padding:34px 42px 80px;max-width:1280px;width:100%}
+  .hero{background:linear-gradient(135deg,#98c941,#6e9d22);color:white;border-radius:18px;padding:30px 32px;margin-bottom:28px;box-shadow:0 14px 35px rgba(104,145,34,.20)}
+  .hero h1{margin:0 0 8px;font-size:32px}.hero p{margin:0;color:#f7ffe9;max-width:900px}
+  section.doc{display:none;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:28px;margin:0;box-shadow:0 4px 14px rgba(16,24,40,.04)}
+  section.doc.active-tab{display:block}
+  h2{font-size:24px;margin:0 0 18px;color:#111827}h3{font-size:18px;margin-top:28px;margin-bottom:10px;color:#17202a}h4{font-size:15px;margin:22px 0 8px;color:#25313c}
+  .note{background:var(--brand-soft);border-left:4px solid var(--brand);padding:12px 14px;border-radius:8px;color:var(--brand-ink);margin:12px 0 20px}
+  table{width:100%;border-collapse:collapse;margin:12px 0 22px;font-size:14px;overflow:hidden;border-radius:10px}
+  th,td{border:1px solid var(--line);padding:10px 12px;vertical-align:top}th{background:#f4f7ee;text-align:left;color:#3d4931;font-weight:700}
+  code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace}
+  pre{background:var(--code);color:#e5e7eb;padding:16px;border-radius:10px;overflow:auto;font-size:13px}
+  ul{padding-left:20px}.check{list-style:none;padding:0}.check li{margin:6px 0}.check li:before{content:"☐";margin-right:8px;color:var(--brand)}
+  .pill{display:inline-block;padding:3px 8px;border-radius:999px;background:#eef2f6;color:#475467;font-size:12px;margin-right:5px}
+  .topline{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}.id{font-size:12px;font-weight:700;color:var(--brand);background:var(--brand-soft);padding:4px 8px;border-radius:999px}
+  .small{font-size:13px;color:var(--muted)}
+  .doc-owner{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:12px 0 24px}
+  .owner-card{border:1px solid #dbe7c9;background:#fbfdf8;border-radius:10px;padding:11px 13px}
+  .owner-label{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.07em;font-weight:800;color:var(--brand-dark);margin-bottom:3px}
+  .owner-value{font-size:13px;font-weight:650;color:#2d3823}
+  .brand-mark{display:flex;align-items:center;margin-bottom:8px}.brand-mark img{width:94px;height:auto;display:block}
+  @media(max-width:900px){.doc-owner{grid-template-columns:1fr}.app{grid-template-columns:1fr}.app > aside{position:relative;height:auto}main{padding:22px 16px}.hero{padding:24px}.app > aside nav{display:grid;grid-template-columns:1fr 1fr}.group{grid-column:1/-1}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside>
+    <div class="brand-mark"><img src="data:image/png;base64,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" alt="TRE"></div>
+    <div class="brand">Project Docs</div>
+    <div class="sub">Documentation Framework Template</div>
+    <nav>
+      <div class="group">Core Documents</div>
+      <a href="#project">01 · Project Charter</a>
+      <a href="#feature">02 · Feature Requirement Specification (FRS)</a>
+      <a href="#technical">03 · Technical Design (DEV only)</a>
+      <a href="#test">04 · Test</a>
+      <a href="#release">05 · Release</a>
+      <a href="#catalog">06 · Catalog</a>
+      <div class="group">Hướng dẫn sử dụng tài liệu</div>
+      <a href="#id-standard">Hướng dẫn tạo ID tài liệu</a>
+      <a href="#responsibility">Responsibility Matrix</a>
+      <a href="#reading">Hướng dẫn đọc tài liệu</a>
+                </nav>
+  </aside>
+
+  <main>
+    <section id="project" class="doc">
+      <div class="topline"><h2>01 · Project charter</h2><span class="id">PRJ</span></div>
+      <div class="note">Dùng cho thông tin tổng quan cấp dự án. Không mô tả chi tiết từng Feature tại đây.</div><div class="doc-owner">
+  <div class="owner-card"><span class="owner-label">Người phụ trách lập</span><span class="owner-value">BA / PM</span></div>
+  <div class="owner-card"><span class="owner-label">Phối hợp / duyệt</span><span class="owner-value">PO · Technical Lead · Customer</span></div>
+  <div class="owner-card"><span class="owner-label">Nên đọc</span><span class="owner-value">PO · BA/PM · Customer · Management · Dev/Tester khi cần</span></div>
+</div>
+      <h3>Project Overview</h3>
+      <table><tr><th>Item</th><th>Content</th></tr><tr><td>Project ID</td><td>PRJ-XXX</td></tr><tr><td>Project Name</td><td></td></tr><tr><td>Customer / Department</td><td></td></tr><tr><td>Product Owner</td><td></td></tr><tr><td>BA / PM</td><td></td></tr><tr><td>Technical Lead</td><td></td></tr><tr><td>Start Date</td><td></td></tr><tr><td>Target Release</td><td></td></tr><tr><td>Status</td><td>Draft / Analysis / Development / Testing / Released</td></tr></table>
+      <h3>Objective</h3><ul><li>Vấn đề dự án cần giải quyết.</li><li>Kết quả mong muốn.</li><li>Giá trị mang lại cho nghiệp vụ.</li></ul>
+      <h3>Scope</h3>
+      <table><tr><th>In Scope</th><th>Out of Scope</th></tr><tr><td><ul><li></li><li></li><li></li></ul></td><td><ul><li></li><li></li><li></li></ul></td></tr></table>
+      <h3>Modules</h3><table><tr><th>Module</th><th>Description</th><th>Status</th></tr><tr><td>MOD-XXX</td><td></td><td></td></tr></table>
+      <h3>Stakeholders</h3><table><tr><th>Stakeholder</th><th>Role</th><th>Responsibility</th></tr><tr><td></td><td></td><td></td></tr></table>
+      <h3>Milestones</h3><table><tr><th>Milestone</th><th>Target Date</th><th>Status</th><th>Note</th></tr><tr><td>Analysis Complete</td><td></td><td></td><td></td></tr><tr><td>Ready for Dev</td><td></td><td></td><td></td></tr><tr><td>Development Complete</td><td></td><td></td><td></td></tr><tr><td>UAT</td><td></td><td></td><td></td></tr><tr><td>Go-live</td><td></td><td></td><td></td></tr></table>
+      <h3>Key Dependencies</h3><table><tr><th>Dependency</th><th>Owner</th><th>Impact</th><th>Status</th></tr><tr><td></td><td></td><td></td><td></td></tr></table>
+      <h3>Key Risks / Issues</h3><table><tr><th>ID</th><th>Risk / Issue</th><th>Impact</th><th>Owner</th><th>Status</th></tr><tr><td></td><td></td><td></td><td></td><td></td></tr></table>
+
+      <h3>Tài liệu liên quan</h3>
+      <p class="small">Liệt kê các tài liệu tham chiếu của dự án. Có thể gắn đường dẫn trực tiếp tới tài liệu nội bộ, Google Drive, SharePoint, Figma, GitHub hoặc vị trí lưu trữ khác.</p>
+      <table>
+        <tr>
+          <th>Tên tài liệu</th>
+          <th>Loại tài liệu</th>
+          <th>Owner</th>
+          <th>Link / File</th>
+          <th>Ghi chú</th>
+        </tr>
+        <tr>
+          <td></td>
+          <td>Hợp đồng / Biên bản / Proposal / Quy trình / Thiết kế / Khác</td>
+          <td></td>
+          <td><a href="#" onclick="return false;">Gắn link hoặc upload file</a></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td><a href="#" onclick="return false;">Gắn link hoặc upload file</a></td>
+          <td></td>
+        </tr>
+      </table>
+    </section>
+
+    <section id="feature" class="doc">
+      <div class="topline"><h2>02 · Feature Requirement Specification (FRS)</h2><span class="id">FEAT</span></div>
+      <div class="note">Tài liệu chính của Tre ERP. BA, Dev và Tester ưu tiên đọc tài liệu này.</div><div class="doc-owner">
+  <div class="owner-card"><span class="owner-label">Người phụ trách lập</span><span class="owner-value">BA / PM</span></div>
+  <div class="owner-card"><span class="owner-label">Phối hợp / xác nhận</span><span class="owner-value">PO · Dev · Tester · Customer</span></div>
+  <div class="owner-card"><span class="owner-label">Nên đọc</span><span class="owner-value">BA/PM · Dev · Tester · PO · Customer; Management đọc Overview khi cần</span></div>
+</div>
+      <h3>FEAT-[MODULE]-XXX — [Feature Name]</h3>
+      <table><tr><th>Item</th><th>Value</th></tr><tr><td>Feature ID</td><td>FEAT-XXX</td></tr><tr><td>Module</td><td>MOD-XXX</td></tr><tr><td>Status</td><td>Draft / Analysis / Ready for Dev / Development / Testing / Released</td></tr><tr><td>Priority</td><td>High / Medium / Low</td></tr><tr><td>BA</td><td></td></tr><tr><td>Dev</td><td></td></tr><tr><td>Tester</td><td></td></tr><tr><td>PO</td><td></td></tr><tr><td>Target Release</td><td></td></tr><tr><td>Last Updated</td><td></td></tr></table>
+      <h3>1. Overview</h3><p><strong>Goal:</strong> Mô tả feature trong 1–2 câu.</p><p><strong>Actor:</strong></p><ul><li></li><li></li></ul><p><strong>Pre-condition:</strong></p><ul><li></li><li></li></ul><p><strong>Main Flow:</strong> <code>Action → Action → Action → Result</code></p><p><strong>Impact:</strong></p><ul><li>Module:</li><li>Report:</li><li>Integration:</li><li>Existing Feature:</li></ul>
+      <h3>2. Problem & Requirement</h3><table><tr><th>Current / Problem</th><th>Expected / Requirement</th></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr></table>
+      <h4>Business Value</h4><ul><li></li><li></li></ul>
+      <h4>Source</h4><ul><li>Customer:</li><li>Department:</li><li>Meeting / Request:</li><li>Change Request:</li></ul>
+      <h3>3. Quy trình nghiệp vụ &amp; bảng mô tả luồng chi tiết</h3>
+      <p class="muted">Dùng phần này để nhìn nhanh quy trình nghiệp vụ tổng thể và đối chiếu chi tiết hành động của người dùng với cách hệ thống xử lý. BPMN chỉ cần bổ sung khi quy trình có nhiều actor, bước bàn giao, trạng thái hoặc nhánh quyết định.</p>
+      <h4>3.1. Sơ đồ quy trình nghiệp vụ (BPMN) — nếu cần</h4>
+      <div class="note">Chèn ảnh / link BPMN tại đây. Nếu quy trình được nhiều Feature dùng chung, chỉ reference mã PROC-XXX thay vì vẽ lại.</div>
+      <table><tr><th>Process ID</th><th>Process Name</th><th>Actor / Department</th><th>Phạm vi Feature</th></tr><tr><td>PROC-XXX</td><td></td><td></td><td></td></tr></table>
+      <h4>3.2. Bảng mô tả luồng chi tiết</h4>
+      <table><tr><th>Step</th><th>Actor</th><th>User Action</th><th>System Action</th><th>Rule</th><th>Acceptance</th></tr><tr><td>1</td><td></td><td></td><td></td><td></td><td>AC-01</td></tr><tr><td>2</td><td></td><td></td><td></td><td></td><td>AC-02</td></tr><tr><td>3</td><td></td><td></td><td></td><td></td><td>AC-03</td></tr><tr><td>4</td><td></td><td></td><td></td><td></td><td>AC-04</td></tr></table>
+      <h4>3.3. Luồng thay thế / ngoại lệ</h4><table><tr><th>Case</th><th>Condition / Trigger</th><th>System Behaviour</th><th>Rule</th><th>Acceptance</th></tr><tr><td></td><td></td><td></td><td></td><td></td></tr></table>
+      <h3>4. Screen Specification</h3><p><strong>SCR-[MODULE]-XXX — [Screen Name]</strong></p><div class="note">Chèn ảnh / link Figma / wireframe tại đây.</div>
+      <h4>Fields & Actions</h4><table><tr><th>Field / Action</th><th>Type</th><th>Required</th><th>Rule / Validation</th><th>Permission</th><th>Note</th></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
+      <h4>Local Business Rules</h4><p><strong>BR-[FEATURE]-01 — [Rule Name]</strong></p><ul><li><strong>Rule:</strong> [Mô tả rule]</li><li><strong>Condition:</strong> [Điều kiện]</li><li><strong>System Behaviour:</strong> [Hệ thống xử lý]</li><li><strong>Message:</strong> [Thông báo nếu có]</li></ul>
+      <h4>Reused Rules</h4><ul><li>BR-COM-XXX — [Rule]</li><li>BR-[MODULE]-XXX — [Rule]</li></ul>
+      <h3>5. Acceptance & Test</h3><h4>Acceptance Criteria</h4><p><strong>AC-01 — [Name]</strong></p><ul><li><strong>Given:</strong> [Điều kiện ban đầu]</li><li><strong>When:</strong> [Action]</li><li><strong>Then:</strong> [Kết quả mong muốn]</li></ul>
+      <h4>Key Test Scenarios</h4><table><tr><th>Test</th><th>Input / Condition</th><th>Expected</th></tr><tr><td>Happy Path</td><td></td><td></td></tr><tr><td>Validation</td><td></td><td></td></tr><tr><td>Permission</td><td></td><td></td></tr><tr><td>Boundary</td><td></td><td></td></tr><tr><td>Exception</td><td></td><td></td></tr></table>
+      <h3>Open Items</h3><table><tr><th>Type</th><th>Item</th><th>Owner</th><th>Due</th><th>Status</th></tr><tr><td>Question</td><td></td><td></td><td></td><td></td></tr><tr><td>TODO</td><td></td><td></td><td></td><td></td></tr><tr><td>Dependency</td><td></td><td></td><td></td><td></td></tr><tr><td>Decision</td><td></td><td></td><td></td><td></td></tr></table>
+    </section>
+
+    <section id="technical" class="doc">
+      <div class="topline"><h2>03 · Technical Design</h2><span class="id">TECH / API / DB / INT</span></div>
+      <div class="note">Tài liệu do Dev / Technical Lead chịu trách nhiệm. Feature mô tả WHAT &amp; system behaviour; Technical Design mô tả HOW hệ thống được triển khai. Chỉ tạo phần chi tiết tương ứng khi Feature thực sự có tác động kỹ thuật.</div>
+      <div class="doc-owner">
+        <div class="owner-card"><span class="owner-label">Người phụ trách lập</span><span class="owner-value">Dev / Technical Lead</span></div>
+        <div class="owner-card"><span class="owner-label">Phối hợp</span><span class="owner-value">BA · Tester · Dev tích hợp</span></div>
+        <div class="owner-card"><span class="owner-label">Nên đọc</span><span class="owner-value">Dev · Technical Lead; Tester/BA đọc phần liên quan khi cần</span></div>
+      </div>
+
+      <h3>TECH — FEAT-[MODULE]-XXX — [Feature Name]</h3>
+
+      <h3>1. Technical Overview</h3>
+      <table>
+        <tr><th>Item</th><th>Value</th></tr>
+        <tr><td>Feature</td><td>FEAT-[MODULE]-XXX</td></tr>
+        <tr><td>Technical Owner</td><td></td></tr>
+        <tr><td>Service / Component</td><td></td></tr>
+        <tr><td>Architecture Impact</td><td>None / Minor / Major</td></tr>
+        <tr><td>Data Migration</td><td>Yes / No</td></tr>
+        <tr><td>Integration Impact</td><td>Yes / No</td></tr>
+        <tr><td>Deployment Note</td><td></td></tr>
+      </table>
+
+      <h3>2. Implementation Mapping</h3>
+      <p class="muted">Map từng hành động nghiệp vụ trong Feature sang cách triển khai kỹ thuật. Không lặp lại mô tả nghiệp vụ; chỉ reference Step / Rule / AC tương ứng.</p>
+      <table>
+        <tr><th>Business Step / Action</th><th>Implementation</th><th>API</th><th>Main Data</th><th>Integration / Effect</th><th>Reference</th></tr>
+        <tr><td>Step X — Load</td><td></td><td>API-XXX</td><td>DB-XXX</td><td></td><td>BR-XXX / AC-XX</td></tr>
+        <tr><td>Step X — Save</td><td></td><td>API-XXX</td><td>DB-XXX</td><td></td><td>BR-XXX / AC-XX</td></tr>
+      </table>
+
+      <h3>3. API</h3>
+      <h4>API-[MODULE]-XXX — [API Name]</h4>
+      <table><tr><th>Item</th><th>Value</th></tr><tr><td>Method</td><td>GET / POST / PUT / DELETE</td></tr><tr><td>Endpoint</td><td></td></tr><tr><td>Authentication</td><td></td></tr><tr><td>Permission</td><td></td></tr><tr><td>Used By</td><td>FEAT-XXX / Step X</td></tr></table>
+      <h4>Request</h4><pre>{
+}</pre>
+      <h4>Response</h4><pre>{
+}</pre>
+      <h4>Validation / Error Handling</h4>
+      <table><tr><th>Rule / HTTP</th><th>Condition</th><th>Technical Behaviour / Message</th></tr><tr><td>BR-XXX / 400</td><td></td><td></td></tr><tr><td>403</td><td></td><td></td></tr><tr><td>500</td><td></td><td></td></tr></table>
+
+      <h3>4. Database / Data</h3>
+      <h4>DB-[MODULE]-XXX — [Entity / Table]</h4>
+      <table><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th><th>Source / Rule</th></tr><tr><td></td><td></td><td></td><td></td><td></td></tr></table>
+      <h4>Relationships</h4><pre>ENTITY-A
+   ↓
+ENTITY-B
+   ↓
+ENTITY-C</pre>
+      <h4>Data Change / Migration</h4>
+      <table><tr><th>Change</th><th>Required?</th><th>Detail</th></tr><tr><td>New / Changed Field</td><td></td><td></td></tr><tr><td>Migration</td><td></td><td></td></tr><tr><td>Historical Data</td><td></td><td></td></tr></table>
+
+      <h3>5. Integration</h3>
+      <h4>INT-XXX — [Integration Name]</h4>
+      <table><tr><th>Item</th><th>Content</th></tr><tr><td>Source System</td><td></td></tr><tr><td>Target System</td><td></td></tr><tr><td>Direction</td><td></td></tr><tr><td>Trigger</td><td></td></tr><tr><td>Frequency</td><td>Real-time / Batch / Manual</td></tr><tr><td>Owner</td><td></td></tr></table>
+      <h4>Data Flow</h4><pre>Source → Mapping → API / Queue → Destination</pre>
+      <h4>Mapping</h4><table><tr><th>Source Field</th><th>Target Field</th><th>Conversion</th><th>Required</th></tr><tr><td></td><td></td><td></td><td></td></tr></table>
+
+      <h3>6. Background Process / Job</h3>
+      <table><tr><th>Job / Process</th><th>Trigger / Schedule</th><th>Input</th><th>Output</th><th>Retry / Failure Handling</th></tr><tr><td></td><td></td><td></td><td></td><td></td></tr></table>
+
+      <h3>7. Technical Effects</h3>
+      <table><tr><th>Effect</th><th>Yes / No</th><th>Detail / Reference</th></tr><tr><td>Audit Log</td><td></td><td></td></tr><tr><td>Notification</td><td></td><td></td></tr><tr><td>Integration</td><td></td><td></td></tr><tr><td>Background Job</td><td></td><td></td></tr><tr><td>Report / Query Impact</td><td></td><td></td></tr><tr><td>Security / Permission</td><td></td><td></td></tr><tr><td>Performance</td><td></td><td></td></tr></table>
+
+      <h3>8. Technical Notes / Decisions</h3>
+      <table><tr><th>Type</th><th>Content</th><th>Reference</th></tr><tr><td>Decision</td><td></td><td>DEC-XXX</td></tr><tr><td>Constraint</td><td></td><td></td></tr><tr><td>Known Limitation</td><td></td><td></td></tr></table>
+    </section>
+
+    <section id="test" class="doc">
+      <div class="topline"><h2>04 · Test</h2><span class="id">TC</span></div>
+      <div class="note">Acceptance Criteria nằm trong Feature. Tài liệu Test tập trung vào yêu cầu kiểm thử, thực thi Test Case, kết quả và mức độ bao phủ.</div>
+      <div class="doc-owner">
+        <div class="owner-card"><span class="owner-label">Người phụ trách lập</span><span class="owner-value">Tester</span></div>
+        <div class="owner-card"><span class="owner-label">Phối hợp</span><span class="owner-value">BA / PM · Dev</span></div>
+        <div class="owner-card"><span class="owner-label">Nên đọc</span><span class="owner-value">Tester · BA/PM · Dev; PO đọc kết quả/UAT khi cần</span></div>
+      </div>
+
+      <h3>TEST — FEAT-[MODULE]-XXX</h3>
+
+      <h3>1. Test Information</h3>
+      <table>
+        <tr><th>Item</th><th>Value</th></tr>
+        <tr><td>Feature</td><td>FEAT-[MODULE]-XXX</td></tr>
+        <tr><td>Project</td><td></td></tr>
+        <tr><td>Module</td><td>MOD-XXX</td></tr>
+        <tr><td>Requested By</td><td></td></tr>
+        <tr><td>Tester</td><td></td></tr>
+        <tr><td>Test Reviewer</td><td></td></tr>
+        <tr><td>Request Date</td><td></td></tr>
+        <tr><td>Target Test Date</td><td></td></tr>
+        <tr><td>Environment</td><td>SIT / UAT</td></tr>
+        <tr><td>Build / Version</td><td></td></tr>
+        <tr><td>Impact</td><td>Low / Medium / High</td></tr>
+        <tr><td>Change Type</td><td>New / Change / Bug Fix</td></tr>
+        <tr><td>Status</td><td>Ready / Testing / Completed / Blocked</td></tr>
+      </table>
+
+      <h3>2. Test Cases</h3>
+      <h4>TC-[FEATURE]-01 — [Scenario]</h4>
+
+      <h4>Mapping</h4>
+      <table>
+        <tr><th>Feature</th><th>Acceptance Criteria</th><th>Business Rule</th><th>Test Type</th></tr>
+        <tr><td>FEAT-XXX</td><td>AC-01</td><td>BR-01</td><td>Functional / Regression / Smoke / UAT</td></tr>
+      </table>
+
+      <h4>Preconditions & Test Data</h4>
+      <table>
+        <tr><th>Item</th><th>Value</th></tr>
+        <tr><td>User / Role</td><td></td></tr>
+        <tr><td>Permission</td><td></td></tr>
+        <tr><td>Environment</td><td></td></tr>
+        <tr><td>Test Data</td><td></td></tr>
+        <tr><td>Other Preconditions</td><td></td></tr>
+      </table>
+
+      <h4>Test Steps</h4>
+      <table>
+        <tr><th>Step</th><th>Action / Input</th><th>Expected Result</th></tr>
+        <tr><td>1</td><td></td><td></td></tr>
+        <tr><td>2</td><td></td><td></td></tr>
+        <tr><td>3</td><td></td><td></td></tr>
+      </table>
+
+      <h4>Execution</h4>
+      <table>
+        <tr><th>Item</th><th>Value</th></tr>
+        <tr><td>Tester</td><td></td></tr>
+        <tr><td>Test Date</td><td></td></tr>
+        <tr><td>Reviewer</td><td></td></tr>
+        <tr><td>Review Date</td><td></td></tr>
+        <tr><td>Result</td><td>PASS / FAIL / BLOCKED / NOT RUN</td></tr>
+        <tr><td>Bug</td><td>BUG-XXX</td></tr>
+        <tr><td>Evidence</td><td>Link / Attachment</td></tr>
+        <tr><td>Note</td><td></td></tr>
+      </table>
+
+      <h3>3. Test Result Summary</h3>
+      <table>
+        <tr><th>Feature / Function</th><th>Pass</th><th>Fail</th><th>Blocked</th><th>Not Run</th><th>Total</th><th>Pass Rate</th></tr>
+        <tr><td>FEAT-XXX</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td><strong>Total</strong></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      </table>
+
+      <h3>4. Coverage</h3>
+      <table>
+        <tr><th>Acceptance Criteria</th><th>Test Case</th><th>Result</th><th>Bug</th></tr>
+        <tr><td>AC-01</td><td>TC-01</td><td>PASS</td><td>—</td></tr>
+        <tr><td>AC-02</td><td>TC-02</td><td>FAIL</td><td>BUG-XXX</td></tr>
+        <tr><td>AC-03</td><td>TC-03</td><td>BLOCKED</td><td>—</td></tr>
+      </table>
+
+      <h3>5. Defects</h3>
+      <table>
+        <tr><th>Bug ID</th><th>Related TC</th><th>Description</th><th>Severity</th><th>Status</th></tr>
+        <tr><td>BUG-XXX</td><td>TC-XXX</td><td></td><td>Low / Medium / High / Critical</td><td>Open / Fixed / Retest / Closed</td></tr>
+      </table>
+    </section>
+
+    <section id="release" class="doc">
+      <div class="topline"><h2>05 · Release</h2><span class="id">REL</span></div><div class="doc-owner">
+  <div class="owner-card"><span class="owner-label">Người phụ trách lập</span><span class="owner-value">BA / PM</span></div>
+  <div class="owner-card"><span class="owner-label">Phối hợp / xác nhận</span><span class="owner-value">Dev · Tester · PO</span></div>
+  <div class="owner-card"><span class="owner-label">Nên đọc</span><span class="owner-value">PO · BA/PM · Dev · Tester · Customer · Management</span></div>
+</div>
+      <h3>REL-YYYY.MM — [Release Name]</h3><table><tr><th>Item</th><th>Value</th></tr><tr><td>Release</td><td>REL-YYYY.MM</td></tr><tr><td>Release Date</td><td></td></tr><tr><td>Environment</td><td></td></tr><tr><td>Owner</td><td></td></tr><tr><td>Status</td><td></td></tr></table>
+      <h3>Features</h3><table><tr><th>Feature</th><th>Description</th><th>Status</th></tr><tr><td>FEAT-XXX</td><td></td><td>Released</td></tr></table>
+      <h3>Changes</h3><table><tr><th>Type</th><th>ID</th><th>Change</th></tr><tr><td>Feature</td><td>FEAT-XXX</td><td></td></tr><tr><td>Business Rule</td><td>BR-XXX</td><td></td></tr><tr><td>Bug Fix</td><td>BUG-XXX</td><td></td></tr><tr><td>Change Request</td><td>CR-XXX</td><td></td></tr></table>
+      <h3>Known Issues</h3><table><tr><th>Issue</th><th>Impact</th><th>Workaround</th></tr><tr><td></td><td></td><td></td></tr></table>
+      <h3>Deployment Notes</h3><ul><li>Database migration:</li><li>Config:</li><li>Service restart:</li><li>Integration:</li><li>Rollback:</li></ul>
+      <h3>Verification</h3><ul class="check"><li>Application available</li><li>API healthy</li><li>Database migration completed</li><li>Smoke test passed</li><li>Integration checked</li></ul>
+    </section>
+
+    <section id="catalog" class="doc">
+      <div class="topline"><h2>06 · Catalog</h2><span class="id">Reusable</span></div>
+      <div class="note">Catalog chỉ chứa thông tin được tái sử dụng bởi nhiều Feature.</div><div class="doc-owner">
+  <div class="owner-card"><span class="owner-label">Người phụ trách lập</span><span class="owner-value">BA / PM; Dev đồng sở hữu phần kỹ thuật</span></div>
+  <div class="owner-card"><span class="owner-label">Phối hợp / duyệt</span><span class="owner-value">PO · Dev · Tester</span></div>
+  <div class="owner-card"><span class="owner-label">Nên đọc</span><span class="owner-value">BA/PM · Dev · Tester; PO đọc rule nghiệp vụ khi cần</span></div>
+</div>
+      <h3>Business Rule Catalog</h3><p><strong>BR-COM-XXX — [Rule Name]</strong></p><table><tr><th>Item</th><th>Content</th></tr><tr><td>Rule ID</td><td>BR-COM-XXX</td></tr><tr><td>Scope</td><td>Global / Module</td></tr><tr><td>Owner</td><td></td></tr><tr><td>Status</td><td>Active / Deprecated</td></tr><tr><td>Effective Date</td><td></td></tr></table>
+      <h4>Rule Detail</h4><ul><li><strong>Rule:</strong> [Một câu rõ ràng]</li><li><strong>Condition:</strong> [Điều kiện áp dụng]</li><li><strong>System Behaviour:</strong> [Hệ thống phải làm gì]</li><li><strong>Error / Message:</strong> [Thông báo]</li><li><strong>Exception:</strong> [Ngoại lệ nếu có]</li></ul>
+      <h3>Permission Catalog</h3><p><strong>PERM-[MODULE]-XXX — [Permission Name]</strong></p><table><tr><th>Role</th><th>View</th><th>Create</th><th>Edit</th><th>Delete</th><th>Approve</th></tr><tr><td>User</td><td>✓</td><td></td><td></td><td></td><td></td></tr><tr><td>Manager</td><td>✓</td><td>✓</td><td>✓</td><td></td><td></td></tr><tr><td>Admin</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr></table>
+      <h3>Master Data Catalog</h3><table><tr><th>Code</th><th>Name</th><th>Status</th><th>Description</th></tr><tr><td></td><td></td><td>Active</td><td></td></tr></table>
+      <h3>Glossary</h3><table><tr><th>Term</th><th>Definition</th><th>Module</th></tr><tr><td>PO</td><td>Purchase Order</td><td>Order</td></tr><tr><td>BTP</td><td>Bán thành phẩm</td><td>Production</td></tr><tr><td></td><td></td><td></td></tr></table>
+    </section>
+
+    <section id="id-standard" class="doc"><div class="topline"><h2>Hướng dẫn tạo ID tài liệu</h2><span class="id">Naming</span></div><table><tr><th>Object</th><th>Prefix</th><th>Example</th></tr><tr><td>Project</td><td>PRJ</td><td>PRJ-ERP</td></tr><tr><td>Module</td><td>MOD</td><td>MOD-ORD</td></tr><tr><td>Feature</td><td>FEAT</td><td>FEAT-ORD-032</td></tr><tr><td>Technical Design</td><td>TECH</td><td>TECH-ORD-032</td></tr><tr><td>Screen</td><td>SCR</td><td>SCR-ORD-032</td></tr><tr><td>Business Rule</td><td>BR</td><td>BR-ORD-018</td></tr><tr><td>Permission</td><td>PERM</td><td>PERM-ORD-018</td></tr><tr><td>API</td><td>API</td><td>API-ORD-047</td></tr><tr><td>Database</td><td>DB</td><td>DB-ORD-001</td></tr><tr><td>Integration</td><td>INT</td><td>INT-BRAVO-01</td></tr><tr><td>Acceptance</td><td>AC</td><td>AC-ORD-032-01</td></tr><tr><td>Test Case</td><td>TC</td><td>TC-ORD-032-01</td></tr><tr><td>Bug</td><td>BUG</td><td>BUG-ORD-045</td></tr><tr><td>Change Request</td><td>CR</td><td>CR-ORD-018</td></tr><tr><td>Decision</td><td>DEC</td><td>DEC-ORD-012</td></tr><tr><td>Release</td><td>REL</td><td>REL-2026.08</td></tr></table></section>
+
+    <section id="responsibility" class="doc"><div class="topline"><h2>Responsibility Matrix</h2><span class="id">RACI</span></div><table><tr><th>Document</th><th>BA / PM</th><th>PO</th><th>Dev</th><th>Tester</th><th>Customer</th></tr><tr><td>Project</td><td>R</td><td>A</td><td>C</td><td>C</td><td>C</td></tr><tr><td>Feature</td><td>R</td><td>A</td><td>C</td><td>C</td><td>C</td></tr><tr><td>Technical Design</td><td>C</td><td>—</td><td>R/A</td><td>C</td><td>—</td></tr><tr><td>Test</td><td>C</td><td>—</td><td>C</td><td>R/A</td><td>—</td></tr><tr><td>Release</td><td>R</td><td>A</td><td>C</td><td>C</td><td>C</td></tr><tr><td>Catalog</td><td>R</td><td>A</td><td>C</td><td>C</td><td>—</td></tr></table><p class="small">R = Responsible · A = Accountable · C = Consulted</p></section>
+
+    <section id="reading" class="doc"><div class="topline"><h2>Hướng dẫn đọc tài liệu</h2><span class="id">Who reads what</span></div><table><tr><th>Document</th><th>BA</th><th>Dev</th><th>Tester</th><th>PO</th><th>Customer</th><th>Management</th></tr><tr><td>Project</td><td>✓</td><td>○</td><td>○</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>Feature</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>○</td></tr><tr><td>Technical Design</td><td>○</td><td>✓</td><td>○</td><td>—</td><td>—</td><td>—</td></tr><tr><td>Test</td><td>○</td><td>○</td><td>✓</td><td>—</td><td>—</td><td>—</td></tr><tr><td>Release</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>Catalog</td><td>✓</td><td>✓</td><td>✓</td><td>○</td><td>—</td><td>—</td></tr></table><p class="small">✓ = Nên đọc · ○ = Đọc khi cần · — = Thường không cần</p><h3>Lộ trình đọc theo vai trò</h3><h3>Developer</h3><pre>Feature Overview → Quy trình nghiệp vụ & luồng chi tiết → Screen & Rules → Acceptance → Technical Design</pre><h3>Tester</h3><pre>Feature Overview → Quy trình nghiệp vụ & luồng chi tiết → Rules → Acceptance → Test Case</pre><h3>BA / PM</h3><pre>Project → Feature → Open Items → Acceptance → Release</pre><h3>PO</h3><pre>Project → Problem & Requirement → Quy trình nghiệp vụ → Acceptance → Release</pre><h3>Customer</h3><pre>Problem → Expected Requirement → Quy trình nghiệp vụ → Screen → Acceptance</pre><h3>Management</h3><pre>Project → Module / Scope → Major Features → Risks → Release</pre></section>
+
+  </main>
+</div>
+<script>
+const links=[...document.querySelectorAll('nav a')];
+const sections=[...document.querySelectorAll('section.doc')];
+
+function openTab(id, updateHash=true){
+  const target=document.getElementById(id);
+  if(!target) return;
+  sections.forEach(s=>s.classList.toggle('active-tab', s===target));
+  links.forEach(a=>a.classList.toggle('active', a.getAttribute('href')==='#'+id));
+  window.scrollTo({top:0, behavior:'instant'});
+  if(updateHash && location.hash!=='#'+id){
+    history.replaceState(null,'','#'+id);
+  }
+}
+
+links.forEach(a=>a.addEventListener('click',e=>{
+  e.preventDefault();
+  openTab(a.getAttribute('href').slice(1));
+}));
+
+window.addEventListener('hashchange',()=>{
+  const id=location.hash.slice(1);
+  if(id) openTab(id,false);
+});
+
+const initial=location.hash.slice(1);
+openTab(document.getElementById(initial)?initial:'project', false);
+</script>
+<script src="assets/admin-editor.js"></script>
+<script src="assets/erp-sidebar.js"></script>
+</body>
+</html>
